@@ -21,6 +21,19 @@ importers:
         specifier: ^5.9.2
         version: 5.9.3
 
+  packages/validation:
+    dependencies:
+      '@delta-green-character-adapter/character-model':
+        specifier: workspace:*
+        version: link:../character-model
+    devDependencies:
+      '@types/node':
+        specifier: ^22.18.1
+        version: 22.20.1
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
+
 packages:
 
   '@types/node@22.20.1':

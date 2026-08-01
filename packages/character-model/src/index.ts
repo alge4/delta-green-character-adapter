@@ -9,12 +9,5 @@ export {
   standardSkillIdSchema,
 } from "./schemas.js";
 export type { AgentSnapshot, JsonValue, StandardSkillId } from "./schemas.js";
-export { assessAgentSnapshot } from "./assessment.js";
-export type {
-  AgentDiagnostic,
-  CompletenessAssessment,
-  CompletenessImpact,
-  DiagnosticSeverity,
-} from "./assessment.js";
 export { generateAgentJsonSchema } from "./json-schema.js";
 export { serializeAgentSnapshot } from "./serialization.js";

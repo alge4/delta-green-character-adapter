@@ -5,7 +5,6 @@
 ## Public API
 
 - `parseAgentSnapshot` and `safeParseAgentSnapshot` validate untrusted values through the strict Zod schema.
-- `assessAgentSnapshot` evaluates semantic invariants and derives green, amber, or red completeness.
 - `serializeAgentSnapshot` emits UTF-8 JSON with recursively sorted object keys, two-space indentation, and one trailing newline. Array order is preserved for display only.
 - `generateAgentJsonSchema` produces the portable JSON Schema 2020-12 representation used by non-TypeScript consumers.
 
@@ -26,7 +25,7 @@ Every snapshot requires `schemaVersion`, `agentId`, and all semantic section con
 - `notes`: player-visible and Handler-only formatted narrative.
 - `campaignState`: typed optional campaign-framework data, initially Impossible Landscapes.
 - `provenance`: compact adapter/source identity and content hash.
-- `extensions`: namespaced JSON fragments that avoid source-data loss without making source fields canonical.
+- `extensions`: named adapter namespaces whose object payloads avoid source-data loss without making source fields canonical.
 
 A Draft Agent keeps these containers but may omit optional leaf values and use empty collections. Unknown properties are rejected at every canonical object boundary. Adapters must either map a value canonically or retain it under their extension namespace.
 
@@ -38,7 +37,7 @@ Adapters generate new IDs with `crypto.randomUUID()` and preserve existing canon
 
 ## Completeness and unusual values
 
-Completeness is derived rather than stored:
+Completeness is derived by `@delta-green-character-adapter/validation`, rather than stored:
 
 - `red`: missing mathematical inputs, missing Standard Skills, duplicate canonical IDs, or dangling canonical references.
 - `amber`: mathematically usable but missing lower-priority play information such as name or profession.

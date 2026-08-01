@@ -1,10 +1,23 @@
-import { STANDARD_SKILL_IDS, type AgentSnapshot } from "./schemas.js";
+import {
+  STANDARD_SKILL_IDS,
+  type AgentSnapshot,
+} from "@delta-green-character-adapter/character-model";
 
 export type DiagnosticSeverity = "error" | "warning" | "information";
 export type CompletenessImpact = "red" | "amber" | "none";
+export type AgentDiagnosticCode =
+  | "agent.mathematics.required-field.missing"
+  | "agent.skills.standard.missing"
+  | "agent.skills.proficiency.unusual"
+  | "agent.identity.name.missing"
+  | "agent.biography.profession.missing"
+  | "agent.resource.current-above-maximum"
+  | "agent.identity.duplicate"
+  | "agent.psychology.motivation.disorder-reference-missing"
+  | "agent.skills.special-training.custom-skill-reference-missing";
 
 export interface AgentDiagnostic {
-  readonly code: string;
+  readonly code: AgentDiagnosticCode;
   readonly path: string;
   readonly severity: DiagnosticSeverity;
   readonly completenessImpact: CompletenessImpact;
@@ -30,18 +43,29 @@ export function assessAgentSnapshot(snapshot: AgentSnapshot): CompletenessAssess
 
   for (const name of statisticNames) {
     if (snapshot.statistics[name] === undefined) {
-      diagnostics.push(missing(`statistics.${name}`, "A primary statistic is required for mathematics."));
+      diagnostics.push(
+        missingMathematicalInput(
+          `statistics.${name}`,
+          "A primary statistic is required for mathematics.",
+        ),
+      );
     }
   }
 
   for (const name of ["hitPoints", "willpower", "sanity", "breakingPoint"] as const) {
     if (snapshot.resources[name] === undefined) {
-      diagnostics.push(missing(`resources.${name}`, "A core resource is required for mathematics."));
+      diagnostics.push(
+        missingMathematicalInput(
+          `resources.${name}`,
+          "A core resource is required for mathematics.",
+        ),
+      );
     }
   }
 
   for (const skillId of STANDARD_SKILL_IDS) {
-    if (snapshot.skills.standard[skillId] === undefined) {
+    const skill = snapshot.skills.standard[skillId];
+    if (skill === undefined) {
       diagnostics.push({
         code: "agent.skills.standard.missing",
         path: `skills.standard.${skillId}`,
@@ -49,7 +73,13 @@ export function assessAgentSnapshot(snapshot: AgentSnapshot): CompletenessAssess
         completenessImpact: "red",
         message: "A Standard Skill proficiency is required for normal play.",
       });
+    } else {
+      addUnusualProficiencyDiagnostic(skill.proficiency, `skills.standard.${skillId}.proficiency`, diagnostics);
     }
+  }
+
+  for (const [index, skill] of snapshot.skills.custom.entries()) {
+    addUnusualProficiencyDiagnostic(skill.proficiency, `skills.custom.${index}.proficiency`, diagnostics);
   }
 
   if (!snapshot.identity.name) {
@@ -85,7 +115,7 @@ export function assessAgentSnapshot(snapshot: AgentSnapshot): CompletenessAssess
   return { completeness, diagnostics };
 }
 
-function missing(path: string, message: string): AgentDiagnostic {
+function missingMathematicalInput(path: string, message: string): AgentDiagnostic {
   return {
     code: "agent.mathematics.required-field.missing",
     path,
@@ -93,6 +123,22 @@ function missing(path: string, message: string): AgentDiagnostic {
     completenessImpact: "red",
     message,
   };
+}
+
+function addUnusualProficiencyDiagnostic(
+  proficiency: number,
+  path: string,
+  diagnostics: AgentDiagnostic[],
+): void {
+  if (proficiency < 0 || proficiency > 100) {
+    diagnostics.push({
+      code: "agent.skills.proficiency.unusual",
+      path,
+      severity: "warning",
+      completenessImpact: "none",
+      message: "The explicit proficiency is outside the usual 0–100 range and was preserved.",
+    });
+  }
 }
 
 function addResourceWarnings(snapshot: AgentSnapshot, diagnostics: AgentDiagnostic[]): void {
@@ -151,7 +197,7 @@ function addReferenceDiagnostics(snapshot: AgentSnapshot, diagnostics: AgentDiag
         path: `psychology.motivations.${index}.linkedDisorderId`,
         severity: "error",
         completenessImpact: "red",
-        message: "The motivation references a disorder that is not present in this snapshot.",
+        message: "The motivation references a Disorder that is not present in this snapshot.",
       });
     }
   }

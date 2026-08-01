@@ -4,7 +4,7 @@ export const AGENT_SCHEMA_VERSION = "1.0.0" as const;
 
 const strictObject = z.strictObject;
 const optionalText = z.string().optional();
-const percentage = z.number().int().min(0).max(100);
+const proficiency = z.number().int();
 const lowerUuidV4 = z
   .string()
   .regex(
@@ -89,7 +89,7 @@ export const standardSkillIdSchema = z.enum(STANDARD_SKILL_IDS);
 export type StandardSkillId = z.infer<typeof standardSkillIdSchema>;
 
 const standardSkillSchema = strictObject({
-  proficiency: percentage,
+  proficiency,
   failureMarked: z.boolean(),
 });
 
@@ -97,7 +97,7 @@ const customSkillSchema = strictObject({
   id: canonicalIdSchema,
   group: z.string().min(1),
   label: z.string().min(1),
-  proficiency: percentage,
+  proficiency,
   failureMarked: z.boolean(),
 });
 
@@ -209,7 +209,7 @@ const tomeSchema = strictObject({
   occultSkillIncrease: z.number().int().optional(),
 });
 
-const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Expected an ISO 8601 calendar date");
+const isoDate = z.iso.date();
 const isoInstant = z.iso.datetime({ offset: true });
 const semver = z.string().regex(/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?$/);
 
@@ -291,7 +291,10 @@ export const agentSnapshotSchema = strictObject({
     capturedAt: isoInstant.optional(),
     contentHash: z.string().regex(/^sha256:[0-9a-f]{64}$/),
   }),
-  extensions: z.record(z.string().regex(/^[a-z][A-Za-z0-9]*$/), jsonValueSchema),
+  extensions: z.record(
+    z.string().regex(/^[a-z][A-Za-z0-9]*$/),
+    z.record(z.string(), jsonValueSchema),
+  ),
 }).meta({
   id: "https://delta-green-character-adapter.dev/schema/agent/1.0.0",
   title: "Canonical Delta Green Agent Snapshot 1.0.0",
