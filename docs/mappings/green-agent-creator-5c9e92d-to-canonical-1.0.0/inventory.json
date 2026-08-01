@@ -1,0 +1,654 @@
+{
+  "capability": {
+    "id": "green-agent-creator-5c9e92d-to-canonical-1.0.0",
+    "direction": "import",
+    "adapterId": "green-agent-creator-import",
+    "source": {
+      "format": "green-agent-creator",
+      "version": "5c9e92d",
+      "commit": "5c9e92d987f1251d62c172209fc53f8e8ac3372b"
+    },
+    "target": {
+      "schema": "canonical-agent",
+      "version": "1.0.0"
+    },
+    "fidelityClass": "lossy-semantic",
+    "contract": "docs/research/green-agent-creator-5c9e92d-contract.md",
+    "decision": "docs/research/green-agent-creator-5c9e92d-import-mapping.md",
+    "knownLoss": "docs/mappings/green-agent-creator-5c9e92d-to-canonical-1.0.0/known-loss.json"
+  },
+  "extension": {
+    "namespace": "greenAgentCreator",
+    "keys": ["workflow", "skillConstruction", "sheetBaseline", "identity", "raw"]
+  },
+  "blockingRules": [
+    "root must be a JSON object",
+    "stats must be an object",
+    "stats.STR, stats.CON, stats.DEX, stats.INT, stats.POW, stats.CHA must each be finite numbers",
+    "skills must be an array"
+  ],
+  "professionKeyMap": {
+    "anthropologist_archaeologist_historian": "Anthropologist, Archaeologist, or Historian",
+    "computer_scientist_engineer": "Computer Scientist or Engineer",
+    "federal_agent": "Federal Agent",
+    "physician": "Physician",
+    "scientist": "Scientist",
+    "special_operator": "Special Operator"
+  },
+  "skillKeyMap": {
+    "accounting": "accounting",
+    "alertness": "alertness",
+    "anthropology": "anthropology",
+    "archeology": "archeology",
+    "artillery": "artillery",
+    "athletics": "athletics",
+    "bureaucracy": "bureaucracy",
+    "computer_science": "computerScience",
+    "criminology": "criminology",
+    "demolitions": "demolitions",
+    "disguise": "disguise",
+    "dodge": "dodge",
+    "drive": "drive",
+    "firearms": "firearms",
+    "first_aid": "firstAid",
+    "forensics": "forensics",
+    "heavy_machinery": "heavyMachinery",
+    "heavy_weapons": "heavyWeapons",
+    "history": "history",
+    "humint": "humint",
+    "law": "law",
+    "medicine": "medicine",
+    "melee_weapons": "meleeWeapons",
+    "navigate": "navigate",
+    "occult": "occult",
+    "persuade": "persuade",
+    "pharmacy": "pharmacy",
+    "psychotherapy": "psychotherapy",
+    "ride": "ride",
+    "search": "search",
+    "sigint": "sigint",
+    "stealth": "stealth",
+    "surgery": "surgery",
+    "survival": "survival",
+    "swim": "swim",
+    "unnatural": "unnatural"
+  },
+  "typedSkillFamilies": [
+    "art",
+    "craft",
+    "foreign_language",
+    "military_science",
+    "pilot",
+    "science"
+  ],
+  "statKeyMap": {
+    "STR": "strength",
+    "CON": "constitution",
+    "DEX": "dexterity",
+    "INT": "intelligence",
+    "POW": "power",
+    "CHA": "charisma"
+  },
+  "adaptationMatchers": {
+    "violence": ["adapted to violence"],
+    "helplessness": ["adapted to helplessness"]
+  },
+  "paths": [
+    {
+      "source": "personalInfo",
+      "classification": "mapped",
+      "canonical": "identity|biography",
+      "transform": "Container; map known nested keys per child rows; unknown nested keys → extensions.greenAgentCreator.raw['personalInfo.<key>'] with warning."
+    },
+    {
+      "source": "personalInfo.name",
+      "classification": "mapped",
+      "canonical": "identity.name",
+      "transform": "When non-empty string, copy exact text. Empty/missing → omit."
+    },
+    {
+      "source": "personalInfo.employer",
+      "classification": "mapped",
+      "canonical": "biography.employer",
+      "transform": "When non-empty string, copy exact text. Empty/missing → omit."
+    },
+    {
+      "source": "personalInfo.nationality",
+      "classification": "mapped",
+      "canonical": "biography.nationality",
+      "transform": "When non-empty string, copy exact text. Empty/missing → omit."
+    },
+    {
+      "source": "personalInfo.sex",
+      "classification": "mapped",
+      "canonical": "biography.sex",
+      "transform": "When non-empty string, copy exact text. Empty/missing → omit."
+    },
+    {
+      "source": "personalInfo.age",
+      "classification": "mapped",
+      "canonical": "biography.age",
+      "transform": "Number or digit-only string → non-negative integer biography.age (informational diagnostic on coercion). Empty string/missing → omit. Other text → omit canonical age, preserve under extensions.greenAgentCreator.raw['personalInfo.age'], warn."
+    },
+    {
+      "source": "personalInfo.dob",
+      "classification": "mapped",
+      "canonical": "biography.dateOfBirth",
+      "transform": "Trimmed value matching YYYY-MM-DD → biography.dateOfBirth. Otherwise omit dateOfBirth, preserve original under extensions.greenAgentCreator.raw['personalInfo.dob'], warn. No locale date guessing."
+    },
+    {
+      "source": "professionKey",
+      "classification": "mapped",
+      "canonical": "biography.profession",
+      "transform": "Always store raw value in extensions.greenAgentCreator.workflow.professionKey. Known configured key → biography.profession = professionKeyMap[key]. custom_profession → use customProfessionName rule. Unknown non-empty key → biography.profession = key + warning. null/missing → omit biography.profession unless custom name/flag supplies it. Diagnose disagreement with isCustomProfession/customProfessionName."
+    },
+    {
+      "source": "customProfessionName",
+      "classification": "mapped",
+      "canonical": "biography.profession",
+      "transform": "Always store in workflow.customProfessionName. When profession is custom (professionKey === 'custom_profession' or isCustomProfession === true), trimmed non-empty name → biography.profession; empty → warn and omit or fallback 'Custom profession'. When not custom, do not override catalog label; retain as workflow only."
+    },
+    {
+      "source": "isCustomProfession",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.isCustomProfession",
+      "transform": "Retain boolean. Diagnose disagreement with professionKey/customProfessionName; do not silently override either."
+    },
+    {
+      "source": "stats.STR",
+      "classification": "mapped",
+      "canonical": "statistics.strength.score",
+      "transform": "Required finite number → integer score. Warn if outside 3–18; do not clamp. Non-finite/non-numeric → block."
+    },
+    {
+      "source": "stats.CON",
+      "classification": "mapped",
+      "canonical": "statistics.constitution.score",
+      "transform": "Required finite number → integer score. Warn if outside 3–18; do not clamp. Non-finite/non-numeric → block."
+    },
+    {
+      "source": "stats.DEX",
+      "classification": "mapped",
+      "canonical": "statistics.dexterity.score",
+      "transform": "Required finite number → integer score. Warn if outside 3–18; do not clamp. Non-finite/non-numeric → block."
+    },
+    {
+      "source": "stats.INT",
+      "classification": "mapped",
+      "canonical": "statistics.intelligence.score",
+      "transform": "Required finite number → integer score. Warn if outside 3–18; do not clamp. Non-finite/non-numeric → block."
+    },
+    {
+      "source": "stats.POW",
+      "classification": "mapped",
+      "canonical": "statistics.power.score",
+      "transform": "Required finite number → integer score. Warn if outside 3–18; do not clamp. Non-finite/non-numeric → block."
+    },
+    {
+      "source": "stats.CHA",
+      "classification": "mapped",
+      "canonical": "statistics.charisma.score",
+      "transform": "Required finite number → integer score. Warn if outside 3–18; do not clamp. Non-finite/non-numeric → block."
+    },
+    {
+      "source": "stats.*",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.raw['stats.<key>']",
+      "transform": "Unknown nested stat keys preserved with warning; never override the six required stats."
+    },
+    {
+      "source": "distinguishingFeatures.STR",
+      "classification": "mapped",
+      "canonical": "statistics.strength.distinguishingFeature",
+      "transform": "Non-empty string → distinguishingFeature. Empty/missing → omit."
+    },
+    {
+      "source": "distinguishingFeatures.CON",
+      "classification": "mapped",
+      "canonical": "statistics.constitution.distinguishingFeature",
+      "transform": "Non-empty string → distinguishingFeature. Empty/missing → omit."
+    },
+    {
+      "source": "distinguishingFeatures.DEX",
+      "classification": "mapped",
+      "canonical": "statistics.dexterity.distinguishingFeature",
+      "transform": "Non-empty string → distinguishingFeature. Empty/missing → omit."
+    },
+    {
+      "source": "distinguishingFeatures.INT",
+      "classification": "mapped",
+      "canonical": "statistics.intelligence.distinguishingFeature",
+      "transform": "Non-empty string → distinguishingFeature. Empty/missing → omit."
+    },
+    {
+      "source": "distinguishingFeatures.POW",
+      "classification": "mapped",
+      "canonical": "statistics.power.distinguishingFeature",
+      "transform": "Non-empty string → distinguishingFeature. Empty/missing → omit."
+    },
+    {
+      "source": "distinguishingFeatures.CHA",
+      "classification": "mapped",
+      "canonical": "statistics.charisma.distinguishingFeature",
+      "transform": "Non-empty string → distinguishingFeature. Empty/missing → omit."
+    },
+    {
+      "source": "distinguishingFeatures.*",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.raw['distinguishingFeatures.<key>']",
+      "transform": "Unknown keys preserved with warning."
+    },
+    {
+      "source": "derivedAttributes.HP",
+      "classification": "mapped",
+      "canonical": "resources.hitPoints.maximum",
+      "transform": "Explicit finite number preserved. Missing/null → derive ceil((STR+CON)/2). Warn if explicit value conflicts with formula; keep explicit."
+    },
+    {
+      "source": "derivedAttributes.WP",
+      "classification": "mapped",
+      "canonical": "resources.willpower.maximum",
+      "transform": "Explicit finite number preserved. Missing/null → derive from effective POW per pinned creator formula. Warn on conflict; keep explicit."
+    },
+    {
+      "source": "derivedAttributes.SAN",
+      "classification": "mapped",
+      "canonical": "resources.sanity.maximum",
+      "transform": "Explicit finite number preserved. Missing/null → derive per pinned creator traumatic-background rules. Warn on conflict; keep explicit."
+    },
+    {
+      "source": "derivedAttributes.BP",
+      "classification": "mapped",
+      "canonical": "resources.breakingPoint.baseline",
+      "transform": "Explicit finite number preserved. Missing/null → derive per pinned creator formula. Warn on conflict; keep explicit."
+    },
+    {
+      "source": "derivedCurrent.HP",
+      "classification": "mapped",
+      "canonical": "resources.hitPoints.current",
+      "transform": "Explicit value (including 0) preserved. Missing key → default to hitPoints.maximum. Warn if current > maximum."
+    },
+    {
+      "source": "derivedCurrent.WP",
+      "classification": "mapped",
+      "canonical": "resources.willpower.current",
+      "transform": "Explicit value (including 0) preserved. Missing key → default to willpower.maximum. Warn if current > maximum."
+    },
+    {
+      "source": "derivedCurrent.SAN",
+      "classification": "mapped",
+      "canonical": "resources.sanity.current",
+      "transform": "Explicit value (including 0) preserved. Missing key → default to sanity.maximum. Warn if current > maximum."
+    },
+    {
+      "source": "derivedCurrent.BP",
+      "classification": "mapped",
+      "canonical": "resources.breakingPoint.current",
+      "transform": "Explicit value (including 0) preserved. Missing key → default to breakingPoint.baseline. Warn if current > baseline when that is incoherent for play."
+    },
+    {
+      "source": "bonds",
+      "classification": "mapped",
+      "canonical": "relationships.bonds",
+      "transform": "Array of bond objects. Warn if length > 6. Do not use array index as durable identity."
+    },
+    {
+      "source": "bonds[].description",
+      "classification": "mapped",
+      "canonical": "relationships.bonds[].name",
+      "transform": "Trimmed non-empty → name. Empty → synthetic placeholder name + warning. Canonical relationship and description left unset."
+    },
+    {
+      "source": "bonds[].score",
+      "classification": "mapped",
+      "canonical": "relationships.bonds[].score",
+      "transform": "Finite number → integer score. Warn if score > CHA. Non-numeric → diagnose and preserve raw element."
+    },
+    {
+      "source": "bonds[] (generated)",
+      "classification": "derived",
+      "canonical": "relationships.bonds[].id|damagedSinceLastHomeScene",
+      "transform": "New UUID v4 id per bond. damagedSinceLastHomeScene = false (source has no damage flag)."
+    },
+    {
+      "source": "motivations",
+      "classification": "mapped",
+      "canonical": "psychology.motivations",
+      "transform": "Non-empty strings → motivations with new id, statement = exact text, crossedOut = false, no linkedDisorderId. Empty strings omitted from canonical; retain original array including empties in workflow when useful for re-export fidelity."
+    },
+    {
+      "source": "traumaticBackground",
+      "classification": "mapped",
+      "canonical": "psychology.traumaticBackground",
+      "transform": "Known enum strings extreme_violence|captivity|hard_experience|things_man_was_not_meant_to_know → copy as text. null/missing → omit. Unknown non-empty → copy + warn."
+    },
+    {
+      "source": "basePOW",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.basePOW",
+      "transform": "Preserve when present. Diagnose incoherent captivity combinations. No canonical field."
+    },
+    {
+      "source": "adaptations",
+      "classification": "mapped",
+      "canonical": "psychology.adaptations",
+      "transform": "Each non-empty string → adaptation with new id. Case/whitespace-tolerant match against adaptationMatchers → kind violence|helplessness with adapted=true and no incidentMarks. Otherwise kind=other, label=exact text, adapted=true. Empty strings dropped. Never invent incidentMarks."
+    },
+    {
+      "source": "disorder",
+      "classification": "mapped",
+      "canonical": "psychology.disorders",
+      "transform": "Non-empty string → single disorder { new id, name = exact text, cured = false }. null/missing/empty → no disorder entry; preserve raw distinction in workflow/raw if present."
+    },
+    {
+      "source": "items",
+      "classification": "mapped",
+      "canonical": "inventory.gear",
+      "transform": "Each retained string (including interior empties if present as elements) → gear { new id, name = exact string, equipped = false }. Do not infer weapon/armor/ritual/tome subtype. Warn if count > 50."
+    },
+    {
+      "source": "notes",
+      "classification": "mapped",
+      "canonical": "notes.player",
+      "transform": "Non-empty string → one notes.player entry { format: 'plain', content: exact text }. Empty/missing → no player note. notes.handler remains []. Do not truncate."
+    },
+    {
+      "source": "skills",
+      "classification": "mapped",
+      "canonical": "skills.standard|skills.custom",
+      "transform": "Required array. Map each element per skills[] rules. Block if not an array."
+    },
+    {
+      "source": "skills[].instanceId",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.skillConstruction[<instanceId>]",
+      "transform": "Preserve as skillConstruction key / correlation id. Never parse for meaning. Not used as canonical skill id."
+    },
+    {
+      "source": "skills[].key",
+      "classification": "mapped",
+      "canonical": "skills.standard.*|skills.custom[].group",
+      "transform": "Ordinary key in skillKeyMap → standard skill id. Typed family → custom.group = key when imported. unarmed_combat → custom (see known-loss). Unknown key → custom + warning."
+    },
+    {
+      "source": "skills[].typeName",
+      "classification": "mapped",
+      "canonical": "skills.custom[].label",
+      "transform": "For typed families: null/'' placeholder → skip unless non-zero value or resolvable fail mark. Non-blank → custom.label = trimmed typeName. For ordinary skills typeName should be null; unexpected values preserved in skillConstruction/raw."
+    },
+    {
+      "source": "skills[].value",
+      "classification": "mapped",
+      "canonical": "skills.standard.*.proficiency|skills.custom[].proficiency",
+      "transform": "Finite number → integer proficiency. Preserve 0–99; warn on other finite values; reject non-finite/non-numeric element values."
+    },
+    {
+      "source": "skills[].baseValueFromProfession",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.skillConstruction[<instanceId>].baseValueFromProfession",
+      "transform": "Builder provenance only."
+    },
+    {
+      "source": "skills[].increases",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.skillConstruction[<instanceId>].increases",
+      "transform": "Builder provenance only."
+    },
+    {
+      "source": "skills[].isProfessional",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.skillConstruction[<instanceId>].isProfessional",
+      "transform": "Builder provenance only."
+    },
+    {
+      "source": "skills[].isChoiceSkill",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.skillConstruction[<instanceId>].isChoiceSkill",
+      "transform": "Builder provenance only."
+    },
+    {
+      "source": "skills[].slotId",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.skillConstruction[<instanceId>].slotId",
+      "transform": "Builder provenance only."
+    },
+    {
+      "source": "skills[key=unarmed_combat]",
+      "classification": "intentionally_lossy",
+      "canonical": "skills.custom[]",
+      "transform": "Map to custom skill { group: 'unarmed_combat', label: 'Unarmed Combat', proficiency, failureMarked }. Loses standard-skill identity (no unarmedCombat in canonical 1.0.0)."
+    },
+    {
+      "source": "skillFailMarks",
+      "classification": "mapped",
+      "canonical": "skills.standard.*.failureMarked|skills.custom[].failureMarked",
+      "transform": "For each instanceId present in imported skills, set failureMarked true on the mapped skill. Unresolved IDs → extensions.greenAgentCreator.raw.skillFailMarks + warning."
+    },
+    {
+      "source": "customProfessionBonds",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.customProfessionBonds",
+      "transform": "Workflow only."
+    },
+    {
+      "source": "customProfessionSkillPointBudget",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.customProfessionSkillPointBudget",
+      "transform": "Workflow only."
+    },
+    {
+      "source": "customProfessionSelectedSkills",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.customProfessionSelectedSkills",
+      "transform": "Workflow only."
+    },
+    {
+      "source": "customProfessionSetupStage",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.customProfessionSetupStage",
+      "transform": "Workflow only."
+    },
+    {
+      "source": "skillBoostsUsed",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.skillBoostsUsed",
+      "transform": "Workflow only."
+    },
+    {
+      "source": "orSkillChoices",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.orSkillChoices",
+      "transform": "Workflow only."
+    },
+    {
+      "source": "profChoiceSkillSelections",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.profChoiceSkillSelections",
+      "transform": "Workflow only."
+    },
+    {
+      "source": "statGenerationMethod",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.statGenerationMethod",
+      "transform": "Workflow only. Must not override explicit stats."
+    },
+    {
+      "source": "statArrayChoice",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.statArrayChoice",
+      "transform": "Workflow only."
+    },
+    {
+      "source": "rolledStatValues",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.rolledStatValues",
+      "transform": "Workflow only."
+    },
+    {
+      "source": "statAssignments",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.statAssignments",
+      "transform": "Workflow only."
+    },
+    {
+      "source": "traumaticBackgroundEffects",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.workflow.traumaticBackgroundEffects",
+      "transform": "Workflow bookkeeping including _effectsApplied, hardExperienceSkills, removed-bond data."
+    },
+    {
+      "source": "sheetBaseline",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.sheetBaseline",
+      "transform": "Retain as-is. Live root authoritative. Baseline/live differences → informational diagnostics only."
+    },
+    {
+      "source": "id",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.identity.id",
+      "transform": "Also may populate provenance.source.recordId when non-null. Never used as agentId."
+    },
+    {
+      "source": "createdDate",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.identity.createdDate",
+      "transform": "Creator-local timestamp only."
+    },
+    {
+      "source": "meta",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.identity.meta",
+      "transform": "Retain if present."
+    },
+    {
+      "source": "version",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.identity.version",
+      "transform": "Retain if present. Not a reliable schema discriminator."
+    },
+    {
+      "source": "*",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.greenAgentCreator.raw['<path>']",
+      "transform": "Any unclassified root or nested field → raw with path-specific warning."
+    },
+    {
+      "source": "(generated) schemaVersion",
+      "classification": "derived",
+      "canonical": "schemaVersion",
+      "transform": "Constant '1.0.0'."
+    },
+    {
+      "source": "(generated) agentId",
+      "classification": "derived",
+      "canonical": "agentId",
+      "transform": "New lowercase UUID v4."
+    },
+    {
+      "source": "(generated) provenance",
+      "classification": "derived",
+      "canonical": "provenance",
+      "transform": "adapter.id=green-agent-creator-import; adapter.version=runtime semver; source.format=green-agent-creator; source.version=5c9e92d; source.recordId=creator id when present; contentHash=sha256 of raw input bytes; capturedAt optional."
+    },
+    {
+      "source": "(absent) skills.specialTraining",
+      "classification": "unsupported",
+      "canonical": "skills.specialTraining",
+      "transform": "Always []. GAC has no special-training model."
+    },
+    {
+      "source": "(absent) inventory.weapons",
+      "classification": "unsupported",
+      "canonical": "inventory.weapons",
+      "transform": "Always []. Free-text items never silently promoted."
+    },
+    {
+      "source": "(absent) inventory.armor",
+      "classification": "unsupported",
+      "canonical": "inventory.armor",
+      "transform": "Always []."
+    },
+    {
+      "source": "(absent) inventory.rituals",
+      "classification": "unsupported",
+      "canonical": "inventory.rituals",
+      "transform": "Always []."
+    },
+    {
+      "source": "(absent) inventory.tomes",
+      "classification": "unsupported",
+      "canonical": "inventory.tomes",
+      "transform": "Always []."
+    },
+    {
+      "source": "(absent) notes.handler",
+      "classification": "unsupported",
+      "canonical": "notes.handler",
+      "transform": "Always []."
+    },
+    {
+      "source": "(absent) identity.aliases",
+      "classification": "unsupported",
+      "canonical": "identity.aliases",
+      "transform": "Leave unset."
+    },
+    {
+      "source": "(absent) biography.education",
+      "classification": "unsupported",
+      "canonical": "biography.education",
+      "transform": "Leave unset."
+    },
+    {
+      "source": "(absent) biography.physicalDescription",
+      "classification": "unsupported",
+      "canonical": "biography.physicalDescription",
+      "transform": "Leave unset."
+    },
+    {
+      "source": "(absent) resources.wounds|exhausted|firstAidAttempted",
+      "classification": "unsupported",
+      "canonical": "resources.wounds|exhausted|firstAidAttempted",
+      "transform": "Leave unset."
+    },
+    {
+      "source": "(absent) campaignState.impossibleLandscapes",
+      "classification": "unsupported",
+      "canonical": "campaignState.impossibleLandscapes",
+      "transform": "Leave unset."
+    },
+    {
+      "source": "(out of capability) local-storage wrapper",
+      "classification": "unsupported",
+      "canonical": null,
+      "transform": "Required input is the raw character object. Wrapper recognition is non-blocking future convenience, not this capability."
+    }
+  ]
+}

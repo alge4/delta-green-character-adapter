@@ -1,0 +1,158 @@
+{
+  "capability": "green-agent-creator-5c9e92d-to-canonical-1.0.0",
+  "fidelityClass": "lossy-semantic",
+  "summary": "Import preserves playable Agent meaning with enumerated structural defaults and one standard-skill demotion. Creator workflow state is retained in extensions rather than treated as loss.",
+  "losses": [
+    {
+      "id": "unarmed-combat-not-standard",
+      "severity": "structural",
+      "source": "skills[key=unarmed_combat]",
+      "canonical": "skills.custom[]",
+      "loss": "GAC models Unarmed Combat as a first-class skill; canonical Agent 1.0.0 has no unarmedCombat standard skill id. Rating is preserved as a custom skill (group unarmed_combat, label Unarmed Combat) instead of skills.standard.",
+      "diagnostic": "warning",
+      "remediation": "Accept custom skill, or later amend canonical schema and remap."
+    },
+    {
+      "id": "items-are-gear-only",
+      "severity": "structural",
+      "source": "items[]",
+      "canonical": "inventory.gear[]",
+      "loss": "Free-text equipment cannot populate weapons, armor, rituals, or tomes without user remapping. Prose that names a weapon remains gear.",
+      "diagnostic": "information",
+      "remediation": "One-import remapping choice (issue #6) may promote specific gear entries later."
+    },
+    {
+      "id": "bond-damage-default-false",
+      "severity": "defaulted-absent-semantics",
+      "source": "bonds[]",
+      "canonical": "relationships.bonds[].damagedSinceLastHomeScene",
+      "loss": "GAC has no bond-damage flag. Import always sets damagedSinceLastHomeScene to false.",
+      "diagnostic": "information",
+      "remediation": "Existing-Actor update policy must not overwrite live bond damage without review."
+    },
+    {
+      "id": "bond-description-becomes-name",
+      "severity": "shape-normalization",
+      "source": "bonds[].description",
+      "canonical": "relationships.bonds[].name",
+      "loss": "GAC's single bond text field becomes canonical name; canonical relationship and description remain unset. Not semantic loss of the text, but loss of GAC field naming on round-trip to other tools.",
+      "diagnostic": "information",
+      "remediation": "None required for import fidelity of display identity."
+    },
+    {
+      "id": "motivation-crossed-out-default-false",
+      "severity": "defaulted-absent-semantics",
+      "source": "motivations[]",
+      "canonical": "psychology.motivations[].crossedOut",
+      "loss": "GAC motivations are plain strings. crossedOut defaults to false; linkedDisorderId is never auto-set.",
+      "diagnostic": "information",
+      "remediation": "User may mark crossed-out / link disorders after import."
+    },
+    {
+      "id": "disorder-cured-default-false",
+      "severity": "defaulted-absent-semantics",
+      "source": "disorder",
+      "canonical": "psychology.disorders[].cured",
+      "loss": "Single disorder string becomes one uncured disorder with no description.",
+      "diagnostic": "information",
+      "remediation": "None required unless Handler marks cured later."
+    },
+    {
+      "id": "adaptation-incident-marks-omitted",
+      "severity": "defaulted-absent-semantics",
+      "source": "adaptations[]",
+      "canonical": "psychology.adaptations[].incidentMarks",
+      "loss": "GAC expresses adapted state as free text, not 0–3 incident marks. Import sets adapted=true for recognized or other lines and never invents incidentMarks.",
+      "diagnostic": "information",
+      "remediation": "User may add incident history in Foundry/canonical editors."
+    },
+    {
+      "id": "non-iso-dob-omitted",
+      "severity": "normalization",
+      "source": "personalInfo.dob",
+      "canonical": "biography.dateOfBirth",
+      "loss": "Non YYYY-MM-DD dob values cannot populate strict ISO dateOfBirth. Original text is preserved in the extension.",
+      "diagnostic": "warning",
+      "remediation": "Later Foundry-import UI may ask for campaign epoch / age; out of scope for this capability."
+    },
+    {
+      "id": "creator-ids-not-canonical",
+      "severity": "identity",
+      "source": "id|skills[].instanceId",
+      "canonical": "agentId|entity ids",
+      "loss": "Creator-local ids are not durable canonical identities. New UUID v4 values are generated for agentId, bonds, motivations, disorders, adaptations, gear, and custom skills.",
+      "diagnostic": "information",
+      "remediation": "Stable Actor binding uses adapter keys on Foundry side (issues #7/#10), not GAC ids."
+    },
+    {
+      "id": "no-special-training",
+      "severity": "unsupported-source",
+      "source": null,
+      "canonical": "skills.specialTraining",
+      "loss": "GAC has no special-training model. Canonical array is empty.",
+      "diagnostic": "information",
+      "remediation": "Add special training after import if needed."
+    },
+    {
+      "id": "no-handler-notes",
+      "severity": "unsupported-source",
+      "source": "notes",
+      "canonical": "notes.handler",
+      "loss": "GAC has a single notes string mapped only to notes.player. Handler notes stay empty.",
+      "diagnostic": "information",
+      "remediation": "Handler may add private notes in Foundry."
+    },
+    {
+      "id": "no-structured-combat-gear-or-mythos-items",
+      "severity": "unsupported-source",
+      "source": null,
+      "canonical": "inventory.weapons|armor|rituals|tomes",
+      "loss": "No structured GAC sources for these collections; they import empty.",
+      "diagnostic": "information",
+      "remediation": "Create Items after import or use one-import remapping from gear prose."
+    },
+    {
+      "id": "no-aliases-education-physical-description",
+      "severity": "unsupported-source",
+      "source": null,
+      "canonical": "identity.aliases|biography.education|biography.physicalDescription",
+      "loss": "Fields absent from GAC remain unset.",
+      "diagnostic": "information",
+      "remediation": "Fill after import."
+    },
+    {
+      "id": "no-wounds-exhausted-first-aid",
+      "severity": "unsupported-source",
+      "source": null,
+      "canonical": "resources.wounds|exhausted|firstAidAttempted",
+      "loss": "Fields absent from GAC remain unset.",
+      "diagnostic": "information",
+      "remediation": "Fill after import / during play."
+    },
+    {
+      "id": "no-impossible-landscapes",
+      "severity": "unsupported-source",
+      "source": null,
+      "canonical": "campaignState.impossibleLandscapes",
+      "loss": "GAC does not model Impossible Landscapes campaign fields.",
+      "diagnostic": "information",
+      "remediation": "Set in Foundry/campaign tools if applicable."
+    },
+    {
+      "id": "regenerated-entity-ids-break-byte-round-trip",
+      "severity": "identity",
+      "source": "collections",
+      "canonical": "collection entity ids",
+      "loss": "Semantic round-trip compares meaning, not byte equality or regenerated UUIDs. A→canonical→A is not claimed by this capability.",
+      "diagnostic": "information",
+      "remediation": "Export capability would be a separate ticket."
+    }
+  ],
+  "notLosses": [
+    "Creator workflow fields retained under extensions.greenAgentCreator (workflow, skillConstruction, sheetBaseline, identity).",
+    "Unknown roots/keys retained under extensions.greenAgentCreator.raw.",
+    "Explicit derivedCurrent zeros preserved (not treated as missing).",
+    "Out-of-range stats/skills warned but not silently clamped.",
+    "Profession keys retained in workflow even when biography.profession shows the English label."
+  ]
+}
