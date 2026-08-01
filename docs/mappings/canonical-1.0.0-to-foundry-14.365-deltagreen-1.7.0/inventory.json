@@ -1,0 +1,379 @@
+{
+  "capability": {
+    "id": "canonical-1.0.0-to-foundry-14.365-deltagreen-1.7.0",
+    "direction": "export",
+    "adapterId": "foundry-deltagreen-export",
+    "source": {
+      "schema": "canonical-agent",
+      "version": "1.0.0"
+    },
+    "target": {
+      "format": "foundry-deltagreen",
+      "version": "14.365+1.7.0",
+      "systemCommit": "7d86f90e1d25d47a316b94e072b14a34ca80366b"
+    },
+    "fidelityClass": "lossy-semantic",
+    "contract": "docs/research/foundry-14.365-delta-green-1.7.0-contract.md",
+    "decision": "docs/research/foundry-14.365-delta-green-1.7.0-export-mapping.md",
+    "knownLoss": "docs/mappings/canonical-1.0.0-to-foundry-14.365-deltagreen-1.7.0/known-loss.json",
+    "usesUpdatePolicies": ["docs via issues #7 and #10"]
+  },
+  "flagNamespace": "deltaGreenCharacterAdapter",
+  "extensionReadThrough": {
+    "namespace": "foundry",
+    "keys": ["identity", "sheet", "raw"],
+    "note": "Optional restore of prior Foundry sheet knobs and key bindings when present; never required for semantic export from other adapters."
+  },
+  "blockingRules": [
+    "input must parse as canonical Agent schema 1.0.0",
+    "runtime target must be Foundry 14.365 + deltagreen 1.7.0 for exact-target claims",
+    "create/merge apply requires permission to update the Actor (#7)"
+  ],
+  "statKeyMap": {
+    "strength": "str",
+    "constitution": "con",
+    "dexterity": "dex",
+    "intelligence": "int",
+    "power": "pow",
+    "charisma": "cha"
+  },
+  "skillKeyMap": {
+    "accounting": "accounting",
+    "alertness": "alertness",
+    "anthropology": "anthropology",
+    "archeology": "archeology",
+    "artillery": "artillery",
+    "athletics": "athletics",
+    "bureaucracy": "bureaucracy",
+    "computerScience": "computer_science",
+    "criminology": "criminology",
+    "demolitions": "demolitions",
+    "disguise": "disguise",
+    "dodge": "dodge",
+    "drive": "drive",
+    "firearms": "firearms",
+    "firstAid": "first_aid",
+    "forensics": "forensics",
+    "heavyMachinery": "heavy_machiner",
+    "heavyWeapons": "heavy_weapons",
+    "history": "history",
+    "humint": "humint",
+    "law": "law",
+    "medicine": "medicine",
+    "meleeWeapons": "melee_weapons",
+    "navigate": "navigate",
+    "occult": "occult",
+    "persuade": "persuade",
+    "pharmacy": "pharmacy",
+    "psychotherapy": "psychotherapy",
+    "ride": "ride",
+    "search": "search",
+    "sigint": "sigint",
+    "stealth": "stealth",
+    "surgery": "surgery",
+    "survival": "survival",
+    "swim": "swim",
+    "unnatural": "unnatural"
+  },
+  "typedSkillFamilies": [
+    "art",
+    "craft",
+    "foreign_language",
+    "military_science",
+    "pilot",
+    "science"
+  ],
+  "standardSkillDefaults": {
+    "note": "On create, write system default labels from DG 1.7.0 human-skills schema. On merge, preserve existing labels unless empty."
+  },
+  "paths": [
+    {
+      "canonical": "schemaVersion",
+      "classification": "ignored",
+      "target": null,
+      "transform": "Canonical schema marker only. Do not write to system.schemaVersion (DG internal marker; default/preserve 1)."
+    },
+    {
+      "canonical": "agentId",
+      "classification": "mapped",
+      "target": "flags.deltaGreenCharacterAdapter.agentId",
+      "transform": "Always write. Never overwrite a different bound agentId without explicit rebind (#7)."
+    },
+    {
+      "canonical": "identity.name",
+      "classification": "mapped",
+      "target": "name",
+      "transform": "Non-empty → Actor name. Missing on create → system/user must supply or warn; do not invent."
+    },
+    {
+      "canonical": "identity.aliases",
+      "classification": "mapped",
+      "target": "flags.deltaGreenCharacterAdapter.unrepresentable.aliases",
+      "transform": "Write string array when present. No system biography field."
+    },
+    {
+      "canonical": "biography.profession",
+      "classification": "mapped",
+      "target": "system.biography.profession",
+      "transform": "Write string when present; otherwise leave default/empty per mode."
+    },
+    {
+      "canonical": "biography.employer",
+      "classification": "mapped",
+      "target": "system.biography.employer",
+      "transform": "Write string when present."
+    },
+    {
+      "canonical": "biography.nationality",
+      "classification": "mapped",
+      "target": "system.biography.nationality",
+      "transform": "Write string when present."
+    },
+    {
+      "canonical": "biography.sex",
+      "classification": "mapped",
+      "target": "system.biography.sex",
+      "transform": "Write string when present."
+    },
+    {
+      "canonical": "biography.age",
+      "classification": "mapped",
+      "target": "system.biography.age",
+      "transform": "Non-negative int → decimal string."
+    },
+    {
+      "canonical": "biography.dateOfBirth",
+      "classification": "mapped",
+      "target": "flags.deltaGreenCharacterAdapter.unrepresentable.dateOfBirth",
+      "transform": "ISO date → flag. No system field."
+    },
+    {
+      "canonical": "biography.education",
+      "classification": "mapped",
+      "target": "system.biography.education",
+      "transform": "Write string when present."
+    },
+    {
+      "canonical": "biography.physicalDescription",
+      "classification": "mapped",
+      "target": "system.physical.description",
+      "transform": "HTML content as-is (sanitized). Plain/markdown → safe HTML conversion + info diagnostic."
+    },
+    {
+      "canonical": "statistics.<stat>.score",
+      "classification": "mapped",
+      "target": "system.statistics.<statKeyMap[stat]>.value",
+      "transform": "Write integer. Warn if outside 3–18; do not clamp."
+    },
+    {
+      "canonical": "statistics.<stat>.distinguishingFeature",
+      "classification": "mapped",
+      "target": "system.statistics.<statKeyMap[stat]>.distinguishing_feature",
+      "transform": "Write string when present."
+    },
+    {
+      "canonical": "resources.hitPoints.current",
+      "classification": "mapped",
+      "target": "system.health.value",
+      "transform": "Write integer. Merge: mutable; preserve by default (#7)."
+    },
+    {
+      "canonical": "resources.hitPoints.maximum",
+      "classification": "derived",
+      "target": "system.health.max",
+      "transform": "Write formula ceil((STR+CON)/2) from exported stats. Canonical maximum disagreement → warn; still write formula-consistent max (system re-prepares)."
+    },
+    {
+      "canonical": "resources.willpower.current",
+      "classification": "mapped",
+      "target": "system.wp.value",
+      "transform": "Write integer. Merge: mutable default preserve."
+    },
+    {
+      "canonical": "resources.willpower.maximum",
+      "classification": "derived",
+      "target": "system.wp.max",
+      "transform": "Write POW. Disagreement with canonical maximum → warn."
+    },
+    {
+      "canonical": "resources.sanity.current",
+      "classification": "mapped",
+      "target": "system.sanity.value",
+      "transform": "If current >= 100 → warn and write POW×5 (Foundry cannot retain ≥100 through prepare). Else write current. Merge: mutable default preserve."
+    },
+    {
+      "canonical": "resources.sanity.maximum",
+      "classification": "derived",
+      "target": null,
+      "transform": "Do not write prepared sanity.max. POW×5 is the system projection."
+    },
+    {
+      "canonical": "resources.breakingPoint.current",
+      "classification": "mapped",
+      "target": "system.sanity.currentBreakingPoint",
+      "transform": "Write integer. Avoid writing 101 unless that is the true current. Merge: mutable default preserve."
+    },
+    {
+      "canonical": "resources.breakingPoint.baseline",
+      "classification": "mapped",
+      "target": "flags.deltaGreenCharacterAdapter.unrepresentable.breakingPointBaseline",
+      "transform": "Always write when present. No system baseline field."
+    },
+    {
+      "canonical": "resources.wounds",
+      "classification": "mapped",
+      "target": "system.physical.wounds",
+      "transform": "Write text content (HTML allowed). Merge: mutable default preserve."
+    },
+    {
+      "canonical": "resources.exhausted",
+      "classification": "mapped",
+      "target": "system.physical.exhausted",
+      "transform": "Write boolean. Merge: mutable default preserve."
+    },
+    {
+      "canonical": "resources.firstAidAttempted",
+      "classification": "mapped",
+      "target": "system.physical.firstAidAttempted",
+      "transform": "Write boolean. Merge: mutable default preserve."
+    },
+    {
+      "canonical": "skills.standard.<id>",
+      "classification": "mapped",
+      "target": "system.skills.<skillKeyMap[id]>",
+      "transform": "Write proficiency and failure (omit failure for unnatural). Labels: defaults on create; preserve on merge if set."
+    },
+    {
+      "canonical": "skills.custom[group=unarmed_combat]",
+      "classification": "mapped",
+      "target": "system.skills.unarmed_combat",
+      "transform": "When group is unarmed_combat, write Foundry standard skill key rather than typedSkills."
+    },
+    {
+      "canonical": "skills.custom[]",
+      "classification": "mapped",
+      "target": "system.typedSkills.<tsKey>",
+      "transform": "Handbook family groups → typedSkills entries. Reuse bindings / extensions.foundry.identity keys when present; else allocate tskill_NN. label = specialization; proficiency; failure."
+    },
+    {
+      "canonical": "skills.specialTraining[]",
+      "classification": "mapped",
+      "target": "system.specialTraining[]",
+      "transform": "Write { name, id, attribute } with bound or new local id. attribute from uses (stat key, skill key, or custom skill binding)."
+    },
+    {
+      "canonical": "psychology.adaptations[kind=violence|helplessness]",
+      "classification": "mapped",
+      "target": "system.sanity.adaptations.<kind>.incident1..3",
+      "transform": "If incidentMarks set → that many leading trues. Else adapted true → all three true + info. Else all false. Merge: mutable default preserve."
+    },
+    {
+      "canonical": "psychology.adaptations[kind=other]",
+      "classification": "lossy",
+      "target": "flags.deltaGreenCharacterAdapter.unrepresentable.otherAdaptations",
+      "transform": "No Foundry adaptation bits. Park under unrepresentable + warn."
+    },
+    {
+      "canonical": "psychology.motivations[]",
+      "classification": "mapped",
+      "target": "items[type=motivation]",
+      "transform": "One Item per motivation. Item.name = statement; crossedOut; if linkedDisorderId resolves fill disorder/disorderCured."
+    },
+    {
+      "canonical": "psychology.disorders[]",
+      "classification": "mapped",
+      "target": "items[type=motivation]",
+      "transform": "Linked disorders fold into their motivation Item. Unlinked → motivation Item with statement from disorder name (or 'Disorder: <name>') and system.disorder fields; info diagnostic for normalization."
+    },
+    {
+      "canonical": "psychology.traumaticBackground",
+      "classification": "mapped",
+      "target": "flags.deltaGreenCharacterAdapter.unrepresentable.traumaticBackground",
+      "transform": "No Agent system field in 1.7.0. Park in flags when present."
+    },
+    {
+      "canonical": "relationships.bonds[]",
+      "classification": "mapped",
+      "target": "items[type=bond]",
+      "transform": "Item.name = name; system.score, relationship, hasBeenDamagedSinceLastHomeScene, description HTML when present."
+    },
+    {
+      "canonical": "inventory.weapons[]",
+      "classification": "mapped",
+      "target": "items[type=weapon]",
+      "transform": "Map fields; ammo ← ammunition; skill string or reverse skillKeyMap; isLethal ← lethality > 0 when unset; do not invent customSkillTarget. Unarmed: bind AutoAdded Item, never duplicate."
+    },
+    {
+      "canonical": "inventory.armor[]",
+      "classification": "mapped",
+      "target": "items[type=armor]",
+      "transform": "name, description, protection, expense, equipped."
+    },
+    {
+      "canonical": "inventory.gear[]",
+      "classification": "mapped",
+      "target": "items[type=gear]",
+      "transform": "name, description, expense, equipped."
+    },
+    {
+      "canonical": "inventory.tomes[]",
+      "classification": "mapped",
+      "target": "items[type=tome]",
+      "transform": "Full tome system fields including handlerNotes/revealed. Handler content GM-gated on merge (#7/#10)."
+    },
+    {
+      "canonical": "inventory.rituals[]",
+      "classification": "mapped",
+      "target": "items[type=ritual]",
+      "transform": "Full ritual system fields including learnedSanity ← learnedSanityLoss."
+    },
+    {
+      "canonical": "notes.player",
+      "classification": "mapped",
+      "target": "flags.deltaGreenCharacterAdapter.unrepresentable.notes.player",
+      "transform": "No Agent notes field. Park array in flags."
+    },
+    {
+      "canonical": "notes.handler",
+      "classification": "mapped",
+      "target": "flags.deltaGreenCharacterAdapter.unrepresentable.notes.handler",
+      "transform": "Park in flags; GM-gated on apply."
+    },
+    {
+      "canonical": "campaignState.impossibleLandscapes",
+      "classification": "mapped",
+      "target": "system.corruption",
+      "transform": "corruption→value; seenTheYellowSign→haveSeenTheYellowSign; gift; insight. Omit/clear only under Replace completeness rules (#10). Merge: treat as campaign state; preserve by default."
+    },
+    {
+      "canonical": "provenance",
+      "classification": "mapped",
+      "target": "flags.deltaGreenCharacterAdapter.audit|bindings",
+      "transform": "Compact audit on successful apply: adapter/source identities, content hash, capability id, timestamp, user. No raw payload."
+    },
+    {
+      "canonical": "extensions.foundry.sheet",
+      "classification": "mapped",
+      "target": "system.settings|system.schemaVersion|system.physical.exhaustedPenalty|resource min",
+      "transform": "Optional restore when exporting back to Foundry with that extension present. Other adapters' extensions ignored."
+    },
+    {
+      "canonical": "extensions.*",
+      "classification": "ignored",
+      "target": null,
+      "transform": "Foreign adapter extensions are not written into DG system fields. May remain untouched in flags only if a future convention says so; v1 leaves them off the Actor."
+    },
+    {
+      "canonical": null,
+      "classification": "generated",
+      "target": "type",
+      "transform": "Always \"agent\"."
+    },
+    {
+      "canonical": null,
+      "classification": "ignored",
+      "target": "_id|_stats|folder|ownership|prototypeToken|sort|img|effects",
+      "transform": "Create: omit (Foundry/system defaults). Merge: preserve existing. Never invent ActiveEffects."
+    }
+  ]
+}

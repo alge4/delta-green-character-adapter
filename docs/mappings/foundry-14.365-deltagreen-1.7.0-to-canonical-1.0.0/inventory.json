@@ -1,0 +1,535 @@
+{
+  "capability": {
+    "id": "foundry-14.365-deltagreen-1.7.0-to-canonical-1.0.0",
+    "direction": "import",
+    "adapterId": "foundry-deltagreen-import",
+    "source": {
+      "format": "foundry-deltagreen",
+      "version": "14.365+1.7.0",
+      "systemCommit": "7d86f90e1d25d47a316b94e072b14a34ca80366b"
+    },
+    "target": {
+      "schema": "canonical-agent",
+      "version": "1.0.0"
+    },
+    "fidelityClass": "lossy-semantic",
+    "contract": "docs/research/foundry-14.365-delta-green-1.7.0-contract.md",
+    "decision": "docs/research/foundry-14.365-delta-green-1.7.0-import-mapping.md",
+    "knownLoss": "docs/mappings/foundry-14.365-deltagreen-1.7.0-to-canonical-1.0.0/known-loss.json"
+  },
+  "extension": {
+    "namespace": "foundry",
+    "keys": ["identity", "sheet", "raw"]
+  },
+  "flagNamespace": "deltaGreenCharacterAdapter",
+  "blockingRules": [
+    "root must be a JSON object",
+    "when type is present it must be \"agent\"",
+    "system must be an object",
+    "system.statistics.{str,con,dex,int,pow,cha}.value must each be finite numbers",
+    "when _stats.systemId is present it must be \"deltagreen\""
+  ],
+  "statKeyMap": {
+    "str": "strength",
+    "con": "constitution",
+    "dex": "dexterity",
+    "int": "intelligence",
+    "pow": "power",
+    "cha": "charisma"
+  },
+  "skillKeyMap": {
+    "accounting": "accounting",
+    "alertness": "alertness",
+    "anthropology": "anthropology",
+    "archeology": "archeology",
+    "artillery": "artillery",
+    "athletics": "athletics",
+    "bureaucracy": "bureaucracy",
+    "computer_science": "computerScience",
+    "criminology": "criminology",
+    "demolitions": "demolitions",
+    "disguise": "disguise",
+    "dodge": "dodge",
+    "drive": "drive",
+    "firearms": "firearms",
+    "first_aid": "firstAid",
+    "forensics": "forensics",
+    "heavy_machiner": "heavyMachinery",
+    "heavy_weapons": "heavyWeapons",
+    "history": "history",
+    "humint": "humint",
+    "law": "law",
+    "medicine": "medicine",
+    "melee_weapons": "meleeWeapons",
+    "navigate": "navigate",
+    "occult": "occult",
+    "persuade": "persuade",
+    "pharmacy": "pharmacy",
+    "psychotherapy": "psychotherapy",
+    "ride": "ride",
+    "search": "search",
+    "sigint": "sigint",
+    "stealth": "stealth",
+    "surgery": "surgery",
+    "survival": "survival",
+    "swim": "swim",
+    "unnatural": "unnatural"
+  },
+  "typedSkillFamilies": [
+    "art",
+    "craft",
+    "foreign_language",
+    "military_science",
+    "pilot",
+    "science"
+  ],
+  "preparedIgnore": [
+    "system.statistics.*.x5",
+    "system.statistics.str.meleeDamageBonusFormula",
+    "system.skills.*.targetProficiency",
+    "system.skills.*.cannotBeImprovedByFailure",
+    "system.sanity.max",
+    "system.sanity.ritual",
+    "system.sanity.adaptations.*.isAdapted",
+    "system.sanity.breakingPointHit",
+    "system.health.protection",
+    "system.health.max",
+    "system.wp.max"
+  ],
+  "paths": [
+    {
+      "source": "type",
+      "classification": "mapped",
+      "canonical": null,
+      "transform": "Must be \"agent\" when present. Other Actor types are unsupported for this capability (block)."
+    },
+    {
+      "source": "name",
+      "classification": "mapped",
+      "canonical": "identity.name",
+      "transform": "Non-empty string → identity.name. Empty/missing → omit."
+    },
+    {
+      "source": "_id",
+      "classification": "extension",
+      "canonical": "provenance.source.recordId",
+      "extension": "extensions.foundry.identity.actorId",
+      "transform": "When present, set provenance.source.recordId and retain under identity.actorId. Never use as agentId."
+    },
+    {
+      "source": "_stats",
+      "classification": "ignored",
+      "canonical": null,
+      "transform": "Version evidence only. Warn when coreVersion/systemVersion/systemId disagree with 14.365 / deltagreen / 1.7.0. Not character content."
+    },
+    {
+      "source": "folder",
+      "classification": "ignored",
+      "canonical": null,
+      "transform": "Foundry-owned world metadata. Not imported into canonical."
+    },
+    {
+      "source": "ownership",
+      "classification": "ignored",
+      "canonical": null,
+      "transform": "Foundry-owned access metadata. Not imported."
+    },
+    {
+      "source": "prototypeToken",
+      "classification": "ignored",
+      "canonical": null,
+      "transform": "Foundry-owned presentation. Not imported."
+    },
+    {
+      "source": "sort",
+      "classification": "ignored",
+      "canonical": null,
+      "transform": "Foundry-owned presentation. Not imported."
+    },
+    {
+      "source": "img",
+      "classification": "ignored",
+      "canonical": null,
+      "transform": "Foundry-owned presentation. Not imported."
+    },
+    {
+      "source": "effects",
+      "classification": "ignored",
+      "canonical": null,
+      "transform": "ActiveEffects are out of canonical Agent 1.0.0. Not imported; preserved only on Foundry merge paths."
+    },
+    {
+      "source": "flags.deltaGreenCharacterAdapter.agentId",
+      "classification": "mapped",
+      "canonical": "agentId",
+      "transform": "Valid lowercase UUID v4 → reuse as agentId. Invalid/missing → generate new UUID v4 and warn if invalid."
+    },
+    {
+      "source": "flags.deltaGreenCharacterAdapter.unrepresentable.dateOfBirth",
+      "classification": "mapped",
+      "canonical": "biography.dateOfBirth",
+      "transform": "YYYY-MM-DD → biography.dateOfBirth. Otherwise omit + raw + warn."
+    },
+    {
+      "source": "flags.deltaGreenCharacterAdapter.unrepresentable.aliases",
+      "classification": "mapped",
+      "canonical": "identity.aliases",
+      "transform": "Array of non-empty strings → identity.aliases. Other shapes → raw + warn."
+    },
+    {
+      "source": "flags.deltaGreenCharacterAdapter.unrepresentable.breakingPointBaseline",
+      "classification": "mapped",
+      "canonical": "resources.breakingPoint.baseline",
+      "transform": "Finite integer → prefer as baseline when present. Else derive per breaking-point rules."
+    },
+    {
+      "source": "flags.deltagreen",
+      "classification": "ignored",
+      "canonical": null,
+      "transform": "System-owned flags. Item AutoAdded/SystemName recorded via item identity when observed; do not copy into canonical extensions as Agent meaning."
+    },
+    {
+      "source": "flags.*",
+      "classification": "ignored",
+      "canonical": null,
+      "transform": "Non-adapter module flags are Foundry-owned. Not imported."
+    },
+    {
+      "source": "system.schemaVersion",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.foundry.sheet.schemaVersion",
+      "transform": "Retain number. Do not equate to canonical schemaVersion or system release 1.7.0."
+    },
+    {
+      "source": "system.settings",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.foundry.sheet.settings",
+      "transform": "Retain sorting/rolling settings as-is. Not Agent meaning."
+    },
+    {
+      "source": "system.statistics.str.value",
+      "classification": "mapped",
+      "canonical": "statistics.strength.score",
+      "transform": "Required finite number → integer score. Warn if outside 3–18; do not clamp."
+    },
+    {
+      "source": "system.statistics.con.value",
+      "classification": "mapped",
+      "canonical": "statistics.constitution.score",
+      "transform": "Required finite number → integer score. Warn if outside 3–18; do not clamp."
+    },
+    {
+      "source": "system.statistics.dex.value",
+      "classification": "mapped",
+      "canonical": "statistics.dexterity.score",
+      "transform": "Required finite number → integer score. Warn if outside 3–18; do not clamp."
+    },
+    {
+      "source": "system.statistics.int.value",
+      "classification": "mapped",
+      "canonical": "statistics.intelligence.score",
+      "transform": "Required finite number → integer score. Warn if outside 3–18; do not clamp."
+    },
+    {
+      "source": "system.statistics.pow.value",
+      "classification": "mapped",
+      "canonical": "statistics.power.score",
+      "transform": "Required finite number → integer score. Warn if outside 3–18; do not clamp."
+    },
+    {
+      "source": "system.statistics.cha.value",
+      "classification": "mapped",
+      "canonical": "statistics.charisma.score",
+      "transform": "Required finite number → integer score. Warn if outside 3–18; do not clamp."
+    },
+    {
+      "source": "system.statistics.<stat>.distinguishing_feature",
+      "classification": "mapped",
+      "canonical": "statistics.<mapped>.distinguishingFeature",
+      "transform": "Non-empty string → distinguishingFeature. Empty/missing → omit."
+    },
+    {
+      "source": "system.statistics.<stat>.x5",
+      "classification": "ignored",
+      "canonical": null,
+      "transform": "Prepared/transient. Ignore even if present in legacy exports."
+    },
+    {
+      "source": "system.health.value",
+      "classification": "mapped",
+      "canonical": "resources.hitPoints.current",
+      "transform": "Finite number → current. Explicit zero kept."
+    },
+    {
+      "source": "system.health.max",
+      "classification": "derived",
+      "canonical": "resources.hitPoints.maximum",
+      "transform": "Compute ceil((STR+CON)/2) when stats present. If persisted max disagrees → use formula, warn, stash persisted under extensions.foundry.raw['system.health.max']."
+    },
+    {
+      "source": "system.health.min",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.foundry.sheet.healthMin",
+      "transform": "Retain; non-semantic system metadata."
+    },
+    {
+      "source": "system.wp.value",
+      "classification": "mapped",
+      "canonical": "resources.willpower.current",
+      "transform": "Finite number → current. Explicit zero kept."
+    },
+    {
+      "source": "system.wp.max",
+      "classification": "derived",
+      "canonical": "resources.willpower.maximum",
+      "transform": "Compute POW when present. Persisted disagreement → formula + warn + raw."
+    },
+    {
+      "source": "system.wp.min",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.foundry.sheet.wpMin",
+      "transform": "Retain; non-semantic."
+    },
+    {
+      "source": "system.sanity.value",
+      "classification": "mapped",
+      "canonical": "resources.sanity.current",
+      "transform": "If value >= 100 (init sentinel) → treat as uninitialized: current = maximum = POW×5 when POW present; info diagnostic. If value < 100 → current = value; maximum = POW×5 when POW present; warn if current disagrees with POW×5. Never trust prepared sanity.max."
+    },
+    {
+      "source": "system.sanity.currentBreakingPoint",
+      "classification": "mapped",
+      "canonical": "resources.breakingPoint",
+      "transform": "If value === 101 on otherwise blank/sentinel SAN path → derive current/baseline from SAN−POW (or SAN rules used by system init). Explicit non-sentinel → current = value. Baseline: prefer flags…breakingPointBaseline; else if current ≈ SAN−POW use that as baseline; else baseline = current + warn. Never invent historical baseline beyond that."
+    },
+    {
+      "source": "system.sanity.adaptations.violence.incident1",
+      "classification": "mapped",
+      "canonical": "psychology.adaptations[kind=violence].incidentMarks",
+      "transform": "Count true among incident1..3 → incidentMarks. Emit violence row with adapted = (marks === 3). Always emit violence and helplessness rows for Agent exports."
+    },
+    {
+      "source": "system.sanity.adaptations.violence.incident2",
+      "classification": "mapped",
+      "canonical": "psychology.adaptations[kind=violence].incidentMarks",
+      "transform": "See incident1."
+    },
+    {
+      "source": "system.sanity.adaptations.violence.incident3",
+      "classification": "mapped",
+      "canonical": "psychology.adaptations[kind=violence].incidentMarks",
+      "transform": "See incident1."
+    },
+    {
+      "source": "system.sanity.adaptations.helplessness.incident1",
+      "classification": "mapped",
+      "canonical": "psychology.adaptations[kind=helplessness].incidentMarks",
+      "transform": "Count true among incident1..3 → incidentMarks. adapted = (marks === 3)."
+    },
+    {
+      "source": "system.sanity.adaptations.helplessness.incident2",
+      "classification": "mapped",
+      "canonical": "psychology.adaptations[kind=helplessness].incidentMarks",
+      "transform": "See helplessness.incident1."
+    },
+    {
+      "source": "system.sanity.adaptations.helplessness.incident3",
+      "classification": "mapped",
+      "canonical": "psychology.adaptations[kind=helplessness].incidentMarks",
+      "transform": "See helplessness.incident1."
+    },
+    {
+      "source": "system.sanity.adaptations.*.isAdapted",
+      "classification": "ignored",
+      "canonical": null,
+      "transform": "Prepared projection. Derive adapted from incident marks instead."
+    },
+    {
+      "source": "system.physical.description",
+      "classification": "mapped",
+      "canonical": "biography.physicalDescription",
+      "transform": "Non-empty → { format: \"html\", content }. Empty/missing → omit."
+    },
+    {
+      "source": "system.physical.wounds",
+      "classification": "mapped",
+      "canonical": "resources.wounds",
+      "transform": "Non-empty string → { format: \"plain\", content } unless content clearly contains HTML tags then format html. Empty → omit."
+    },
+    {
+      "source": "system.physical.firstAidAttempted",
+      "classification": "mapped",
+      "canonical": "resources.firstAidAttempted",
+      "transform": "Boolean → resources.firstAidAttempted."
+    },
+    {
+      "source": "system.physical.exhausted",
+      "classification": "mapped",
+      "canonical": "resources.exhausted",
+      "transform": "Boolean → resources.exhausted."
+    },
+    {
+      "source": "system.physical.exhaustedPenalty",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.foundry.sheet.exhaustedPenalty",
+      "transform": "Retain number; non-semantic sheet/state knob."
+    },
+    {
+      "source": "system.biography.profession",
+      "classification": "mapped",
+      "canonical": "biography.profession",
+      "transform": "Non-empty string → biography.profession. Empty → omit."
+    },
+    {
+      "source": "system.biography.employer",
+      "classification": "mapped",
+      "canonical": "biography.employer",
+      "transform": "Non-empty string → biography.employer. Empty → omit."
+    },
+    {
+      "source": "system.biography.nationality",
+      "classification": "mapped",
+      "canonical": "biography.nationality",
+      "transform": "Non-empty string → biography.nationality. Empty → omit."
+    },
+    {
+      "source": "system.biography.sex",
+      "classification": "mapped",
+      "canonical": "biography.sex",
+      "transform": "Non-empty string → biography.sex. Empty → omit."
+    },
+    {
+      "source": "system.biography.age",
+      "classification": "mapped",
+      "canonical": "biography.age",
+      "transform": "Digit-only string or non-negative integer → biography.age. Empty/missing → omit. Other text → omit age, extensions.foundry.raw['system.biography.age'], warn."
+    },
+    {
+      "source": "system.biography.education",
+      "classification": "mapped",
+      "canonical": "biography.education",
+      "transform": "Non-empty string → biography.education. Empty → omit."
+    },
+    {
+      "source": "system.corruption.value",
+      "classification": "mapped",
+      "canonical": "campaignState.impossibleLandscapes.corruption",
+      "transform": "When any corruption field is non-default, emit impossibleLandscapes. Map value → corruption."
+    },
+    {
+      "source": "system.corruption.haveSeenTheYellowSign",
+      "classification": "mapped",
+      "canonical": "campaignState.impossibleLandscapes.seenTheYellowSign",
+      "transform": "Boolean → seenTheYellowSign when IL block emitted."
+    },
+    {
+      "source": "system.corruption.gift",
+      "classification": "mapped",
+      "canonical": "campaignState.impossibleLandscapes.gift",
+      "transform": "Non-empty → gift. Empty defaults omitted with the block when all default."
+    },
+    {
+      "source": "system.corruption.insight",
+      "classification": "mapped",
+      "canonical": "campaignState.impossibleLandscapes.insight",
+      "transform": "Non-empty → insight."
+    },
+    {
+      "source": "system.skills.<key>.proficiency",
+      "classification": "mapped",
+      "canonical": "skills.standard.<skillKeyMap[key]>.proficiency",
+      "transform": "For keys in skillKeyMap: integer proficiency. Warn if outside 0–99; do not clamp. Unknown keys (except unarmed_combat) → custom + warn."
+    },
+    {
+      "source": "system.skills.<key>.failure",
+      "classification": "mapped",
+      "canonical": "skills.standard.<id>.failureMarked",
+      "transform": "Boolean → failureMarked. Missing (unnatural) → false."
+    },
+    {
+      "source": "system.skills.<key>.label",
+      "classification": "ignored",
+      "canonical": null,
+      "transform": "Display label for standard skills. Ignore on import."
+    },
+    {
+      "source": "system.skills.unarmed_combat",
+      "classification": "lossy",
+      "canonical": "skills.custom[]",
+      "transform": "Map to custom skill { group: \"unarmed_combat\", label: label or \"Unarmed Combat\", proficiency, failureMarked }. Known loss: not a canonical standard skill."
+    },
+    {
+      "source": "system.typedSkills.<tsKey>",
+      "classification": "mapped",
+      "canonical": "skills.custom[]",
+      "transform": "Emit custom skill with new/bound id; group normalized to typedSkillFamilies when possible; label = specialization text; proficiency; failureMarked. Store tsKey under extensions.foundry.identity.typedSkills[canonicalId]. Unknown family → still import + warn + raw group."
+    },
+    {
+      "source": "system.specialTraining[]",
+      "classification": "mapped",
+      "canonical": "skills.specialTraining[]",
+      "transform": "Each entry → specialTraining with new/bound id, name, uses from attribute (stat key → statistic; skill key → standardSkill; bound custom → customSkill; else warn + raw). Store Foundry id under identity.specialTraining."
+    },
+    {
+      "source": "items[type=bond]",
+      "classification": "mapped",
+      "canonical": "relationships.bonds[]",
+      "transform": "name from Item.name or system.description; score; relationship; damagedSinceLastHomeScene ← hasBeenDamagedSinceLastHomeScene; description HTML when distinct from name. New/bound canonical id; store Item._id in identity."
+    },
+    {
+      "source": "items[type=motivation]",
+      "classification": "mapped",
+      "canonical": "psychology.motivations[]|psychology.disorders[]",
+      "transform": "Always one motivation (statement from Item.name else description; crossedOut). If system.disorder non-empty → linked disorder (name, cured←disorderCured). Name/description disagreement → prefer name, keep other + warn."
+    },
+    {
+      "source": "items[type=weapon]",
+      "classification": "mapped",
+      "canonical": "inventory.weapons[]",
+      "transform": "Map name, HTML description, skill (standard map or free string; unarmed_combat stays string), skillModifier, range, damage, armorPiercing, lethality, killRadius, ammunition←ammo, expense, equipped. isLethal and customSkillTarget → extensions.foundry.raw/identity for that item. AutoAdded Unarmed Attack recorded in identity."
+    },
+    {
+      "source": "items[type=armor]",
+      "classification": "mapped",
+      "canonical": "inventory.armor[]",
+      "transform": "name, description HTML, protection, expense, equipped."
+    },
+    {
+      "source": "items[type=gear]",
+      "classification": "mapped",
+      "canonical": "inventory.gear[]",
+      "transform": "name, description HTML, expense, equipped."
+    },
+    {
+      "source": "items[type=tome]",
+      "classification": "mapped",
+      "canonical": "inventory.tomes[]",
+      "transform": "name, description HTML, language, studyTime, unnaturalSkillIncrease, occultSkillIncrease, sanityLoss from sanity.*, handlerNotes HTML, revealed."
+    },
+    {
+      "source": "items[type=ritual]",
+      "classification": "mapped",
+      "canonical": "inventory.rituals[]",
+      "transform": "name, description HTML, studyTime, sanityLoss, learnedSanityLoss←learnedSanity, unnaturalSkillIncrease, activationCosts, activationTime, complexity, handlerNotes HTML, revealed."
+    },
+    {
+      "source": "items[type=*]",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.foundry.raw['items[<id>]']",
+      "transform": "Unknown Item types preserved with warning; not mapped into inventory."
+    },
+    {
+      "source": "system.*",
+      "classification": "extension",
+      "canonical": null,
+      "extension": "extensions.foundry.raw['system.<path>']",
+      "transform": "Any authoritative persisted system path not classified above → raw + warning."
+    }
+  ]
+}

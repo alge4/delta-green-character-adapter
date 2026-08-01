@@ -1,0 +1,87 @@
+{
+  "capability": "canonical-1.0.0-to-foundry-14.365-deltagreen-1.7.0",
+  "fidelityClass": "lossy-semantic",
+  "summary": "Export writes playable Agent meaning into DG 1.7.0 persisted fields and parks unrepresentable canonical fields in module flags. Semantic equality for other tools requires reading those flags or round-tripping through canonical.",
+  "losses": [
+    {
+      "id": "dob-aliases-notes-in-flags-only",
+      "severity": "structural",
+      "source": "biography.dateOfBirth|identity.aliases|notes.*|psychology.traumaticBackground|breakingPoint.baseline",
+      "canonical": "flags.deltaGreenCharacterAdapter.unrepresentable.*",
+      "loss": "DG 1.7.0 Agent system data cannot hold these fields. They are stored only in module flags. Raw Foundry JSON consumers that ignore the module will not see them; canonical interchange still carries them.",
+      "diagnostic": "information",
+      "remediation": "Keep the module installed for Foundry-side Bio surfacing (ADR #0001); prefer canonical for cross-adapter transport."
+    },
+    {
+      "id": "san-cannot-persist-ge-100",
+      "severity": "normalization",
+      "source": "resources.sanity.current",
+      "canonical": "system.sanity.value",
+      "loss": "Canonical SAN ≥ 100 is rewritten to POW×5 on write because Foundry prepare treats ≥100 as an init sentinel.",
+      "diagnostic": "warning",
+      "remediation": "Keep explicit SAN below 100 or accept POW×5 normalization."
+    },
+    {
+      "id": "other-adaptations-not-in-system",
+      "severity": "structural",
+      "source": "psychology.adaptations[kind=other]",
+      "canonical": "flags…unrepresentable.otherAdaptations",
+      "loss": "Foundry only has violence/helplessness incident bits. other adaptations cannot be expressed in system.sanity.adaptations.",
+      "diagnostic": "warning",
+      "remediation": "Retain in canonical / flags; do not invent incident marks."
+    },
+    {
+      "id": "adaptation-marks-synthesized-from-adapted-flag",
+      "severity": "defaulted-absent-semantics",
+      "source": "psychology.adaptations[].adapted",
+      "canonical": "system.sanity.adaptations.*.incident1..3",
+      "loss": "When incidentMarks is absent and adapted is true, export writes all three incidents true, losing which-incident history that was never specified.",
+      "diagnostic": "information",
+      "remediation": "Prefer explicit incidentMarks in canonical when history matters."
+    },
+    {
+      "id": "unlinked-disorder-normalization",
+      "severity": "shape-normalization",
+      "source": "psychology.disorders[]",
+      "canonical": "items[type=motivation]",
+      "loss": "Foundry stores disorders on motivation Items. Unlinked disorders become motivation Items with synthetic statement text.",
+      "diagnostic": "information",
+      "remediation": "Link disorders to motivations in canonical when possible."
+    },
+    {
+      "id": "narrative-format-conversion",
+      "severity": "normalization",
+      "source": "narrative fields with format plain|markdown",
+      "canonical": "HTML system fields",
+      "loss": "Plain/markdown becomes sanitized HTML on write; original format enum is not persisted by DG fields.",
+      "diagnostic": "information",
+      "remediation": "Prefer HTML in canonical when targeting Foundry, or accept conversion."
+    },
+    {
+      "id": "foreign-extensions-not-exported",
+      "severity": "intentional-exclusion",
+      "source": "extensions.<other>",
+      "canonical": null,
+      "loss": "Non-foundry extensions (for example greenAgentCreator workflow) are not written into the Actor. Cross-adapter meaning must already live in canonical fields.",
+      "diagnostic": "information",
+      "remediation": "Ensure GAC→canonical mapped semantic fields before Foundry export."
+    },
+    {
+      "id": "maxima-follow-formula",
+      "severity": "normalization",
+      "source": "resources.*.maximum",
+      "canonical": "system.health.max|system.wp.max",
+      "loss": "Exported maxima follow DG formulas from stats; conflicting canonical maxima warn but do not force an anti-formula persisted max that prepare will overwrite.",
+      "diagnostic": "warning",
+      "remediation": "Align stats and maxima in canonical, or accept formula maxima in Foundry."
+    }
+  ],
+  "notLosses": [
+    "Canonical Agent meaning that has a DG system or Item field is written there for other Foundry users.",
+    "Unarmed Combat custom skill round-trips to system.skills.unarmed_combat on this Foundry edge.",
+    "heavyMachinery writes the historical heavy_machiner key.",
+    "Impossible Landscapes fields write to system.corruption.",
+    "System-owned Unarmed Attack is bound/updated rather than duplicated.",
+    "Create-new leaves Foundry-owned presentation/access to system defaults; merge preserves them."
+  ]
+}

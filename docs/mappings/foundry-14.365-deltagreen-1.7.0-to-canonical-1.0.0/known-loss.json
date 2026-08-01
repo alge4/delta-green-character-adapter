@@ -1,0 +1,97 @@
+{
+  "capability": "foundry-14.365-deltagreen-1.7.0-to-canonical-1.0.0",
+  "fidelityClass": "lossy-semantic",
+  "summary": "Import preserves playable Agent meaning into canonical fields. Foundry sheet knobs and document metadata are residual extensions or intentionally ignored. Enumerated losses cover schema gaps and init-sentinel collisions.",
+  "losses": [
+    {
+      "id": "unarmed-combat-not-standard",
+      "severity": "structural",
+      "source": "system.skills.unarmed_combat",
+      "canonical": "skills.custom[]",
+      "loss": "Delta Green 1.7.0 persists Unarmed Combat as a standard skill key, but canonical Agent 1.0.0 has no unarmedCombat standard skill id. Rating is preserved as a custom skill (group unarmed_combat, label Unarmed Combat).",
+      "diagnostic": "warning",
+      "remediation": "Accept custom skill, or later amend canonical schema and remap."
+    },
+    {
+      "id": "san-sentinel-collides-with-explicit-high-san",
+      "severity": "normalization",
+      "source": "system.sanity.value",
+      "canonical": "resources.sanity",
+      "loss": "Foundry treats sanity.value >= 100 as an initialization sentinel and rewrites it to POW×5 on prepare. Import cannot distinguish an intentional SAN ≥ 100 from the blank-Actor sentinel; values ≥ 100 are normalized to POW×5.",
+      "diagnostic": "information",
+      "remediation": "Keep SAN below 100 for explicit currents; unusual high SAN cannot round-trip through Foundry prepare."
+    },
+    {
+      "id": "breaking-point-baseline-derived",
+      "severity": "defaulted-absent-semantics",
+      "source": "system.sanity.currentBreakingPoint",
+      "canonical": "resources.breakingPoint.baseline",
+      "loss": "Foundry persists only currentBreakingPoint. Baseline is taken from adapter flags when present, else derived (SAN−POW when consistent) or copied from current with a warning.",
+      "diagnostic": "information",
+      "remediation": "Export capability writes baseline into flags.deltaGreenCharacterAdapter.unrepresentable when it must be retained."
+    },
+    {
+      "id": "no-general-agent-notes",
+      "severity": "unsupported-source",
+      "source": null,
+      "canonical": "notes.player|notes.handler",
+      "loss": "DG 1.7.0 Agent schema has no general notes fields. notes.player and notes.handler import empty. Handler text on tomes/rituals maps onto those inventory entries only.",
+      "diagnostic": "information",
+      "remediation": "Carry notes via canonical from other adapters; Foundry export parks unrepresentable notes in module flags."
+    },
+    {
+      "id": "other-adaptations-unsupported",
+      "severity": "unsupported-source",
+      "source": "system.sanity.adaptations",
+      "canonical": "psychology.adaptations[kind=other]",
+      "loss": "Foundry only models violence and helplessness incident bits. kind=other adaptations cannot originate from this source.",
+      "diagnostic": "information",
+      "remediation": "other adaptations may exist in canonical from other adapters; they are not read from Foundry adaptation fields."
+    },
+    {
+      "id": "weapon-islethal-custom-target-extension-only",
+      "severity": "structural",
+      "source": "items[type=weapon].system.isLethal|customSkillTarget",
+      "canonical": null,
+      "loss": "Canonical weapon schema has no isLethal or customSkillTarget fields. Values are retained under extensions.foundry for correlation only and are not Agent meaning for other adapters.",
+      "diagnostic": "information",
+      "remediation": "Export may re-derive isLethal from lethality > 0 when writing Foundry."
+    },
+    {
+      "id": "foundry-ids-not-canonical",
+      "severity": "identity",
+      "source": "_id|items[]._id|typedSkills keys|specialTraining.id",
+      "canonical": "agentId|entity ids",
+      "loss": "Foundry document and local collection ids are not durable canonical identities unless an adapter flag already binds a UUID. New UUID v4 values are generated when unbound.",
+      "diagnostic": "information",
+      "remediation": "Stable rematch uses flags.deltaGreenCharacterAdapter bindings (issues #7/#10)."
+    },
+    {
+      "id": "presentation-and-effects-dropped",
+      "severity": "intentional-exclusion",
+      "source": "img|folder|ownership|prototypeToken|sort|effects|non-adapter flags",
+      "canonical": null,
+      "loss": "Foundry-owned presentation, access, ActiveEffects, and other-module flags are not Agent interchange meaning and are omitted from canonical.",
+      "diagnostic": "information",
+      "remediation": "Merge paths preserve them on the Actor; they are not transported through canonical."
+    },
+    {
+      "id": "non-digit-age-omitted",
+      "severity": "normalization",
+      "source": "system.biography.age",
+      "canonical": "biography.age",
+      "loss": "Non-digit age strings cannot populate canonical non-negative int age. Original text is preserved in extensions.foundry.raw.",
+      "diagnostic": "warning",
+      "remediation": "Correct age to a digit string in Foundry or set biography.age after import."
+    }
+  ],
+  "notLosses": [
+    "Impossible Landscapes corruption fields map into campaignState.impossibleLandscapes.",
+    "Exact violence/helplessness incident marks are preserved (unlike GAC import).",
+    "Sheet settings, schemaVersion, resource min, and exhaustedPenalty retained under extensions.foundry.sheet.",
+    "DOB and aliases recovered from module flags into canonical fields when present.",
+    "Prepared projections ignored rather than treated as conflicting source facts.",
+    "Out-of-range stats/skills warned but not silently clamped.",
+    "System-owned Unarmed Attack weapon is imported as inventory.weapons[] with identity correlation."
+  ]
+}
