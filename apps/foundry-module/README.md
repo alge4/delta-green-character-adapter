@@ -14,17 +14,25 @@ What should the Foundry Agent-sheet integration look like and how should it beha
 - module-owned fields such as date of birth
 - while preserving the upstream Delta Green sheet and schema
 
+## Verdict
+
+**Variant A — Header chrome + modal wizard** won (user preference, 2026-08-01).
+
+The Foundry Agent-sheet integration uses a title-bar Completeness Assessment lamp plus Import control, with source pick → diagnostics / one-import remediation → Update Plan review → apply in a modal wizard. Module-owned fields such as date of birth stay out of the upstream schema and surface in Bio after import. Upstream Delta Green sheet tabs remain unchanged.
+
+This branch keeps all three variants as the primary source. The accepted decision for main is recorded in `docs/adr/0001-foundry-agent-sheet-import-ui.md` (decision-only change; do not merge this prototype package into main).
+
 ## Assumption
 
 This is a **UI** prototype (sub-shape B): there is no existing Foundry module page yet, so variants live on a throwaway browser mock of the Agent sheet window.
 
 ## Variants
 
-| Key | Name | Structure |
-| --- | --- | --- |
-| `A` | Header chrome + modal wizard | Compact completeness dot + Import in the sheet window title bar; full flow in a modal |
-| `B` | Interchange tab | New sheet tab owns drop zone, diagnostics, remediation, Update Plan, and module-owned fields |
-| `C` | Status badge + side drawer | Persistent completeness badge; non-modal right drawer for the import/review flow; DOB beside Age in Bio |
+| Key | Name | Structure | Result |
+| --- | --- | --- | --- |
+| `A` | Header chrome + modal wizard | Compact completeness dot + Import in the sheet window title bar; full flow in a modal | **Accepted** |
+| `B` | Interchange tab | New sheet tab owns drop zone, diagnostics, remediation, Update Plan, and module-owned fields | Rejected |
+| `C` | Status badge + side drawer | Persistent completeness badge; non-modal right drawer for the import/review flow; DOB beside Age in Bio | Rejected |
 
 Switch with `?variant=A|B|C` or the floating bar.
 
