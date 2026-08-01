@@ -1,0 +1,25 @@
+{
+  "name": "@dgca/foundry-module",
+  "version": "0.0.0",
+  "private": true,
+  "description": "PROTOTYPE host for Foundry Agent-sheet import UI explorations. Not production.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "preview": "vite preview",
+    "test": "node -e \"console.log('No tests in prototype package')\""
+  },
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "typescript": "^5.9.2",
+    "vite": "^7.0.6"
+  }
+}

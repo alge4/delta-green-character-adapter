@@ -8,9 +8,13 @@
   "scripts": {
     "build": "pnpm -r build",
     "check": "pnpm -r check",
-    "test": "pnpm -r test"
+    "test": "pnpm -r test",
+    "prototype:agent-sheet-import": "pnpm --filter @dgca/foundry-module dev"
   },
   "engines": {
     "node": ">=22"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
   }
 }
