@@ -13,7 +13,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "check": "tsc -p tsconfig.json --noEmit",
-    "test": "tsc -p tsconfig.test.json && node --test .test-dist/test/**/*.test.js"
+    "test": "pnpm --filter @delta-green-character-adapter/character-model build && tsc -p tsconfig.test.json && node --test .test-dist/test/**/*.test.js"
   },
   "dependencies": {
     "@delta-green-character-adapter/character-model": "workspace:*"

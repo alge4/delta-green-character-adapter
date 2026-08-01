@@ -5,11 +5,12 @@
   "type": "module",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
+      "types": "./src/index.ts",
       "import": "./dist/index.js"
     },
     "./agent-schema-1.0.0.json": "./dist/agent-schema-1.0.0.json"
   },
+  "types": "./src/index.ts",
   "files": [
     "dist"
   ],
