@@ -1,0 +1,10 @@
+# Keep the pinned corpus available to tests without indexing every character as AI context.
+fixtures/upstream/**/pregens/
+
+# Generated outputs and local secrets.
+node_modules/
+.pnpm-store/
+dist/
+coverage/
+.env
+.env.*
