@@ -4,7 +4,7 @@ The Foundry Character Adapter integrates into the upstream Delta Green Agent she
 
 ## Considered options
 
-Prototyped on throwaway branch [`cursor/prototype-agent-sheet-import-253d`](https://github.com/alge4/delta-green-character-adapter/tree/cursor/prototype-agent-sheet-import-253d) for [#9](https://github.com/alge4/delta-green-character-adapter/issues/9):
+Prototyped on throwaway branch `cursor/prototype-agent-sheet-import-253d`; the accepted evidence is pinned at [prototype commit `4a8d8b0`](https://github.com/alge4/delta-green-character-adapter/tree/4a8d8b0f552d03cd731c99a745cdc1c8949f260c) for [#9](https://github.com/alge4/delta-green-character-adapter/issues/9):
 
 - **A — Header chrome + modal wizard** (accepted): keeps upstream tabs intact; import is an explicit overlay flow.
 - **B — Interchange tab**: dedicated workspace tab; rejected in favour of leaving the sheet navigation unchanged.
@@ -12,4 +12,4 @@ Prototyped on throwaway branch [`cursor/prototype-agent-sheet-import-253d`](http
 
 ## Consequences
 
-Future Foundry module UI work should implement Variant A's shape, constrained by the diagnostics (#6) and existing-Actor update (#7) decisions. The full A/B/C prototype remains on the throwaway branch as primary source and must not be merged into main as production code.
+Future Foundry module UI work should implement Variant A's shape, constrained by the diagnostics (#6) and existing-Actor update (#7) decisions. The full A/B/C prototype remains available at the pinned prototype commit as primary evidence and must not be merged into main as production code.
