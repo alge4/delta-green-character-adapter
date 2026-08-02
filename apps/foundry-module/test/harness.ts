@@ -61,10 +61,38 @@ function asFailureQueue(
   return [...injection];
 }
 
+/** Exact-target Foundry document stats stamped by the in-memory runtime (#29 F7). */
+export const EXACT_TARGET_DOCUMENT_STATS = {
+  coreVersion: "14.365",
+  systemId: "deltagreen",
+  systemVersion: "1.7.0",
+  createdTime: 1_780_000_000_000,
+  modifiedTime: 1_780_000_000_000,
+  lastModifiedBy: "UserHarness0001",
+  compendiumSource: null,
+  duplicateSource: null,
+  exportSource: null,
+} as const;
+
+function stampExactTargetStats(
+  document: UnknownRecord,
+  options: { readonly exportSource?: UnknownRecord | null } = {},
+): void {
+  const previous = isRecord(document._stats) ? document._stats : {};
+  document._stats = {
+    ...EXACT_TARGET_DOCUMENT_STATS,
+    ...previous,
+    coreVersion: EXACT_TARGET_DOCUMENT_STATS.coreVersion,
+    systemId: EXACT_TARGET_DOCUMENT_STATS.systemId,
+    systemVersion: EXACT_TARGET_DOCUMENT_STATS.systemVersion,
+    ...(options.exportSource !== undefined ? { exportSource: options.exportSource } : {}),
+  };
+}
+
 function ensureActorShape(
   source: unknown,
   actorId: string,
-  options: { readonly assignDocumentId?: boolean } = {},
+  options: { readonly assignDocumentId?: boolean; readonly stampStats?: boolean } = {},
 ): UnknownRecord {
   const copy = cloneJson(source);
   if (!isRecord(copy)) {
@@ -84,6 +112,25 @@ function ensureActorShape(
   if (!isRecord(copy.system)) {
     copy.system = {};
   }
+  if (options.stampStats !== false) {
+    stampExactTargetStats(copy, {
+      exportSource: {
+        worldId: "dgca-exact-target-harness",
+        uuid: `Actor.${actorId}`,
+        coreVersion: EXACT_TARGET_DOCUMENT_STATS.coreVersion,
+        systemId: EXACT_TARGET_DOCUMENT_STATS.systemId,
+        systemVersion: EXACT_TARGET_DOCUMENT_STATS.systemVersion,
+      },
+    });
+    const items = Array.isArray(copy.items) ? copy.items : [];
+    copy.items = items.map((item) => {
+      if (!isRecord(item)) {
+        return item;
+      }
+      stampExactTargetStats(item);
+      return item;
+    });
+  }
   return copy;
 }
 
@@ -96,7 +143,10 @@ export function createInMemoryActorRuntime(options: InMemoryActorOptions): InMem
   const actorId = options.actorId ?? (isRecord(options.source) && typeof options.source._id === "string"
     ? options.source._id
     : "ActorHarness0001");
-  let source = ensureActorShape(options.source, actorId);
+  let source = ensureActorShape(options.source, actorId, {
+    // Preserve pre-captured live fixtures' own _stats when replaying committed exports.
+    stampStats: !isRecord(options.source) || options.source._stats === undefined,
+  });
   let canUpdate = options.canUpdate !== false;
   let gm = options.gm === true;
   const userId = options.userId ?? "UserHarness0001";
@@ -150,7 +200,8 @@ export function createInMemoryActorRuntime(options: InMemoryActorOptions): InMem
       if (consumeFailure("duringRestore")) {
         throw new Error("Injected failure: duringRestore");
       }
-      source = ensureActorShape(snapshot, actorId);
+      // Preserve the verified recovery snapshot byte-for-byte, including Foundry _stats.
+      source = ensureActorShape(snapshot, actorId, { stampStats: false });
     },
     async updateActor(diff: Record<string, unknown>) {
       maybeBeforeWrite();

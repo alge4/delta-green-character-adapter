@@ -8,9 +8,13 @@ export default defineConfig({
   workers: 1,
   reporter: "list",
   timeout: 60_000,
+  // Aria snapshot YAML baselines are OS-agnostic (unlike pixel screenshots).
+  snapshotPathTemplate: "{testDir}/{testFilePath}-snapshots/{arg}{ext}",
   use: {
     baseURL: "http://127.0.0.1:5173",
     trace: "on-first-retry",
+    viewport: { width: 1280, height: 800 },
+    deviceScaleFactor: 1,
   },
   webServer: {
     command: "pnpm exec vite --host 127.0.0.1 --port 5173",

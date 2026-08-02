@@ -14,6 +14,7 @@ It owns permission and fingerprint revalidation, verified restorable snapshots, 
 - **`FoundryActorRuntime` / `FoundryWorldRuntime`** — injectable ports (no Foundry globals in core apply logic).
 - **In-memory harness** (`test/harness.ts`) — failure-injection Actor/world store for vertical acceptance tests.
 - **Browser harness** (`browser/`, `pnpm test:browser`) — Playwright flows for Caleb blank import and populated mutable-preserving merge.
+- **Production artifact** (`pnpm build` → `artifact/delta-green-character-adapter/`) — Foundry `module.json` plus bundled `main.js` and styles only; exact Foundry `14.365` / Delta Green `1.7.0` compatibility and the three verified capability ids are embedded in manifest flags.
 
 ## Constraints
 

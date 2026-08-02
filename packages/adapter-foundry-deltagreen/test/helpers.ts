@@ -39,6 +39,12 @@ export function canonicalFixtureNames(): string[] {
     .sort();
 }
 
+export function liveApplyFixtureNames(): string[] {
+  return readdirSync(resolve(foundryFixtureRoot, "live-apply"))
+    .filter((name) => name.endsWith(".json"))
+    .sort();
+}
+
 export function sha256Foundry(relativePath: string): string {
   const digest = createHash("sha256").update(readFoundryFixtureBytes(relativePath)).digest("hex");
   return `sha256:${digest}`;

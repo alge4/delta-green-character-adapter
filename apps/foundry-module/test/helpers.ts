@@ -27,6 +27,7 @@ function findRepoRoot(start: string): string {
 }
 
 export const repoRoot = findRepoRoot(dirname(fileURLToPath(import.meta.url)));
+export const moduleRoot = resolve(repoRoot, "apps/foundry-module");
 export const foundryFixtureRoot = resolve(repoRoot, "fixtures/foundry/14.365-deltagreen-1.7.0");
 export const canonicalFixtureRoot = resolve(repoRoot, "fixtures/canonical/1.0.0/export-to-foundry");
 

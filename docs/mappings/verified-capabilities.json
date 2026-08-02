@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0.0",
+  "capabilities": [
+    {
+      "id": "green-agent-creator-5c9e92d-to-canonical-1.0.0",
+      "inventory": "docs/mappings/green-agent-creator-5c9e92d-to-canonical-1.0.0/inventory.json",
+      "knownLoss": "docs/mappings/green-agent-creator-5c9e92d-to-canonical-1.0.0/known-loss.json",
+      "checksumManifests": ["fixtures/green-agent-creator/5c9e92d/SHA256SUMS"]
+    },
+    {
+      "id": "foundry-14.365-deltagreen-1.7.0-to-canonical-1.0.0",
+      "inventory": "docs/mappings/foundry-14.365-deltagreen-1.7.0-to-canonical-1.0.0/inventory.json",
+      "knownLoss": "docs/mappings/foundry-14.365-deltagreen-1.7.0-to-canonical-1.0.0/known-loss.json",
+      "checksumManifests": ["fixtures/foundry/14.365-deltagreen-1.7.0/SHA256SUMS"]
+    },
+    {
+      "id": "canonical-1.0.0-to-foundry-14.365-deltagreen-1.7.0",
+      "inventory": "docs/mappings/canonical-1.0.0-to-foundry-14.365-deltagreen-1.7.0/inventory.json",
+      "knownLoss": "docs/mappings/canonical-1.0.0-to-foundry-14.365-deltagreen-1.7.0/known-loss.json",
+      "checksumManifests": [
+        "fixtures/canonical/1.0.0/export-to-foundry/SHA256SUMS",
+        "fixtures/foundry/14.365-deltagreen-1.7.0/SHA256SUMS"
+      ]
+    }
+  ]
+}
