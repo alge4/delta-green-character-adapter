@@ -20,11 +20,19 @@ test("browser: import Caleb into a blank Agent Actor through verified persistenc
   await waitForMount(page);
 
   await expect(page.getByRole("img", { name: /Completeness Assessment/i })).toBeVisible();
+  await expect(page.locator("[data-dgca-titlebar]")).toHaveScreenshot("titlebar-lamp.png");
+
   await page.getByRole("button", { name: "Import…" }).click();
   await expect(page.getByRole("dialog", { name: "Import Agent" })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Import Agent" })).toHaveScreenshot(
+    "import-source.png",
+  );
 
   await page.getByTestId("dgca-source-file").setInputFiles(calebFixturePath);
   await expect(page.getByRole("heading", { name: "Diagnostics" })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Import Agent" })).toHaveScreenshot(
+    "import-diagnostics.png",
+  );
 
   // Acknowledge every pending group (buttons appear once per diagnostic sharing the key;
   // clicking any one for a key clears that pending group).
@@ -34,6 +42,9 @@ test("browser: import Caleb into a blank Agent Actor through verified persistenc
 
   await page.getByTestId("dgca-continue-plan").click();
   await expect(page.getByRole("heading", { name: "Update Plan" })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Import Agent" })).toHaveScreenshot(
+    "import-plan.png",
+  );
 
   // Confirm Actor Binding — first bind checkbox for agentId.
   const bindCheckbox = page.locator('input[data-testid^="dgca-plan-"]').first();
@@ -41,6 +52,9 @@ test("browser: import Caleb into a blank Agent Actor through verified persistenc
   await page.getByTestId("dgca-apply").click();
 
   await expect(page.getByRole("heading", { name: "Applied" })).toBeVisible();
+  await expect(page.getByRole("dialog", { name: "Import Agent" })).toHaveScreenshot(
+    "import-applied.png",
+  );
   await page.getByTestId("dgca-done-close").click();
 
   const source = runtime.readActorSource();
