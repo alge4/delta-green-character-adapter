@@ -1,0 +1,91 @@
+{
+  "schemaVersion": "1.0.0",
+  "agentId": "00000000-0000-4000-8000-000000000001",
+  "identity": {
+    "name": "Export Subject"
+  },
+  "biography": {},
+  "statistics": {
+    "strength": {
+      "score": 12
+    },
+    "constitution": {
+      "score": 11
+    },
+    "dexterity": {
+      "score": 13
+    },
+    "intelligence": {
+      "score": 14
+    },
+    "power": {
+      "score": 11
+    },
+    "charisma": {
+      "score": 10
+    }
+  },
+  "resources": {
+    "hitPoints": {
+      "current": 12,
+      "maximum": 12
+    },
+    "willpower": {
+      "current": 11,
+      "maximum": 11
+    },
+    "sanity": {
+      "current": 55,
+      "maximum": 55
+    },
+    "breakingPoint": {
+      "current": 44,
+      "baseline": 44
+    }
+  },
+  "skills": {
+    "standard": {},
+    "custom": [
+      {
+        "id": "00000000-0000-4000-8000-000000000011",
+        "group": "unarmed_combat",
+        "label": "Unarmed Combat",
+        "proficiency": 65,
+        "failureMarked": true
+      }
+    ],
+    "specialTraining": []
+  },
+  "relationships": {
+    "bonds": []
+  },
+  "psychology": {
+    "motivations": [],
+    "disorders": [],
+    "adaptations": []
+  },
+  "inventory": {
+    "weapons": [],
+    "armor": [],
+    "gear": [],
+    "rituals": [],
+    "tomes": []
+  },
+  "notes": {
+    "player": [],
+    "handler": []
+  },
+  "campaignState": {},
+  "provenance": {
+    "adapter": {
+      "id": "fixture-authoring",
+      "version": "0.0.0"
+    },
+    "source": {
+      "format": "canonical-fixture",
+      "version": "1.0.0"
+    },
+    "contentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "extensions": {}
+}

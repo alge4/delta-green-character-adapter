@@ -1,0 +1,546 @@
+{
+  "name": "ARENDT, GEORGE",
+  "type": "agent",
+  "img": "icons/svg/mystery-man.svg",
+  "items": [
+    {
+      "name": "New Bond",
+      "type": "bond",
+      "img": "icons/svg/mystery-man.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "system": {
+        "description": "",
+        "score": 10,
+        "relationship": "",
+        "hasBeenDamagedSinceLastHomeScene": false
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_id": "cQXgVZSDZidu7yaN",
+      "_stats": {
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "coreVersion": "14.365",
+        "createdTime": 1785554185797,
+        "modifiedTime": 1785554185797,
+        "lastModifiedBy": "61Nk4LqGD5F5o62U",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "New Bond",
+      "type": "bond",
+      "img": "icons/svg/mystery-man.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "system": {
+        "description": "",
+        "score": 10,
+        "relationship": "",
+        "hasBeenDamagedSinceLastHomeScene": false
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_id": "bLwOqAFc3WWtoDTR",
+      "_stats": {
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "coreVersion": "14.365",
+        "createdTime": 1785554185797,
+        "modifiedTime": 1785554185797,
+        "lastModifiedBy": "61Nk4LqGD5F5o62U",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "New Bond",
+      "type": "bond",
+      "img": "icons/svg/mystery-man.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "flags": {},
+      "system": {
+        "description": "",
+        "score": 10,
+        "relationship": "",
+        "hasBeenDamagedSinceLastHomeScene": false
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_id": "nATzD0Q0xFKpunGS",
+      "_stats": {
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "coreVersion": "14.365",
+        "createdTime": 1785554185797,
+        "modifiedTime": 1785554185797,
+        "lastModifiedBy": "61Nk4LqGD5F5o62U",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Unarmed Attack",
+      "type": "weapon",
+      "img": "systems/deltagreen/assets/icons/punch.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "system": {
+        "description": "",
+        "skill": "unarmed_combat",
+        "skillModifier": 0,
+        "customSkillTarget": 50,
+        "range": "0M",
+        "damage": "1D4-1",
+        "armorPiercing": 0,
+        "lethality": 0,
+        "isLethal": false,
+        "killRadius": "N/A",
+        "ammo": "",
+        "expense": "NA",
+        "equipped": true
+      },
+      "ownership": {
+        "default": 0
+      },
+      "_id": "Hq4cdrQXzza8ke9k",
+      "flags": {},
+      "_stats": {
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "coreVersion": "14.365",
+        "createdTime": 1785554185797,
+        "modifiedTime": 1785554185797,
+        "lastModifiedBy": "61Nk4LqGD5F5o62U",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    }
+  ],
+  "folder": "GMfaMq76spx8qeBL",
+  "system": {
+    "health": {
+      "value": 14,
+      "min": 0,
+      "max": 14
+    },
+    "wp": {
+      "value": 10,
+      "min": 0,
+      "max": 10
+    },
+    "statistics": {
+      "str": {
+        "value": 15,
+        "distinguishing_feature": "Powerful"
+      },
+      "con": {
+        "value": 12,
+        "distinguishing_feature": ""
+      },
+      "dex": {
+        "value": 11,
+        "distinguishing_feature": ""
+      },
+      "int": {
+        "value": 14,
+        "distinguishing_feature": "Astute"
+      },
+      "pow": {
+        "value": 10,
+        "distinguishing_feature": ""
+      },
+      "cha": {
+        "value": 10,
+        "distinguishing_feature": ""
+      }
+    },
+    "skills": {
+      "accounting": {
+        "label": "Accounting",
+        "proficiency": 50,
+        "failure": false
+      },
+      "alertness": {
+        "label": "Alertness",
+        "proficiency": 20,
+        "failure": false
+      },
+      "anthropology": {
+        "label": "Anthropology",
+        "proficiency": 0,
+        "failure": false
+      },
+      "archeology": {
+        "label": "Archeology",
+        "proficiency": 0,
+        "failure": false
+      },
+      "artillery": {
+        "label": "Artillery",
+        "proficiency": 0,
+        "failure": false
+      },
+      "athletics": {
+        "label": "Athletics",
+        "proficiency": 30,
+        "failure": false
+      },
+      "bureaucracy": {
+        "label": "Bureaucracy",
+        "proficiency": 50,
+        "failure": false
+      },
+      "computer_science": {
+        "label": "Computer Science",
+        "proficiency": 80,
+        "failure": false
+      },
+      "criminology": {
+        "label": "Criminology",
+        "proficiency": 10,
+        "failure": false
+      },
+      "demolitions": {
+        "label": "Demolitions",
+        "proficiency": 20,
+        "failure": false
+      },
+      "disguise": {
+        "label": "Disguise",
+        "proficiency": 10,
+        "failure": false
+      },
+      "dodge": {
+        "label": "Dodge",
+        "proficiency": 30,
+        "failure": false
+      },
+      "drive": {
+        "label": "Drive",
+        "proficiency": 20,
+        "failure": false
+      },
+      "firearms": {
+        "label": "Firearms",
+        "proficiency": 20,
+        "failure": false
+      },
+      "first_aid": {
+        "label": "First Aid",
+        "proficiency": 10,
+        "failure": false
+      },
+      "forensics": {
+        "label": "Forensics",
+        "proficiency": 0,
+        "failure": false
+      },
+      "heavy_machiner": {
+        "label": "Heavy Machinery",
+        "proficiency": 30,
+        "failure": false
+      },
+      "heavy_weapons": {
+        "label": "Heavy Weapons",
+        "proficiency": 0,
+        "failure": false
+      },
+      "history": {
+        "label": "History",
+        "proficiency": 10,
+        "failure": false
+      },
+      "humint": {
+        "label": "HUMINT",
+        "proficiency": 30,
+        "failure": false
+      },
+      "law": {
+        "label": "Law",
+        "proficiency": 40,
+        "failure": false
+      },
+      "medicine": {
+        "label": "Medicine",
+        "proficiency": 0,
+        "failure": false
+      },
+      "melee_weapons": {
+        "label": "Melee Weapons",
+        "proficiency": 30,
+        "failure": false
+      },
+      "navigate": {
+        "label": "Navigate",
+        "proficiency": 30,
+        "failure": false
+      },
+      "occult": {
+        "label": "Occult",
+        "proficiency": 10,
+        "failure": false
+      },
+      "persuade": {
+        "label": "Persuade",
+        "proficiency": 20,
+        "failure": false
+      },
+      "pharmacy": {
+        "label": "Pharmacy",
+        "proficiency": 0,
+        "failure": false
+      },
+      "psychotherapy": {
+        "label": "Psychotherapy",
+        "proficiency": 10,
+        "failure": false
+      },
+      "ride": {
+        "label": "Ride",
+        "proficiency": 10,
+        "failure": false
+      },
+      "search": {
+        "label": "Search",
+        "proficiency": 40,
+        "failure": false
+      },
+      "sigint": {
+        "label": "SIGINT",
+        "proficiency": 40,
+        "failure": false
+      },
+      "stealth": {
+        "label": "Stealth",
+        "proficiency": 10,
+        "failure": false
+      },
+      "surgery": {
+        "label": "Surgery",
+        "proficiency": 0,
+        "failure": false
+      },
+      "survival": {
+        "label": "Survival",
+        "proficiency": 30,
+        "failure": false
+      },
+      "swim": {
+        "label": "Swim",
+        "proficiency": 20,
+        "failure": false
+      },
+      "unarmed_combat": {
+        "label": "Unarmed Combat",
+        "proficiency": 40,
+        "failure": false
+      },
+      "unnatural": {
+        "label": "Unnatural",
+        "proficiency": 0
+      }
+    },
+    "typedSkills": {
+      "tskill_01": {
+        "label": "???",
+        "group": "Art",
+        "proficiency": 20,
+        "failure": false
+      },
+      "tskill_02": {
+        "label": "???",
+        "group": "Foreign Language",
+        "proficiency": 40,
+        "failure": false
+      },
+      "tskill_03": {
+        "label": "???",
+        "group": "Science",
+        "proficiency": 40,
+        "failure": false
+      }
+    },
+    "specialTraining": [],
+    "schemaVersion": 1,
+    "sanity": {
+      "value": 50,
+      "currentBreakingPoint": 40,
+      "adaptations": {
+        "violence": {
+          "incident1": false,
+          "incident2": false,
+          "incident3": false
+        },
+        "helplessness": {
+          "incident1": false,
+          "incident2": false,
+          "incident3": false
+        }
+      }
+    },
+    "physical": {
+      "description": "(Physical description of agent)",
+      "wounds": "",
+      "firstAidAttempted": false,
+      "exhausted": false,
+      "exhaustedPenalty": -20
+    },
+    "biography": {
+      "profession": "Computer Scientist",
+      "employer": "",
+      "nationality": "(U.S.A.) Karns, TN",
+      "sex": "M",
+      "age": "29    (DEC 3)",
+      "education": ""
+    },
+    "corruption": {
+      "value": 0,
+      "haveSeenTheYellowSign": false,
+      "gift": "",
+      "insight": ""
+    },
+    "settings": {
+      "sorting": {
+        "weaponSortAlphabetical": false,
+        "armorSortAlphabetical": false,
+        "gearSortAlphabetical": false,
+        "tomeSortAlphabetical": false,
+        "ritualSortAlphabetical": false
+      },
+      "rolling": {
+        "defaultPercentileModifier": 20
+      }
+    }
+  },
+  "prototypeToken": {
+    "name": "ARENDT, GEORGE",
+    "displayName": 0,
+    "actorLink": false,
+    "appendNumber": false,
+    "prependAdjective": false,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg",
+      "scaleX": 1,
+      "scaleY": 1,
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "fit": "contain",
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "width": 1,
+    "height": 1,
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "disposition": -1,
+    "displayBars": 0,
+    "bar1": {
+      "attribute": "health"
+    },
+    "bar2": {
+      "attribute": "wp"
+    },
+    "light": {
+      "alpha": 0.5,
+      "angle": 360,
+      "bright": 0,
+      "coloration": 1,
+      "dim": 0,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "type": null,
+        "speed": 5,
+        "intensity": 5,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      },
+      "negative": false,
+      "priority": 0,
+      "color": null
+    },
+    "sight": {
+      "enabled": false,
+      "range": 0,
+      "angle": 360,
+      "visionMode": "basic",
+      "attenuation": 0.1,
+      "brightness": 0,
+      "saturation": 0,
+      "contrast": 0,
+      "color": null
+    },
+    "detectionModes": {},
+    "flags": {},
+    "randomImg": false,
+    "depth": 1,
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null
+  },
+  "effects": [],
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "systemId": "deltagreen",
+    "systemVersion": "1.7.0",
+    "coreVersion": "14.365",
+    "createdTime": 1785554185797,
+    "modifiedTime": 1785554185797,
+    "lastModifiedBy": "61Nk4LqGD5F5o62U",
+    "compendiumSource": "Compendium.deltagreen.agent-pregens.Actor.1JRxGMZ9oXtUmaSg",
+    "duplicateSource": null,
+    "exportSource": {
+      "worldId": "delta-green",
+      "uuid": "Actor.1JRxGMZ9oXtUmaSg",
+      "coreVersion": "14.365",
+      "systemId": "deltagreen",
+      "systemVersion": "1.7.0"
+    }
+  }
+}
