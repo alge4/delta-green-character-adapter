@@ -200,7 +200,8 @@ export function createInMemoryActorRuntime(options: InMemoryActorOptions): InMem
       if (consumeFailure("duringRestore")) {
         throw new Error("Injected failure: duringRestore");
       }
-      source = ensureActorShape(snapshot, actorId);
+      // Preserve the verified recovery snapshot byte-for-byte, including Foundry _stats.
+      source = ensureActorShape(snapshot, actorId, { stampStats: false });
     },
     async updateActor(diff: Record<string, unknown>) {
       maybeBeforeWrite();
