@@ -218,8 +218,7 @@ describe("registerFoundryModule Agent-sheet mount (#38)", () => {
   installDom();
 
   it("registers classic and ApplicationV2 Agent-sheet hooks in the Foundry bootstrap source", () => {
-    // Assert source (not artifact/main.js): packaging.test.ts rmSync's the artifact in parallel.
-    // Packaged main.js hook surface is covered by scripts/diagnose-sheet-mount.mjs.
+    // Source seam here; packaged main.js + diagnose gate are covered by packaging.test.ts (#39).
     const source = readFileSync(resolve(moduleRoot, "src/foundry/register.ts"), "utf8");
     assert.match(source, /"renderActorSheet"/);
     assert.match(source, /"renderDocumentSheet"/);

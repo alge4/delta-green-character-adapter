@@ -32,9 +32,5 @@ jobs:
       - name: Build (packages + Foundry production artifact)
         run: pnpm build
 
-      - name: Assert Foundry production artifact metadata
-        run: |
-          test -f apps/foundry-module/artifact/delta-green-character-adapter/module.json
-          test -f apps/foundry-module/artifact/delta-green-character-adapter/main.js
-          test -f apps/foundry-module/artifact/delta-green-character-adapter/styles/styles.css
-          node --input-type=module -e "import { readFileSync } from 'node:fs'; const m=JSON.parse(readFileSync('apps/foundry-module/artifact/delta-green-character-adapter/module.json','utf8')); if(m.compatibility.verified!=='14.365') process.exit(1); if(m.relationships.systems[0].compatibility.verified!=='1.7.0') process.exit(1); if(m.flags.deltaGreenCharacterAdapter.verifiedCapabilities.length!==3) process.exit(1);"
+      - name: Assert Foundry production artifact metadata and corrected bootstrap
+        run: node apps/foundry-module/scripts/assert-packaged-artifact.mjs
