@@ -13,6 +13,13 @@ The narrowest verified corrective seam is **`registerFoundryModule` in `apps/fou
 - Module registration surface: `apps/foundry-module/src/foundry/register.ts` currently hooks only `renderActorSheet` and `renderDocumentSheet`.
 - Live host marker: `https://foundry.faux-orator.com/join` reports **Version 14 Build 365** (exact-target core).
 
+## Evidence tiers
+
+1. **Primary-source runtime contract** — DG `1.7.0` registers `DGAgentSheet`, whose base class is `ActorSheetV2`. Foundry v14 dispatches ApplicationV2 hooks (`renderActorSheetV2`, etc.), not classic `renderActorSheet`, for that sheet.
+2. **Packaged artifact surface** — built `artifact/delta-green-character-adapter/main.js` contains `renderActorSheet` / `renderDocumentSheet` string literals and does **not** contain `renderActorSheetV2`.
+3. **Call-site simulation** — `registerFoundryModule` against a DOM shim with exact-target `game` values: ApplicationV2 hooks leave chrome unmounted; the subscribed classic hook mounts Completeness + Import.
+4. **Live host marker only** — `foundry.faux-orator.com` reports Foundry 14 Build 365; this diagnosis did not open an authenticated Agent sheet on that host.
+
 ## Red-capable feedback loop
 
 Command (from `apps/foundry-module` after `pnpm build`):
@@ -24,6 +31,8 @@ node ./scripts/diagnose-sheet-mount.mjs
 Observed on this diagnosis (exit code `1`):
 
 ```text
+packaged main.js renderActorSheet: present
+packaged main.js renderActorSheetV2: absent (expected for #37)
 subscribed hooks: renderActorSheet, renderDocumentSheet
 after renderActorSheetV2 / renderDocumentSheetV2:
   data-dgca-titlebar: MISSING

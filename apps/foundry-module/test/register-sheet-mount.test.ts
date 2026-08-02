@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
 import { describe, it } from "node:test";
 
 import { registerFoundryModule } from "../src/foundry/register.js";
-import { BLANK_ACTOR, readFoundryFixture } from "./helpers.js";
+import { BLANK_ACTOR, moduleRoot, readFoundryFixture } from "./helpers.js";
 
 /**
  * Minimal DOM for registerFoundryModule attach (#37).
@@ -214,6 +216,19 @@ const exactGame = {
 
 describe("registerFoundryModule Agent-sheet mount (#37)", () => {
   installDom();
+
+  it("packages bootstrap that listens for classic sheet hooks but not ActorSheetV2", () => {
+    const artifactMain = resolve(
+      moduleRoot,
+      "artifact/delta-green-character-adapter/main.js",
+    );
+    assert.equal(existsSync(artifactMain), true, "production artifact main.js must exist");
+    const bundled = readFileSync(artifactMain, "utf8");
+    assert.match(bundled, /["']renderActorSheet["']/);
+    assert.match(bundled, /["']renderDocumentSheet["']/);
+    assert.equal(bundled.includes("renderActorSheetV2"), false);
+    assert.equal(bundled.includes("renderDocumentSheetV2"), false);
+  });
 
   it("subscribes only to classic Application V1 sheet hooks today", () => {
     const hooks = createHookBus();

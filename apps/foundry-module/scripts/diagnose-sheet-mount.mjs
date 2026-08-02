@@ -25,6 +25,21 @@ const blankPath = resolve(
   "fixtures/foundry/14.365-deltagreen-1.7.0/fvtt-Actor-blank-GZGftVGSKSRNSREr.json",
 );
 
+const artifactMain = resolve(rootDir, "artifact/delta-green-character-adapter/main.js");
+const bundled = readFileSync(artifactMain, "utf8");
+const bundleHasV1 =
+  bundled.includes('"renderActorSheet"') || bundled.includes("'renderActorSheet'");
+const bundleHasV2 =
+  bundled.includes('"renderActorSheetV2"') || bundled.includes("'renderActorSheetV2'");
+console.log("packaged main.js renderActorSheet:", bundleHasV1 ? "present" : "MISSING");
+console.log("packaged main.js renderActorSheetV2:", bundleHasV2 ? "present" : "absent (expected for #37)");
+if (!bundleHasV1 || bundleHasV2) {
+  console.log(
+    "DIAGNOSIS: packaged bootstrap hook surface unexpected; aborting call-site simulation.",
+  );
+  process.exit(2);
+}
+
 installDomShim();
 
 const { registerFoundryModule } = await import("../dist/foundry/register.js");
