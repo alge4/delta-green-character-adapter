@@ -10,11 +10,13 @@ import {
   importFoundryDeltaGreen,
   PREPARED_ONLY_FIELDS,
 } from "@delta-green-character-adapter/adapter-foundry-deltagreen";
+import { importGreenAgentCreator } from "@delta-green-character-adapter/adapter-green-agent-creator";
 import { planFoundryActorUpdate } from "@delta-green-character-adapter/foundry-update-planner";
 
 import { applyFoundryActorUpdate } from "../src/apply.js";
 import { createFoundryActor } from "../src/create.js";
 import { getByPointer, isRecord } from "../src/paths.js";
+import { createImportWizardSession } from "../src/wizard/session.js";
 import { createInMemoryActorRuntime, createInMemoryWorld } from "./harness.js";
 import {
   adapterFlags,
@@ -29,6 +31,14 @@ import {
   sequentialIdFactory,
   withActorName,
 } from "./helpers.js";
+
+const supportedSheet = {
+  documentName: "Actor",
+  actorType: "agent",
+  systemId: "deltagreen",
+  systemVersion: "1.7.0",
+  coreVersion: "14.365",
+} as const;
 
 const LIVE_APPLY_DIR = resolve(foundryFixtureRoot, "live-apply");
 const CREATE_FIXTURE = "f7-create-full-semantic.json";
@@ -253,6 +263,79 @@ describe("exact-target live apply evidence (#29 F7)", () => {
     assert.equal(getByPointer(output, "/resources/willpower/current"), 4);
     assert.equal(getByPointer(output, "/resources/sanity/current"), 40);
     assert.equal(getByPointer(output, "/biography/profession"), "Federal Agent");
+  });
+
+  it("proves Green Caleb → create → export → re-import as one continuous exact-runtime path", async () => {
+    const greenBytes = readFileSync(
+      resolve(repoRoot, "fixtures/green-agent-creator/5c9e92d/caleb.json"),
+    );
+    const green = importGreenAgentCreator(new Uint8Array(greenBytes));
+    assert.equal(green.blocked, false, JSON.stringify(green.diagnostics, null, 2));
+    assert.ok(green.output !== undefined);
+
+    const world = createInMemoryWorld({ gm: true });
+    const created = await createFoundryActor({
+      snapshot: green.output,
+      world,
+      options: {
+        createId: sequentialIdFactory(),
+        adapterVersion: "0.0.0",
+        now: "2026-08-02T12:00:00.000Z",
+      },
+    });
+    assert.equal(created.blocked, false, JSON.stringify(created.diagnostics, null, 2));
+    const actorId = isRecord(created.output) ? String(created.output.actorId) : "";
+    const runtime = world.actors.get(actorId);
+    assert.ok(runtime !== undefined);
+    const exported = runtime.readActorSource();
+    assertExactTargetStats(exported);
+    assertNoPreparedOnlyFields(exported);
+
+    const reimport = importFoundryDeltaGreen(
+      new TextEncoder().encode(JSON.stringify(exported)),
+    );
+    assert.equal(reimport.blocked, false, JSON.stringify(reimport.diagnostics, null, 2));
+    assert.ok(reimport.output !== undefined);
+    assert.equal(
+      getByPointer(reimport.output as Record<string, unknown>, "/biography/profession"),
+      "Computer Scientist or Engineer",
+    );
+  });
+
+  it("hides Handler-only values from non-GM callers on the Green→wizard merge path", async () => {
+    const runtime = createInMemoryActorRuntime({
+      source: withActorName(readFoundryFixture(BLANK_ACTOR), "Caleb"),
+      gm: false,
+      canUpdate: true,
+    });
+    const session = createImportWizardSession({
+      runtime,
+      sheet: supportedSheet,
+      options: {
+        createId: sequentialIdFactory(),
+        adapterVersion: "0.0.0",
+        now: "2026-08-02T12:00:00.000Z",
+      },
+    });
+    const calebBytes = readFileSync(
+      resolve(repoRoot, "fixtures/green-agent-creator/5c9e92d/caleb.json"),
+    );
+    session.open();
+    session.loadLocalGreenSource({ bytes: calebBytes, fileName: "caleb.json" });
+    for (const groupKey of session.view().pendingGroupAcknowledgements) {
+      session.acknowledgeGroup(groupKey);
+    }
+    session.continueToPlan();
+    assert.equal(session.view().handlerOnlyVisible, false);
+    for (const entry of session.view().plan!.entries.filter(
+      (item) => item.fieldClass === "handlerOnly",
+    )) {
+      assert.equal(entry.selectedByDefault, false);
+      assert.ok(
+        entry.proposed.kind === "redacted" || entry.proposed.kind === "omitted",
+        JSON.stringify(entry.proposed),
+      );
+    }
   });
 
   it("keeps live-apply fixtures listed in SHA256SUMS", () => {
