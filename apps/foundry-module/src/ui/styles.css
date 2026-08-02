@@ -67,20 +67,32 @@
   cursor: not-allowed;
 }
 
+.dgca-modal-host {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+}
+
+.dgca-modal-host:empty {
+  display: none;
+}
+
 .dgca-modal-backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: rgba(10, 12, 10, 0.55);
   display: grid;
   place-items: center;
-  z-index: 20;
+  z-index: 99999;
   padding: 1rem;
+  pointer-events: auto;
 }
 
 .dgca-modal {
   width: min(720px, 100%);
   max-height: min(80vh, 720px);
-  overflow: auto;
+  overflow: hidden;
   background: var(--dgca-paper);
   color: var(--dgca-ink);
   border-radius: 6px;
@@ -89,6 +101,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  pointer-events: auto;
+}
+
+.dgca-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
 }
 
 .dgca-modal-header {
@@ -179,6 +198,7 @@
 .dgca-remediation {
   display: flex;
   flex-wrap: wrap;
+  flex: 0 0 auto;
   gap: 0.45rem;
   margin-top: 0.65rem;
 }

@@ -177,18 +177,25 @@ class HTMLElementShim extends ElementShim {}
 
 function installDom(): void {
   (globalThis as unknown as { HTMLElement: typeof HTMLElementShim }).HTMLElement = HTMLElementShim;
-  (globalThis as unknown as { document: { createElement: (tag: string) => HTMLElementShim } }).document =
-    {
-      createElement(tagName: string) {
-        return new HTMLElementShim(tagName);
-      },
+  const body = new HTMLElementShim("body");
+  (globalThis as unknown as {
+    document: {
+      body: HTMLElementShim;
+      createElement: (tag: string) => HTMLElementShim;
     };
+  }).document = {
+    body,
+    createElement(tagName: string) {
+      return new HTMLElementShim(tagName);
+    },
+  };
   (globalThis as unknown as { getComputedStyle: () => { position: string } }).getComputedStyle = () => ({
     position: "static",
   });
 }
 
 function createApplicationRoot(): HTMLElementShim {
+  document.body.replaceChildren();
   const root = new HTMLElementShim("div");
   root.classList.add("application");
   const header = new HTMLElementShim("header");
@@ -348,6 +355,31 @@ describe("registerFoundryModule Agent-sheet mount (#38)", () => {
     const importButton = titleBar.querySelector("button");
     assert.ok(importButton, "Import control should mount on V2 render");
     assert.match(importButton.textContent, /Import/);
+  });
+
+  it("portals the import modal host onto document.body, not inside the sheet form", async () => {
+    const hooks = createHookBus();
+    registerFoundryModule({
+      hooks,
+      getGame: () => exactGame,
+      adapterVersion: "0.0.0",
+    });
+    const root = createApplicationRoot();
+    hooks.emit("renderActorSheetV2", createSheet(root), root, {}, {});
+
+    await waitFor(
+      () => document.body.querySelector("[data-dgca-modal-host]"),
+      (node) => node !== null,
+    );
+    const modalHost = document.body.querySelector("[data-dgca-modal-host]");
+    assert.ok(modalHost, "modal host should mount on document.body");
+    assert.equal(modalHost.parentElement, document.body);
+    assert.equal(modalHost.getAttribute("data-dgca-modal-portal"), "true");
+    assert.equal(
+      root.querySelector("[data-dgca-modal-host]"),
+      null,
+      "modal host must not remain inside the ApplicationV2 form",
+    );
   });
 
   it("mounts module-owned Bio chrome on the bio tab panel, not the Bio nav link", async () => {

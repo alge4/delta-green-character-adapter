@@ -91,15 +91,29 @@ function ensureChromeSlots(root: HTMLElement): {
         })();
   placeTitleBarSlot(header, titleBar);
 
-  let modalHost = windowEl.querySelector("[data-dgca-modal-host]");
+  // Portal the wizard outside the ApplicationV2 <form>. In-sheet absolute overlays
+  // overflow onto #board, so Continue/Apply clicks hit the canvas instead (#40).
+  for (const legacy of windowEl.querySelectorAll("[data-dgca-modal-host]")) {
+    legacy.remove();
+  }
+  const body = document.body;
+  let modalHost =
+    body instanceof HTMLElement
+      ? Array.from(body.children).find(
+          (child): child is HTMLElement =>
+            child instanceof HTMLElement && child.getAttribute("data-dgca-modal-host") === "true",
+        )
+      : undefined;
   if (!(modalHost instanceof HTMLElement)) {
     modalHost = document.createElement("div");
     modalHost.setAttribute("data-dgca-modal-host", "true");
+    modalHost.setAttribute("data-dgca-modal-portal", "true");
     modalHost.className = "dgca-modal-host";
-    if (getComputedStyle(windowEl).position === "static") {
-      windowEl.style.position = "relative";
+    if (body instanceof HTMLElement) {
+      body.append(modalHost);
+    } else {
+      windowEl.append(modalHost);
     }
-    windowEl.append(modalHost);
   }
 
   // Prefer ApplicationV2 tab *panels* (`data-application-part` / `.tab[data-tab]`).

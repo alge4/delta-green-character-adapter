@@ -178,6 +178,7 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
       modal.append(steps);
 
       const body = el("div", "dgca-panel");
+      let footer: HTMLElement | null = null;
       if (view.progressMessage) {
         body.append(el("p", "dgca-progress", view.progressMessage));
       }
@@ -265,7 +266,7 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
           list.append(item);
         }
         body.append(list);
-        const actions = el("div", "dgca-panel-actions");
+        footer = el("div", "dgca-panel-actions");
         const cont = el("button", "dgca-primary", "Continue to Update Plan");
         cont.type = "button";
         cont.disabled = !view.canContinueToPlan;
@@ -273,8 +274,7 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
         cont.addEventListener("click", () => {
           void Promise.resolve(host.continueToPlan()).then(() => void render());
         });
-        actions.append(cont);
-        body.append(actions);
+        footer.append(cont);
       }
 
       if (view.phase === "plan" || view.phase === "applying") {
@@ -341,7 +341,7 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
           }
           body.append(list);
         }
-        const actions = el("div", "dgca-panel-actions");
+        footer = el("div", "dgca-panel-actions");
         const back = el("button", "dgca-ghost", "Back");
         back.type = "button";
         back.disabled = view.phase === "applying";
@@ -355,8 +355,7 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
         apply.addEventListener("click", () => {
           void Promise.resolve(host.confirmApply()).then(() => void render());
         });
-        actions.append(back, apply);
-        body.append(actions);
+        footer.append(back, apply);
       }
 
       if (view.phase === "done") {
@@ -400,6 +399,9 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
       }
 
       modal.append(body);
+      if (footer) {
+        modal.append(footer);
+      }
 
       if (view.phase !== "source" && view.phase !== "done") {
         const cancel = el("button", "dgca-ghost", "Cancel import");
@@ -427,6 +429,9 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
     unsubscribe?.();
     titleBar.replaceChildren();
     modalHost.replaceChildren();
+    if (modalHost.getAttribute("data-dgca-modal-portal") === "true") {
+      modalHost.remove();
+    }
     bioHost?.querySelector("[data-dgca-module-owned]")?.remove();
   };
 }

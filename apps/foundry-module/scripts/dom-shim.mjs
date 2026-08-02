@@ -179,7 +179,9 @@ class HTMLElementShim extends ElementShim {}
 
 export function installDomShim() {
   globalThis.HTMLElement = HTMLElementShim;
+  const body = new HTMLElementShim("body");
   globalThis.document = {
+    body,
     createElement(tagName) {
       return new HTMLElementShim(tagName);
     },
@@ -192,6 +194,7 @@ export function installDomShim() {
 }
 
 export function createApplicationRoot(dom = installDomShim()) {
+  document.body.replaceChildren();
   const root = dom.createElement("div");
   root.classList.add("application");
   const header = dom.createElement("header");
