@@ -8,6 +8,25 @@ importers:
 
   .: {}
 
+  packages/adapter-core:
+    dependencies:
+      '@delta-green-character-adapter/character-model':
+        specifier: workspace:*
+        version: link:../character-model
+      '@delta-green-character-adapter/validation':
+        specifier: workspace:*
+        version: link:../validation
+      zod:
+        specifier: ^4.1.5
+        version: 4.4.3
+    devDependencies:
+      '@types/node':
+        specifier: ^22.18.1
+        version: 22.20.1
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
+
   packages/character-model:
     dependencies:
       zod:
