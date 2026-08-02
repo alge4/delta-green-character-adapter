@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { existsSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { describe, it } from "node:test";
 
@@ -217,17 +217,14 @@ const exactGame = {
 describe("registerFoundryModule Agent-sheet mount (#37)", () => {
   installDom();
 
-  it("packages bootstrap that listens for classic sheet hooks but not ActorSheetV2", () => {
-    const artifactMain = resolve(
-      moduleRoot,
-      "artifact/delta-green-character-adapter/main.js",
-    );
-    assert.equal(existsSync(artifactMain), true, "production artifact main.js must exist");
-    const bundled = readFileSync(artifactMain, "utf8");
-    assert.match(bundled, /["']renderActorSheet["']/);
-    assert.match(bundled, /["']renderDocumentSheet["']/);
-    assert.equal(bundled.includes("renderActorSheetV2"), false);
-    assert.equal(bundled.includes("renderDocumentSheetV2"), false);
+  it("registers classic sheet hooks but not ActorSheetV2 in the Foundry bootstrap source", () => {
+    // Assert source (not artifact/main.js): packaging.test.ts rmSync's the artifact in parallel.
+    // Packaged main.js hook surface is covered by scripts/diagnose-sheet-mount.mjs.
+    const source = readFileSync(resolve(moduleRoot, "src/foundry/register.ts"), "utf8");
+    assert.match(source, /"renderActorSheet"/);
+    assert.match(source, /"renderDocumentSheet"/);
+    assert.equal(source.includes("renderActorSheetV2"), false);
+    assert.equal(source.includes("renderDocumentSheetV2"), false);
   });
 
   it("subscribes only to classic Application V1 sheet hooks today", () => {
