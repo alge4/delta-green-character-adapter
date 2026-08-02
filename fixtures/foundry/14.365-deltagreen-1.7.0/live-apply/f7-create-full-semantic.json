@@ -1,0 +1,655 @@
+{
+  "name": "REYES, MARISOL",
+  "type": "agent",
+  "system": {
+    "health": {
+      "min": 0,
+      "value": 7,
+      "max": 12
+    },
+    "wp": {
+      "min": 0,
+      "value": 6,
+      "max": 11
+    },
+    "statistics": {
+      "str": {
+        "value": 12,
+        "distinguishing_feature": ""
+      },
+      "con": {
+        "value": 11,
+        "distinguishing_feature": ""
+      },
+      "dex": {
+        "value": 13,
+        "distinguishing_feature": ""
+      },
+      "int": {
+        "value": 14,
+        "distinguishing_feature": ""
+      },
+      "pow": {
+        "value": 11,
+        "distinguishing_feature": ""
+      },
+      "cha": {
+        "value": 10,
+        "distinguishing_feature": ""
+      }
+    },
+    "settings": {
+      "sorting": {
+        "weaponSortAlphabetical": false,
+        "armorSortAlphabetical": false,
+        "gearSortAlphabetical": false,
+        "tomeSortAlphabetical": false,
+        "ritualSortAlphabetical": false
+      },
+      "rolling": {
+        "defaultPercentileModifier": 20
+      }
+    },
+    "skills": {
+      "accounting": {
+        "proficiency": 10,
+        "label": "Accounting",
+        "failure": false
+      },
+      "alertness": {
+        "proficiency": 20,
+        "label": "Alertness",
+        "failure": false
+      },
+      "anthropology": {
+        "proficiency": 0,
+        "label": "Anthropology",
+        "failure": false
+      },
+      "archeology": {
+        "proficiency": 0,
+        "label": "Archeology",
+        "failure": false
+      },
+      "artillery": {
+        "proficiency": 0,
+        "label": "Artillery",
+        "failure": false
+      },
+      "athletics": {
+        "proficiency": 30,
+        "label": "Athletics",
+        "failure": false
+      },
+      "bureaucracy": {
+        "proficiency": 10,
+        "label": "Bureaucracy",
+        "failure": false
+      },
+      "computer_science": {
+        "proficiency": 0,
+        "label": "Computer Science",
+        "failure": false
+      },
+      "criminology": {
+        "proficiency": 10,
+        "label": "Criminology",
+        "failure": false
+      },
+      "demolitions": {
+        "proficiency": 0,
+        "label": "Demolitions",
+        "failure": false
+      },
+      "disguise": {
+        "proficiency": 10,
+        "label": "Disguise",
+        "failure": false
+      },
+      "dodge": {
+        "proficiency": 30,
+        "label": "Dodge",
+        "failure": false
+      },
+      "drive": {
+        "proficiency": 20,
+        "label": "Drive",
+        "failure": false
+      },
+      "firearms": {
+        "proficiency": 60,
+        "label": "Firearms",
+        "failure": true
+      },
+      "first_aid": {
+        "proficiency": 10,
+        "label": "First Aid",
+        "failure": false
+      },
+      "forensics": {
+        "proficiency": 0,
+        "label": "Forensics",
+        "failure": false
+      },
+      "heavy_machiner": {
+        "proficiency": 30,
+        "label": "Heavy Machinery",
+        "failure": false
+      },
+      "heavy_weapons": {
+        "proficiency": 0,
+        "label": "Heavy Weapons",
+        "failure": false
+      },
+      "history": {
+        "proficiency": 10,
+        "label": "History",
+        "failure": false
+      },
+      "humint": {
+        "proficiency": 10,
+        "label": "HUMINT",
+        "failure": false
+      },
+      "law": {
+        "proficiency": 0,
+        "label": "Law",
+        "failure": false
+      },
+      "medicine": {
+        "proficiency": 0,
+        "label": "Medicine",
+        "failure": false
+      },
+      "melee_weapons": {
+        "proficiency": 30,
+        "label": "Melee Weapons",
+        "failure": false
+      },
+      "navigate": {
+        "proficiency": 10,
+        "label": "Navigate",
+        "failure": false
+      },
+      "occult": {
+        "proficiency": 40,
+        "label": "Occult",
+        "failure": false
+      },
+      "persuade": {
+        "proficiency": 20,
+        "label": "Persuade",
+        "failure": false
+      },
+      "pharmacy": {
+        "proficiency": 0,
+        "label": "Pharmacy",
+        "failure": false
+      },
+      "psychotherapy": {
+        "proficiency": 10,
+        "label": "Psychotherapy",
+        "failure": false
+      },
+      "ride": {
+        "proficiency": 10,
+        "label": "Ride",
+        "failure": false
+      },
+      "search": {
+        "proficiency": 20,
+        "label": "Search",
+        "failure": false
+      },
+      "sigint": {
+        "proficiency": 0,
+        "label": "SIGINT",
+        "failure": false
+      },
+      "stealth": {
+        "proficiency": 10,
+        "label": "Stealth",
+        "failure": false
+      },
+      "surgery": {
+        "proficiency": 0,
+        "label": "Surgery",
+        "failure": false
+      },
+      "survival": {
+        "proficiency": 10,
+        "label": "Survival",
+        "failure": false
+      },
+      "swim": {
+        "proficiency": 20,
+        "label": "Swim",
+        "failure": false
+      },
+      "unarmed_combat": {
+        "proficiency": 55,
+        "label": "Unarmed Combat",
+        "failure": false
+      },
+      "unnatural": {
+        "proficiency": 12,
+        "label": "Unnatural"
+      }
+    },
+    "typedSkills": {
+      "tskill_01": {
+        "label": "Biology",
+        "group": "Science",
+        "proficiency": 50,
+        "failure": false
+      },
+      "tskill_02": {
+        "label": "Spanish",
+        "group": "Foreign Language",
+        "proficiency": 45,
+        "failure": true
+      }
+    },
+    "specialTraining": [
+      {
+        "name": "Iron Grip",
+        "attribute": "str",
+        "id": "0000000000004000"
+      },
+      {
+        "name": "Battlefield Medicine",
+        "attribute": "first_aid",
+        "id": "0000000000004000"
+      },
+      {
+        "name": "Field Chemistry",
+        "attribute": "tskill_01",
+        "id": "0000000000004000"
+      }
+    ],
+    "schemaVersion": 1,
+    "sanity": {
+      "value": 41,
+      "currentBreakingPoint": 30,
+      "adaptations": {
+        "violence": {
+          "incident1": true,
+          "incident2": true,
+          "incident3": true
+        },
+        "helplessness": {
+          "incident1": true,
+          "incident2": false,
+          "incident3": false
+        }
+      }
+    },
+    "physical": {
+      "description": "<p>Tall, burn scar on the right hand.</p>",
+      "wounds": "Cracked ribs, left side.",
+      "firstAidAttempted": true,
+      "exhausted": true,
+      "exhaustedPenalty": -20
+    },
+    "biography": {
+      "profession": "Federal Agent",
+      "employer": "FBI",
+      "nationality": "USA",
+      "sex": "F",
+      "age": "41",
+      "education": "BA Criminal Justice"
+    },
+    "corruption": {
+      "value": 3,
+      "haveSeenTheYellowSign": true,
+      "gift": "The Tatterdemalion's favour",
+      "insight": "The King in tatters walks the halls."
+    }
+  },
+  "items": [
+    {
+      "name": "Unarmed Attack",
+      "type": "weapon",
+      "system": {
+        "description": "",
+        "skill": "unarmed_combat",
+        "skillModifier": 0,
+        "range": "0M",
+        "damage": "1D4-1",
+        "armorPiercing": 0,
+        "lethality": 0,
+        "isLethal": false,
+        "killRadius": "N/A",
+        "ammo": "",
+        "expense": "Standard",
+        "equipped": true
+      },
+      "flags": {
+        "deltagreen": {
+          "AutoAdded": true,
+          "SystemName": "unarmed-attack"
+        }
+      },
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1780000000000,
+        "modifiedTime": 1780000000000,
+        "lastModifiedBy": "UserHarness0001",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Glock 17",
+      "type": "weapon",
+      "system": {
+        "description": "<p>Duty sidearm.</p>",
+        "skill": "firearms",
+        "skillModifier": 0,
+        "range": "15M",
+        "damage": "1D10",
+        "armorPiercing": 3,
+        "lethality": 0,
+        "isLethal": false,
+        "killRadius": "N/A",
+        "ammo": "17",
+        "expense": "Standard",
+        "equipped": true
+      },
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1780000000000,
+        "modifiedTime": 1780000000000,
+        "lastModifiedBy": "UserHarness0001",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Kevlar Vest",
+      "type": "armor",
+      "system": {
+        "description": "<p>Concealable.</p>",
+        "protection": 3,
+        "equipped": true,
+        "expense": "Standard"
+      },
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1780000000000,
+        "modifiedTime": 1780000000000,
+        "lastModifiedBy": "UserHarness0001",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Evidence Kit",
+      "type": "gear",
+      "system": {
+        "description": "",
+        "equipped": false,
+        "expense": "Incidental"
+      },
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1780000000000,
+        "modifiedTime": 1780000000000,
+        "lastModifiedBy": "UserHarness0001",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Nameless Cults",
+      "type": "tome",
+      "system": {
+        "description": "<p>German edition.</p>",
+        "language": "German",
+        "studyTime": "6 weeks",
+        "unnaturalSkillIncrease": 5,
+        "occultSkillIncrease": 3,
+        "sanity": {
+          "notes": "Cumulative",
+          "failedLoss": "1D6",
+          "successLoss": "1D4"
+        },
+        "handlerNotes": "<p>Handler only.</p>",
+        "revealed": false
+      },
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1780000000000,
+        "modifiedTime": 1780000000000,
+        "lastModifiedBy": "UserHarness0001",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Voorish Sign",
+      "type": "ritual",
+      "system": {
+        "description": "<p>A warding gesture.</p>",
+        "studyTime": "1 week",
+        "sanity": {
+          "notes": "",
+          "failedLoss": "1D10",
+          "successLoss": "0"
+        },
+        "learnedSanity": {
+          "notes": "Once learned",
+          "failedLoss": "1D4",
+          "successLoss": "0"
+        },
+        "unnaturalSkillIncrease": 1,
+        "activationCosts": "1 WP",
+        "activationTime": "1 round",
+        "complexity": "Simple",
+        "handlerNotes": "<p>Handler only.</p>",
+        "revealed": true
+      },
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1780000000000,
+        "modifiedTime": 1780000000000,
+        "lastModifiedBy": "UserHarness0001",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Rosa Delgado",
+      "type": "bond",
+      "system": {
+        "description": "<p>Lives in Tucson.</p>",
+        "score": 13,
+        "relationship": "Sister",
+        "hasBeenDamagedSinceLastHomeScene": true
+      },
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1780000000000,
+        "modifiedTime": 1780000000000,
+        "lastModifiedBy": "UserHarness0001",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Prove the truth",
+      "type": "motivation",
+      "system": {
+        "description": "",
+        "disorder": "Post-traumatic stress",
+        "crossedOut": false,
+        "disorderCured": false
+      },
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1780000000000,
+        "modifiedTime": 1780000000000,
+        "lastModifiedBy": "UserHarness0001",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Protect the innocent",
+      "type": "motivation",
+      "system": {
+        "description": "",
+        "disorder": "",
+        "crossedOut": true,
+        "disorderCured": false
+      },
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1780000000000,
+        "modifiedTime": 1780000000000,
+        "lastModifiedBy": "UserHarness0001",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "Disorder: Insomnia",
+      "type": "motivation",
+      "system": {
+        "description": "",
+        "disorder": "Insomnia",
+        "crossedOut": false,
+        "disorderCured": true
+      },
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1780000000000,
+        "modifiedTime": 1780000000000,
+        "lastModifiedBy": "UserHarness0001",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    }
+  ],
+  "flags": {
+    "deltaGreenCharacterAdapter": {
+      "agentId": "00000000-0000-4000-8000-000000000001",
+      "unrepresentable": {
+        "breakingPointBaseline": 44,
+        "dateOfBirth": "1984-11-02",
+        "aliases": [
+          "Cardinal",
+          "M. Reyes"
+        ],
+        "notes": {
+          "player": [
+            {
+              "format": "plain",
+              "content": "Keep the field notes off the record."
+            }
+          ],
+          "handler": [
+            {
+              "format": "plain",
+              "content": "Marisol is closer to the cell than she knows."
+            }
+          ]
+        },
+        "traumaticBackground": "hard_experience"
+      },
+      "audit": {
+        "capabilityId": "canonical-1.0.0-to-foundry-14.365-deltagreen-1.7.0",
+        "adapterId": "foundry-deltagreen-export",
+        "adapterVersion": "0.0.0",
+        "sourceFormat": "canonical-fixture",
+        "sourceContentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+        "adapterIds": [
+          "foundry-deltagreen-export"
+        ],
+        "planDigest": "sha256:4d76921bc1488392970443b42efbe83db825abd6814f33c7c625a27b9d76e792",
+        "targetFingerprint": "sha256:4d087c68b6b36c8b5fb09b6f2776529f32ff0fc782609648d28c57dbfaae9464",
+        "resultFingerprint": "sha256:589090f2f24c1370de861e6a5cf139796751e1d16ec14ad6e511bea97e6f7a30",
+        "mode": "create",
+        "affectedScopes": [
+          "biography"
+        ],
+        "operationCounts": {
+          "create": 1
+        },
+        "userId": "UserHarness0001",
+        "timestamp": "2026-08-02T12:00:00.000Z",
+        "agentId": "00000000-0000-4000-8000-000000000001",
+        "bindings": {
+          "typedSkills": {
+            "00000000-0000-4000-8000-000000000012": "tskill_01",
+            "00000000-0000-4000-8000-000000000013": "tskill_02"
+          },
+          "specialTraining": {
+            "00000000-0000-4000-8000-000000000014": "0000000000004000",
+            "00000000-0000-4000-8000-000000000015": "0000000000004000",
+            "00000000-0000-4000-8000-000000000016": "0000000000004000"
+          }
+        }
+      },
+      "bindings": {
+        "typedSkills": {
+          "00000000-0000-4000-8000-000000000012": "tskill_01",
+          "00000000-0000-4000-8000-000000000013": "tskill_02"
+        },
+        "specialTraining": {
+          "00000000-0000-4000-8000-000000000014": "0000000000004000",
+          "00000000-0000-4000-8000-000000000015": "0000000000004000",
+          "00000000-0000-4000-8000-000000000016": "0000000000004000"
+        }
+      }
+    }
+  },
+  "_id": "Actor000000000001",
+  "_stats": {
+    "coreVersion": "14.365",
+    "systemId": "deltagreen",
+    "systemVersion": "1.7.0",
+    "createdTime": 1780000000000,
+    "modifiedTime": 1780000000000,
+    "lastModifiedBy": "UserHarness0001",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": {
+      "worldId": "dgca-exact-target-harness",
+      "uuid": "Actor.Actor000000000001",
+      "coreVersion": "14.365",
+      "systemId": "deltagreen",
+      "systemVersion": "1.7.0"
+    }
+  }
+}

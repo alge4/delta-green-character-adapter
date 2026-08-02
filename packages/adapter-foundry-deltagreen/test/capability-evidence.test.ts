@@ -27,6 +27,7 @@ import {
   foundryFixtureRoot,
   LIVE_GEORGE,
   LIVE_STANDARD,
+  liveApplyFixtureNames,
   repoRoot,
   syntheticFixtureNames,
 } from "./helpers.js";
@@ -40,6 +41,7 @@ const TESTS = [
   `${TEST_ROOT}/round-trip.test.ts`,
   `${TEST_ROOT}/capability-evidence.test.ts`,
   `${TEST_ROOT}/path-coverage.test.ts`,
+  "apps/foundry-module/test/live-apply.test.ts",
 ];
 
 function readJson(relativePath: string): unknown {
@@ -65,19 +67,21 @@ function verifyChecksumFile(root: string): number {
   return lines.length;
 }
 
-// Both fixture plans gate release on an F7 live apply against a running Foundry 14.365 +
-// Delta Green 1.7.0 world. That evidence cannot be produced by a pure codec package and is
-// deferred to the live-apply ticket (#27); the checksums below cover the offline evidence.
-describe("Foundry Delta Green capability evidence (#25)", () => {
+describe("Foundry Delta Green capability evidence (#25/#29)", () => {
+  const liveApplyFixtures = liveApplyFixtureNames().map(
+    (name) => `${FOUNDRY_FIXTURE_ROOT}/live-apply/${name}`,
+  );
   const importFixtures = [
     `${FOUNDRY_FIXTURE_ROOT}/${BLANK_ACTOR}`,
     `${FOUNDRY_FIXTURE_ROOT}/${LIVE_GEORGE}`,
     `${FOUNDRY_FIXTURE_ROOT}/${LIVE_STANDARD}`,
     ...syntheticFixtureNames().map((name) => `${FOUNDRY_FIXTURE_ROOT}/synthetic/${name}`),
+    ...liveApplyFixtures,
   ];
-  const exportFixtures = canonicalFixtureNames().map(
-    (name) => `${CANONICAL_EXPORT_FIXTURE_ROOT}/${name}`,
-  );
+  const exportFixtures = [
+    ...canonicalFixtureNames().map((name) => `${CANONICAL_EXPORT_FIXTURE_ROOT}/${name}`),
+    ...liveApplyFixtures,
+  ];
 
   it("passes validateCapabilityEvidence for the import capability", () => {
     const capability = createFoundryDeltaGreenImportCapability({
@@ -121,7 +125,16 @@ describe("Foundry Delta Green capability evidence (#25)", () => {
 
   it("agrees SHA256SUMS with the on-disk bytes of every advertised fixture", () => {
     assert.equal(verifyChecksumFile(foundryFixtureRoot), importFixtures.length);
-    assert.equal(verifyChecksumFile(canonicalFixtureRoot), exportFixtures.length);
+    assert.equal(
+      verifyChecksumFile(canonicalFixtureRoot),
+      canonicalFixtureNames().length,
+    );
+    for (const path of liveApplyFixtures) {
+      assert.ok(
+        importFixtures.includes(path) && exportFixtures.includes(path),
+        `live-apply fixture must be advertised for both capabilities: ${path}`,
+      );
+    }
   });
 
   it("keeps the pinned upstream Actor bytes unchanged", () => {
