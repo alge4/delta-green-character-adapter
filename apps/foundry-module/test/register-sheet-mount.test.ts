@@ -61,6 +61,24 @@ class ElementShim {
     }
   }
 
+  insertBefore(node: ElementShim, reference: ElementShim | null): ElementShim {
+    if (node.parentElement) {
+      node.parentElement.children = node.parentElement.children.filter((child) => child !== node);
+    }
+    node.parentElement = this;
+    if (reference === null) {
+      this.children.push(node);
+      return node;
+    }
+    const index = this.children.indexOf(reference);
+    if (index === -1) {
+      this.children.push(node);
+    } else {
+      this.children.splice(index, 0, node);
+    }
+    return node;
+  }
+
   replaceChildren(...nodes: Array<ElementShim | string>): void {
     for (const child of this.children) {
       child.parentElement = null;
@@ -162,6 +180,17 @@ function createApplicationRoot(): HTMLElementShim {
   root.classList.add("application");
   const header = new HTMLElementShim("header");
   header.classList.add("window-header");
+  const title = new HTMLElementShim("h1");
+  title.classList.add("window-title");
+  title.textContent = "Agent: Test";
+  const toggle = new HTMLElementShim("button");
+  toggle.classList.add("header-control", "icon");
+  toggle.setAttribute("data-action", "toggleControls");
+  toggle.setAttribute("aria-label", "Toggle Controls");
+  const close = new HTMLElementShim("button");
+  close.classList.add("header-control", "icon");
+  close.setAttribute("data-action", "close");
+  header.append(title, toggle, close);
   const bio = new HTMLElementShim("div");
   bio.setAttribute("data-tab", "bio");
   root.append(header, bio);
@@ -289,6 +318,35 @@ describe("registerFoundryModule Agent-sheet mount (#38)", () => {
     const importButton = titleBar.querySelector("button");
     assert.ok(importButton, "Import control should mount on V2 render");
     assert.match(importButton.textContent, /Import/);
+  });
+
+  it("places title-bar chrome immediately before Toggle Controls in one header row", async () => {
+    const hooks = createHookBus();
+    registerFoundryModule({
+      hooks,
+      getGame: () => exactGame,
+      adapterVersion: "0.0.0",
+    });
+    const root = createApplicationRoot();
+    hooks.emit("renderActorSheetV2", createSheet(root), root, {}, {});
+
+    const header = root.querySelector(".window-header");
+    assert.ok(header, "ApplicationV2 window-header should exist");
+    const titleBar = await waitFor(
+      () => header.querySelector("[data-dgca-titlebar]"),
+      (node) => node !== null,
+    );
+    assert.ok(titleBar, "title-bar chrome slot should mount");
+    const toggle = header.querySelector('[data-action="toggleControls"]');
+    assert.ok(toggle, "Toggle Controls button should remain in the header");
+    const slotIndex = header.children.indexOf(titleBar);
+    const toggleIndex = header.children.indexOf(toggle);
+    assert.equal(
+      slotIndex,
+      toggleIndex - 1,
+      "Completeness/Import slot must sit immediately left of Toggle Controls",
+    );
+    assert.equal(titleBar.className, "dgca-titlebar-actions");
   });
 
   it("mounts Completeness + Import when renderDocumentSheetV2 fires", async () => {

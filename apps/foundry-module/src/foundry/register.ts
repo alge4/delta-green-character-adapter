@@ -48,6 +48,22 @@ function asHtmlElement(value: unknown): HTMLElement | null {
   return null;
 }
 
+function placeTitleBarSlot(header: HTMLElement, titleBar: HTMLElement): void {
+  // ApplicationV2 headers are a single flex row: title, then controls. Sit immediately
+  // left of Toggle Controls (ellipsis) so Completeness/Import stay on that row (#40).
+  const toggle =
+    header.querySelector('[data-action="toggleControls"]') instanceof HTMLElement
+      ? (header.querySelector('[data-action="toggleControls"]') as HTMLElement)
+      : header.querySelector(".header-control") instanceof HTMLElement
+        ? (header.querySelector(".header-control") as HTMLElement)
+        : null;
+  if (toggle?.parentElement === header) {
+    header.insertBefore(titleBar, toggle);
+    return;
+  }
+  header.append(titleBar);
+}
+
 function ensureChromeSlots(root: HTMLElement): {
   titleBar: HTMLElement;
   modalHost: HTMLElement;
@@ -58,17 +74,22 @@ function ensureChromeSlots(root: HTMLElement): {
       ? (root.closest(".app, .application, .window-app") as HTMLElement)
       : root;
 
-  let titleBar = windowEl.querySelector("[data-dgca-titlebar]");
-  if (!(titleBar instanceof HTMLElement)) {
-    const header =
-      windowEl.querySelector(".window-header, .application-header, header") instanceof HTMLElement
-        ? (windowEl.querySelector(".window-header, .application-header, header") as HTMLElement)
-        : windowEl;
-    titleBar = document.createElement("div");
-    titleBar.setAttribute("data-dgca-titlebar", "true");
-    titleBar.className = "dgca-titlebar-actions";
-    header.append(titleBar);
-  }
+  const header =
+    windowEl.querySelector(".window-header, .application-header, header") instanceof HTMLElement
+      ? (windowEl.querySelector(".window-header, .application-header, header") as HTMLElement)
+      : windowEl;
+
+  const existingTitleBar = windowEl.querySelector("[data-dgca-titlebar]");
+  const titleBar =
+    existingTitleBar instanceof HTMLElement
+      ? existingTitleBar
+      : (() => {
+          const slot = document.createElement("div");
+          slot.setAttribute("data-dgca-titlebar", "true");
+          slot.className = "dgca-titlebar-actions";
+          return slot;
+        })();
+  placeTitleBarSlot(header, titleBar);
 
   let modalHost = windowEl.querySelector("[data-dgca-modal-host]");
   if (!(modalHost instanceof HTMLElement)) {

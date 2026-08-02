@@ -9,11 +9,22 @@
   --dgca-paper: #e8e2d4;
 }
 
+.dgca-titlebar-actions {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.35rem;
+  max-height: 100%;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 .dgca-completeness {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  line-height: 1;
 }
 
 .dgca-completeness-lamp {
@@ -45,7 +56,9 @@
   background: #333;
   color: #eee;
   border-radius: 3px;
-  padding: 0.15rem 0.55rem;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.75rem;
+  line-height: 1.2;
   cursor: pointer;
 }
 

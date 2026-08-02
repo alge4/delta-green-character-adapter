@@ -57,6 +57,24 @@ class ElementShim {
     }
   }
 
+  insertBefore(node, reference) {
+    if (node.parentElement) {
+      node.parentElement.children = node.parentElement.children.filter((child) => child !== node);
+    }
+    node.parentElement = this;
+    if (reference == null) {
+      this.children.push(node);
+      return node;
+    }
+    const index = this.children.indexOf(reference);
+    if (index === -1) {
+      this.children.push(node);
+    } else {
+      this.children.splice(index, 0, node);
+    }
+    return node;
+  }
+
   replaceChildren(...nodes) {
     for (const child of this.children) {
       child.parentElement = null;
@@ -178,6 +196,17 @@ export function createApplicationRoot(dom = installDomShim()) {
   root.classList.add("application");
   const header = dom.createElement("header");
   header.classList.add("window-header");
+  const title = dom.createElement("h1");
+  title.classList.add("window-title");
+  title.textContent = "Agent: Test";
+  const toggle = dom.createElement("button");
+  toggle.classList.add("header-control", "icon");
+  toggle.setAttribute("data-action", "toggleControls");
+  toggle.setAttribute("aria-label", "Toggle Controls");
+  const close = dom.createElement("button");
+  close.classList.add("header-control", "icon");
+  close.setAttribute("data-action", "close");
+  header.append(title, toggle, close);
   const bio = dom.createElement("div");
   bio.setAttribute("data-tab", "bio");
   root.append(header, bio);
