@@ -7,7 +7,7 @@ import { registerFoundryModule } from "../src/foundry/register.js";
 import { BLANK_ACTOR, moduleRoot, readFoundryFixture } from "./helpers.js";
 
 /**
- * Minimal DOM for registerFoundryModule attach (#37).
+ * Minimal DOM for registerFoundryModule attach (#37/#38).
  * Mirrors apps/foundry-module/scripts/dom-shim.mjs for node:test.
  */
 class ClassList {
@@ -214,28 +214,31 @@ const exactGame = {
   user: { id: "UserHarness0001", isGM: true },
 };
 
-describe("registerFoundryModule Agent-sheet mount (#37)", () => {
+describe("registerFoundryModule Agent-sheet mount (#38)", () => {
   installDom();
 
-  it("registers classic sheet hooks but not ActorSheetV2 in the Foundry bootstrap source", () => {
+  it("registers classic and ApplicationV2 Agent-sheet hooks in the Foundry bootstrap source", () => {
     // Assert source (not artifact/main.js): packaging.test.ts rmSync's the artifact in parallel.
     // Packaged main.js hook surface is covered by scripts/diagnose-sheet-mount.mjs.
     const source = readFileSync(resolve(moduleRoot, "src/foundry/register.ts"), "utf8");
     assert.match(source, /"renderActorSheet"/);
     assert.match(source, /"renderDocumentSheet"/);
-    assert.equal(source.includes("renderActorSheetV2"), false);
-    assert.equal(source.includes("renderDocumentSheetV2"), false);
+    assert.match(source, /"renderActorSheetV2"/);
+    assert.match(source, /"renderDocumentSheetV2"/);
   });
 
-  it("subscribes only to classic Application V1 sheet hooks today", () => {
+  it("subscribes to classic and ApplicationV2 Agent-sheet render hooks", () => {
     const hooks = createHookBus();
     registerFoundryModule({
       hooks,
       getGame: () => exactGame,
     });
-    assert.deepEqual(hooks.subscribed(), ["renderActorSheet", "renderDocumentSheet"]);
-    assert.equal(hooks.subscribed().includes("renderActorSheetV2"), false);
-    assert.equal(hooks.subscribed().includes("renderDocumentSheetV2"), false);
+    assert.deepEqual(hooks.subscribed(), [
+      "renderActorSheet",
+      "renderActorSheetV2",
+      "renderDocumentSheet",
+      "renderDocumentSheetV2",
+    ]);
   });
 
   it("mounts Completeness + Import when a subscribed classic renderActorSheet fires", async () => {
@@ -262,7 +265,7 @@ describe("registerFoundryModule Agent-sheet mount (#37)", () => {
     assert.match(importButton.textContent, /Import/);
   });
 
-  it("does not mount chrome when Foundry fires ApplicationV2 Agent-sheet hooks (live failure)", async () => {
+  it("mounts Completeness + Import when ApplicationV2 Agent-sheet hooks fire", async () => {
     const hooks = createHookBus();
     registerFoundryModule({
       hooks,
@@ -274,17 +277,43 @@ describe("registerFoundryModule Agent-sheet mount (#37)", () => {
 
     // Delta Green 1.7.0 Agent sheet extends ActorSheetV2 — these are the live hooks.
     hooks.emit("renderActorSheetV2", sheet, root, {}, {});
-    hooks.emit("renderDocumentSheetV2", sheet, root, {}, {});
 
-    // Allow async mount work to run if a listener were incorrectly attached.
-    await Promise.resolve();
-    await Promise.resolve();
-
-    assert.equal(
-      root.querySelector("[data-dgca-titlebar]"),
-      null,
-      "documents #37: ApplicationV2 render leaves Completeness/Import unmounted",
+    const titleBar = await waitFor(
+      () => root.querySelector("[data-dgca-titlebar]"),
+      (node) => node !== null && node.querySelector("button") !== null,
     );
+    assert.ok(titleBar, "title-bar chrome slot should be created on V2 render");
+    assert.ok(
+      titleBar.querySelector('[aria-label*="Completeness Assessment"]'),
+      "Completeness Assessment lamp should mount on V2 render",
+    );
+    const importButton = titleBar.querySelector("button");
+    assert.ok(importButton, "Import control should mount on V2 render");
+    assert.match(importButton.textContent, /Import/);
+  });
+
+  it("mounts Completeness + Import when renderDocumentSheetV2 fires", async () => {
+    const hooks = createHookBus();
+    registerFoundryModule({
+      hooks,
+      getGame: () => exactGame,
+      adapterVersion: "0.0.0",
+    });
+    const root = createApplicationRoot();
+    hooks.emit("renderDocumentSheetV2", createSheet(root), root, {}, {});
+
+    const titleBar = await waitFor(
+      () => root.querySelector("[data-dgca-titlebar]"),
+      (node) => node !== null && node.querySelector("button") !== null,
+    );
+    assert.ok(titleBar, "title-bar chrome slot should be created on DocumentSheetV2 render");
+    assert.ok(
+      titleBar.querySelector('[aria-label*="Completeness Assessment"]'),
+      "Completeness Assessment lamp should mount on DocumentSheetV2 render",
+    );
+    const importButton = titleBar.querySelector("button");
+    assert.ok(importButton, "Import control should mount on DocumentSheetV2 render");
+    assert.match(importButton.textContent, /Import/);
   });
 });
 

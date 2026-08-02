@@ -1,11 +1,11 @@
 /**
- * Red-capable feedback loop for #37: live Agent-sheet mount failure.
+ * Regression feedback loop for #38: ApplicationV2 Agent-sheet mount.
  *
  * Simulates the exact Foundry 14.365 + Delta Green 1.7.0 sheet path:
  * DGAgentSheet extends ActorSheetV2, which fires ApplicationV2 hooks
- * (renderActorSheetV2 / renderDocumentSheetV2), not classic renderActorSheet.
+ * (renderActorSheetV2 / renderDocumentSheetV2).
  *
- * Exit 1 = chrome missing after V2 render (current live failure).
+ * Exit 1 = chrome missing after V2 render.
  * Exit 0 = Completeness Assessment + Import controls mounted.
  *
  * Usage (from apps/foundry-module after build):
@@ -32,8 +32,8 @@ const bundleHasV1 =
 const bundleHasV2 =
   bundled.includes('"renderActorSheetV2"') || bundled.includes("'renderActorSheetV2'");
 console.log("packaged main.js renderActorSheet:", bundleHasV1 ? "present" : "MISSING");
-console.log("packaged main.js renderActorSheetV2:", bundleHasV2 ? "present" : "absent (expected for #37)");
-if (!bundleHasV1 || bundleHasV2) {
+console.log("packaged main.js renderActorSheetV2:", bundleHasV2 ? "present" : "MISSING");
+if (!bundleHasV1 || !bundleHasV2) {
   console.log(
     "DIAGNOSIS: packaged bootstrap hook surface unexpected; aborting call-site simulation.",
   );
