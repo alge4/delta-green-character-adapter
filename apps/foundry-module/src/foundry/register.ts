@@ -102,14 +102,26 @@ function ensureChromeSlots(root: HTMLElement): {
     windowEl.append(modalHost);
   }
 
+  // Prefer ApplicationV2 tab *panels* (`data-application-part` / `.tab[data-tab]`).
+  // Bare `[data-tab='bio']` matches the nav <a> first and mounts DOB chrome in the tab bar (#40).
   const bioCandidate = windowEl.querySelector(
-    "[data-dgca-bio-host], .biography, [data-tab='bio'], [data-tab='cv']",
+    "[data-dgca-bio-host], [data-application-part='bio'], [data-application-part='cv'], .tab[data-tab='bio'], .tab[data-tab='cv']",
   );
+  const bioHost = bioCandidate instanceof HTMLElement ? bioCandidate : undefined;
+  if (bioHost && bioHost.getAttribute("data-dgca-bio-host") !== "true") {
+    bioHost.setAttribute("data-dgca-bio-host", "true");
+  }
+  // Drop any prior mis-mounts (e.g. into Bio nav links from older selectors).
+  for (const stray of windowEl.querySelectorAll("[data-dgca-module-owned]")) {
+    if (stray instanceof HTMLElement && stray.parentElement !== bioHost) {
+      stray.remove();
+    }
+  }
 
   return {
     titleBar: titleBar as HTMLElement,
     modalHost: modalHost as HTMLElement,
-    bioHost: bioCandidate instanceof HTMLElement ? bioCandidate : undefined,
+    bioHost,
   };
 }
 

@@ -119,6 +119,19 @@ class ElementShim {
     return null;
   }
 
+  querySelectorAll(selector: string): ElementShim[] {
+    const found: ElementShim[] = [];
+    const queue = [...this.children];
+    while (queue.length > 0) {
+      const node = queue.shift()!;
+      if (matchesSelector(node, selector)) {
+        found.push(node);
+      }
+      queue.push(...node.children);
+    }
+    return found;
+  }
+
   addEventListener(type: string, listener: (...args: unknown[]) => void): void {
     const list = this.listeners.get(type) ?? [];
     list.push(listener);
@@ -191,9 +204,26 @@ function createApplicationRoot(): HTMLElementShim {
   close.classList.add("header-control", "icon");
   close.setAttribute("data-action", "close");
   header.append(title, toggle, close);
+
+  // ApplicationV2: nav links and tab panels both carry data-tab; nav comes first in DOM.
+  const nav = new HTMLElementShim("nav");
+  nav.setAttribute("data-application-part", "tabs");
+  const bioNav = new HTMLElementShim("a");
+  bioNav.setAttribute("data-tab", "bio");
+  bioNav.textContent = "Bio";
+  nav.append(bioNav);
+
+  const skills = new HTMLElementShim("div");
+  skills.classList.add("tab", "skills", "active");
+  skills.setAttribute("data-tab", "skills");
+  skills.setAttribute("data-application-part", "skills");
+
   const bio = new HTMLElementShim("div");
+  bio.classList.add("tab", "bio");
   bio.setAttribute("data-tab", "bio");
-  root.append(header, bio);
+  bio.setAttribute("data-application-part", "bio");
+
+  root.append(header, nav, skills, bio);
   return root;
 }
 
@@ -318,6 +348,38 @@ describe("registerFoundryModule Agent-sheet mount (#38)", () => {
     const importButton = titleBar.querySelector("button");
     assert.ok(importButton, "Import control should mount on V2 render");
     assert.match(importButton.textContent, /Import/);
+  });
+
+  it("mounts module-owned Bio chrome on the bio tab panel, not the Bio nav link", async () => {
+    const hooks = createHookBus();
+    registerFoundryModule({
+      hooks,
+      getGame: () => exactGame,
+      adapterVersion: "0.0.0",
+    });
+    const root = createApplicationRoot();
+    hooks.emit("renderActorSheetV2", createSheet(root), root, {}, {});
+
+    const owned = await waitFor(
+      () => root.querySelector("[data-dgca-module-owned]"),
+      (node) => node !== null,
+    );
+    assert.ok(owned, "module-owned Bio slot should mount");
+    const host = owned.parentElement;
+    assert.ok(host, "module-owned Bio slot needs a host");
+    assert.equal(host.getAttribute("data-application-part"), "bio");
+    assert.equal(host.tagName, "DIV");
+    assert.equal(host.classList.contains("tab"), true);
+    assert.equal(
+      root.querySelector('a[data-tab="bio"]')?.querySelector("[data-dgca-module-owned]"),
+      null,
+      "must not mount inside the Bio navigation control",
+    );
+    assert.equal(
+      root.querySelector('[data-application-part="skills"]')?.querySelector("[data-dgca-module-owned]"),
+      null,
+      "must not mount on the Skills tab panel",
+    );
   });
 
   it("places title-bar chrome immediately before Toggle Controls in one header row", async () => {

@@ -207,8 +207,20 @@ export function createApplicationRoot(dom = installDomShim()) {
   close.classList.add("header-control", "icon");
   close.setAttribute("data-action", "close");
   header.append(title, toggle, close);
+  const nav = dom.createElement("nav");
+  nav.setAttribute("data-application-part", "tabs");
+  const bioNav = dom.createElement("a");
+  bioNav.setAttribute("data-tab", "bio");
+  bioNav.textContent = "Bio";
+  nav.append(bioNav);
+  const skills = dom.createElement("div");
+  skills.classList.add("tab", "skills", "active");
+  skills.setAttribute("data-tab", "skills");
+  skills.setAttribute("data-application-part", "skills");
   const bio = dom.createElement("div");
+  bio.classList.add("tab", "bio");
   bio.setAttribute("data-tab", "bio");
-  root.append(header, bio);
+  bio.setAttribute("data-application-part", "bio");
+  root.append(header, nav, skills, bio);
   return { root, header, bio };
 }
