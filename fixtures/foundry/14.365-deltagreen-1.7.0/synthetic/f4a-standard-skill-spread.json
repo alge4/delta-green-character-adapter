@@ -1,0 +1,444 @@
+{
+  "name": "F4a Standard Skills",
+  "type": "agent",
+  "prototypeToken": {
+    "actorLink": true,
+    "sight": {
+      "enabled": true,
+      "range": 0,
+      "angle": 360,
+      "visionMode": "basic",
+      "color": null,
+      "attenuation": 0.1,
+      "brightness": 0,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "disposition": 1,
+    "name": "F4a Standard Skills",
+    "displayName": 0,
+    "width": 1,
+    "height": 1,
+    "depth": 1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "fit": "contain",
+      "scaleX": 1,
+      "scaleY": 1,
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "displayBars": 0,
+    "bar1": {
+      "attribute": "health"
+    },
+    "bar2": {
+      "attribute": "wp"
+    },
+    "light": {
+      "negative": false,
+      "priority": 0,
+      "alpha": 0.5,
+      "angle": 360,
+      "bright": 0,
+      "color": null,
+      "coloration": 1,
+      "dim": 0,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "type": null,
+        "speed": 5,
+        "intensity": 5,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    "detectionModes": {},
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null,
+    "flags": {},
+    "randomImg": false,
+    "appendNumber": false,
+    "prependAdjective": false
+  },
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "health": {
+      "min": 0,
+      "value": 10,
+      "max": 10
+    },
+    "wp": {
+      "min": 0,
+      "value": 10,
+      "max": 10
+    },
+    "statistics": {
+      "str": {
+        "value": 10,
+        "distinguishing_feature": ""
+      },
+      "con": {
+        "value": 10,
+        "distinguishing_feature": ""
+      },
+      "dex": {
+        "value": 10,
+        "distinguishing_feature": ""
+      },
+      "int": {
+        "value": 10,
+        "distinguishing_feature": ""
+      },
+      "pow": {
+        "value": 10,
+        "distinguishing_feature": ""
+      },
+      "cha": {
+        "value": 10,
+        "distinguishing_feature": ""
+      }
+    },
+    "settings": {
+      "sorting": {
+        "weaponSortAlphabetical": false,
+        "armorSortAlphabetical": false,
+        "gearSortAlphabetical": false,
+        "tomeSortAlphabetical": false,
+        "ritualSortAlphabetical": false
+      },
+      "rolling": {
+        "defaultPercentileModifier": 20
+      }
+    },
+    "skills": {
+      "accounting": {
+        "proficiency": 7,
+        "label": "Accounting",
+        "failure": false
+      },
+      "alertness": {
+        "proficiency": 14,
+        "label": "Alertness",
+        "failure": false
+      },
+      "anthropology": {
+        "proficiency": 21,
+        "label": "Anthropology",
+        "failure": false
+      },
+      "archeology": {
+        "proficiency": 28,
+        "label": "Archeology",
+        "failure": false
+      },
+      "artillery": {
+        "proficiency": 35,
+        "label": "Artillery",
+        "failure": false
+      },
+      "athletics": {
+        "proficiency": 42,
+        "label": "Athletics",
+        "failure": false
+      },
+      "bureaucracy": {
+        "proficiency": 49,
+        "label": "Bureaucracy",
+        "failure": false
+      },
+      "computer_science": {
+        "proficiency": 56,
+        "label": "Computer Science",
+        "failure": false
+      },
+      "criminology": {
+        "proficiency": 63,
+        "label": "Criminology",
+        "failure": false
+      },
+      "demolitions": {
+        "proficiency": 70,
+        "label": "Demolitions",
+        "failure": false
+      },
+      "disguise": {
+        "proficiency": 77,
+        "label": "Disguise",
+        "failure": false
+      },
+      "dodge": {
+        "proficiency": 84,
+        "label": "Dodge",
+        "failure": false
+      },
+      "drive": {
+        "proficiency": 1,
+        "label": "Drive",
+        "failure": false
+      },
+      "firearms": {
+        "proficiency": 8,
+        "label": "Firearms",
+        "failure": false
+      },
+      "first_aid": {
+        "proficiency": 15,
+        "label": "First Aid",
+        "failure": false
+      },
+      "forensics": {
+        "proficiency": 22,
+        "label": "Forensics",
+        "failure": false
+      },
+      "heavy_machiner": {
+        "proficiency": 55,
+        "label": "Heavy Machinery",
+        "failure": false
+      },
+      "heavy_weapons": {
+        "proficiency": 36,
+        "label": "Heavy Weapons",
+        "failure": false
+      },
+      "history": {
+        "proficiency": 43,
+        "label": "History",
+        "failure": false
+      },
+      "humint": {
+        "proficiency": 50,
+        "label": "HUMINT",
+        "failure": false
+      },
+      "law": {
+        "proficiency": 57,
+        "label": "Law",
+        "failure": false
+      },
+      "medicine": {
+        "proficiency": 64,
+        "label": "Medicine",
+        "failure": false
+      },
+      "melee_weapons": {
+        "proficiency": 71,
+        "label": "Melee Weapons",
+        "failure": false
+      },
+      "navigate": {
+        "proficiency": 78,
+        "label": "Navigate",
+        "failure": false
+      },
+      "occult": {
+        "proficiency": 85,
+        "label": "Occult",
+        "failure": false
+      },
+      "persuade": {
+        "proficiency": 2,
+        "label": "Persuade",
+        "failure": false
+      },
+      "pharmacy": {
+        "proficiency": 9,
+        "label": "Pharmacy",
+        "failure": false
+      },
+      "psychotherapy": {
+        "proficiency": 16,
+        "label": "Psychotherapy",
+        "failure": false
+      },
+      "ride": {
+        "proficiency": 23,
+        "label": "Ride",
+        "failure": false
+      },
+      "search": {
+        "proficiency": 30,
+        "label": "Search",
+        "failure": false
+      },
+      "sigint": {
+        "proficiency": 37,
+        "label": "SIGINT",
+        "failure": false
+      },
+      "stealth": {
+        "proficiency": 44,
+        "label": "Stealth",
+        "failure": false
+      },
+      "surgery": {
+        "proficiency": 51,
+        "label": "Surgery",
+        "failure": false
+      },
+      "survival": {
+        "proficiency": 58,
+        "label": "Survival",
+        "failure": false
+      },
+      "swim": {
+        "proficiency": 65,
+        "label": "Swim",
+        "failure": false
+      },
+      "unarmed_combat": {
+        "proficiency": 72,
+        "label": "Unarmed Combat",
+        "failure": false
+      },
+      "unnatural": {
+        "proficiency": 79,
+        "label": "Unnatural"
+      }
+    },
+    "typedSkills": {},
+    "specialTraining": [],
+    "schemaVersion": 1,
+    "sanity": {
+      "value": 100,
+      "currentBreakingPoint": 101,
+      "adaptations": {
+        "violence": {
+          "incident1": false,
+          "incident2": false,
+          "incident3": false
+        },
+        "helplessness": {
+          "incident1": false,
+          "incident2": false,
+          "incident3": false
+        }
+      }
+    },
+    "physical": {
+      "description": "",
+      "wounds": "",
+      "firstAidAttempted": false,
+      "exhausted": false,
+      "exhaustedPenalty": -20
+    },
+    "biography": {
+      "profession": "",
+      "employer": "",
+      "nationality": "",
+      "sex": "",
+      "age": "",
+      "education": ""
+    },
+    "corruption": {
+      "value": 0,
+      "haveSeenTheYellowSign": false,
+      "gift": "",
+      "insight": ""
+    }
+  },
+  "items": [
+    {
+      "name": "Unarmed Attack",
+      "type": "weapon",
+      "flags": {
+        "deltagreen": {
+          "AutoAdded": true,
+          "SystemName": "unarmed-attack"
+        }
+      },
+      "img": "systems/deltagreen/assets/icons/punch.svg",
+      "_id": "AfSWj5tWv6LQvIWb",
+      "effects": [],
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1785553843495,
+        "modifiedTime": 1785553843534,
+        "lastModifiedBy": "61Nk4LqGD5F5o62U",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bugxCCxa4GzlYx2g": 3,
+        "61Nk4LqGD5F5o62U": 3
+      },
+      "system": {
+        "description": "",
+        "skill": "unarmed_combat",
+        "range": "0M",
+        "damage": "1D4-1",
+        "armorPiercing": 0,
+        "lethality": 0,
+        "isLethal": false,
+        "killRadius": "N/A",
+        "ammo": "",
+        "expense": "Standard",
+        "skillModifier": 0,
+        "customSkillTarget": 50,
+        "equipped": true
+      },
+      "folder": null,
+      "sort": 0
+    }
+  ],
+  "effects": [],
+  "folder": null,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14.365",
+    "systemId": "deltagreen",
+    "systemVersion": "1.7.0",
+    "createdTime": 1785553843226,
+    "modifiedTime": 1785553843244,
+    "lastModifiedBy": "61Nk4LqGD5F5o62U",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": {
+      "worldId": "delta-green",
+      "uuid": "Actor.synthetic-f4a-standard-skills",
+      "coreVersion": "14.365",
+      "systemId": "deltagreen",
+      "systemVersion": "1.7.0"
+    }
+  }
+}

@@ -1,0 +1,694 @@
+{
+  "name": "Standard",
+  "type": "agent",
+  "prototypeToken": {
+    "actorLink": true,
+    "sight": {
+      "enabled": true,
+      "range": 0,
+      "angle": 360,
+      "visionMode": "basic",
+      "color": null,
+      "attenuation": 0.1,
+      "brightness": 0,
+      "saturation": 0,
+      "contrast": 0
+    },
+    "disposition": 1,
+    "name": "Standard",
+    "displayName": 0,
+    "width": 1,
+    "height": 1,
+    "depth": 1,
+    "texture": {
+      "src": "icons/svg/mystery-man.svg",
+      "anchorX": 0.5,
+      "anchorY": 0.5,
+      "fit": "contain",
+      "scaleX": 1,
+      "scaleY": 1,
+      "tint": "#ffffff",
+      "alphaThreshold": 0.75
+    },
+    "lockRotation": false,
+    "rotation": 0,
+    "alpha": 1,
+    "displayBars": 0,
+    "bar1": {
+      "attribute": "health"
+    },
+    "bar2": {
+      "attribute": "wp"
+    },
+    "light": {
+      "negative": false,
+      "priority": 0,
+      "alpha": 0.5,
+      "angle": 360,
+      "bright": 0,
+      "color": null,
+      "coloration": 1,
+      "dim": 0,
+      "attenuation": 0.5,
+      "luminosity": 0.5,
+      "saturation": 0,
+      "contrast": 0,
+      "shadows": 0,
+      "animation": {
+        "type": null,
+        "speed": 5,
+        "intensity": 5,
+        "reverse": false
+      },
+      "darkness": {
+        "min": 0,
+        "max": 1
+      }
+    },
+    "detectionModes": {},
+    "occludable": {
+      "radius": 0
+    },
+    "ring": {
+      "enabled": false,
+      "colors": {
+        "ring": null,
+        "background": null
+      },
+      "effects": 1,
+      "subject": {
+        "scale": 1,
+        "texture": null
+      }
+    },
+    "turnMarker": {
+      "mode": 1,
+      "animation": null,
+      "src": null,
+      "disposition": false
+    },
+    "movementAction": null,
+    "flags": {},
+    "randomImg": false,
+    "appendNumber": false,
+    "prependAdjective": false
+  },
+  "img": "icons/svg/mystery-man.svg",
+  "system": {
+    "health": {
+      "min": 0,
+      "value": 10,
+      "max": 10
+    },
+    "wp": {
+      "min": 0,
+      "value": 10,
+      "max": 10
+    },
+    "statistics": {
+      "str": {
+        "value": 10,
+        "distinguishing_feature": ""
+      },
+      "con": {
+        "value": 10,
+        "distinguishing_feature": ""
+      },
+      "dex": {
+        "value": 10,
+        "distinguishing_feature": ""
+      },
+      "int": {
+        "value": 10,
+        "distinguishing_feature": ""
+      },
+      "pow": {
+        "value": 10,
+        "distinguishing_feature": ""
+      },
+      "cha": {
+        "value": 10,
+        "distinguishing_feature": ""
+      }
+    },
+    "settings": {
+      "sorting": {
+        "weaponSortAlphabetical": false,
+        "armorSortAlphabetical": false,
+        "gearSortAlphabetical": false,
+        "tomeSortAlphabetical": false,
+        "ritualSortAlphabetical": false
+      },
+      "rolling": {
+        "defaultPercentileModifier": 20
+      }
+    },
+    "skills": {
+      "accounting": {
+        "proficiency": 10,
+        "label": "Accounting",
+        "failure": false
+      },
+      "alertness": {
+        "proficiency": 20,
+        "label": "Alertness",
+        "failure": false
+      },
+      "anthropology": {
+        "proficiency": 0,
+        "label": "Anthropology",
+        "failure": false
+      },
+      "archeology": {
+        "proficiency": 0,
+        "label": "Archeology",
+        "failure": false
+      },
+      "artillery": {
+        "proficiency": 0,
+        "label": "Artillery",
+        "failure": false
+      },
+      "athletics": {
+        "proficiency": 30,
+        "label": "Athletics",
+        "failure": false
+      },
+      "bureaucracy": {
+        "proficiency": 10,
+        "label": "Bureaucracy",
+        "failure": false
+      },
+      "computer_science": {
+        "proficiency": 0,
+        "label": "Computer Science",
+        "failure": false
+      },
+      "criminology": {
+        "proficiency": 10,
+        "label": "Criminology",
+        "failure": false
+      },
+      "demolitions": {
+        "proficiency": 0,
+        "label": "Demolitions",
+        "failure": false
+      },
+      "disguise": {
+        "proficiency": 10,
+        "label": "Disguise",
+        "failure": false
+      },
+      "dodge": {
+        "proficiency": 30,
+        "label": "Dodge",
+        "failure": false
+      },
+      "drive": {
+        "proficiency": 20,
+        "label": "Drive",
+        "failure": false
+      },
+      "firearms": {
+        "proficiency": 20,
+        "label": "Firearms",
+        "failure": false
+      },
+      "first_aid": {
+        "proficiency": 10,
+        "label": "First Aid",
+        "failure": false
+      },
+      "forensics": {
+        "proficiency": 0,
+        "label": "Forensics",
+        "failure": false
+      },
+      "heavy_machiner": {
+        "proficiency": 10,
+        "label": "Heavy Machinery",
+        "failure": false
+      },
+      "heavy_weapons": {
+        "proficiency": 0,
+        "label": "Heavy Weapons",
+        "failure": false
+      },
+      "history": {
+        "proficiency": 10,
+        "label": "History",
+        "failure": false
+      },
+      "humint": {
+        "proficiency": 10,
+        "label": "HUMINT",
+        "failure": false
+      },
+      "law": {
+        "proficiency": 0,
+        "label": "Law",
+        "failure": false
+      },
+      "medicine": {
+        "proficiency": 0,
+        "label": "Medicine",
+        "failure": false
+      },
+      "melee_weapons": {
+        "proficiency": 30,
+        "label": "Melee Weapons",
+        "failure": false
+      },
+      "navigate": {
+        "proficiency": 10,
+        "label": "Navigate",
+        "failure": false
+      },
+      "occult": {
+        "proficiency": 10,
+        "label": "Occult",
+        "failure": false
+      },
+      "persuade": {
+        "proficiency": 20,
+        "label": "Persuade",
+        "failure": false
+      },
+      "pharmacy": {
+        "proficiency": 0,
+        "label": "Pharmacy",
+        "failure": false
+      },
+      "psychotherapy": {
+        "proficiency": 10,
+        "label": "Psychotherapy",
+        "failure": false
+      },
+      "ride": {
+        "proficiency": 10,
+        "label": "Ride",
+        "failure": false
+      },
+      "search": {
+        "proficiency": 20,
+        "label": "Search",
+        "failure": false
+      },
+      "sigint": {
+        "proficiency": 0,
+        "label": "SIGINT",
+        "failure": false
+      },
+      "stealth": {
+        "proficiency": 10,
+        "label": "Stealth",
+        "failure": false
+      },
+      "surgery": {
+        "proficiency": 0,
+        "label": "Surgery",
+        "failure": false
+      },
+      "survival": {
+        "proficiency": 10,
+        "label": "Survival",
+        "failure": false
+      },
+      "swim": {
+        "proficiency": 20,
+        "label": "Swim",
+        "failure": false
+      },
+      "unarmed_combat": {
+        "proficiency": 40,
+        "label": "Unarmed Combat",
+        "failure": false
+      },
+      "unnatural": {
+        "proficiency": 0,
+        "label": "Unnatural"
+      }
+    },
+    "typedSkills": {
+      "2026811343": {
+        "label": "Typed",
+        "group": "ForeignLanguage",
+        "proficiency": 10,
+        "failure": false
+      },
+      "20268113349": {
+        "label": "Typed",
+        "group": "Science",
+        "proficiency": 10,
+        "failure": false
+      },
+      "20268113357": {
+        "label": "Typed",
+        "group": "Craft",
+        "proficiency": 10,
+        "failure": false
+      },
+      "20268113411": {
+        "label": "Typed",
+        "group": "MilitaryScience",
+        "proficiency": 10,
+        "failure": false
+      },
+      "20268113416": {
+        "label": "Typed",
+        "group": "Pilot",
+        "proficiency": 10,
+        "failure": false
+      },
+      "20268113431": {
+        "label": "Typed",
+        "group": "Art",
+        "proficiency": 10,
+        "failure": false
+      }
+    },
+    "specialTraining": [
+      {
+        "name": "",
+        "attribute": "str",
+        "id": "m1oGrqvMOucq0vDO"
+      }
+    ],
+    "schemaVersion": 1,
+    "sanity": {
+      "value": 100,
+      "currentBreakingPoint": 101,
+      "adaptations": {
+        "violence": {
+          "incident1": false,
+          "incident2": false,
+          "incident3": false
+        },
+        "helplessness": {
+          "incident1": false,
+          "incident2": false,
+          "incident3": false
+        }
+      }
+    },
+    "physical": {
+      "description": "",
+      "wounds": "",
+      "firstAidAttempted": false,
+      "exhausted": false,
+      "exhaustedPenalty": -20
+    },
+    "biography": {
+      "profession": "",
+      "employer": "",
+      "nationality": "",
+      "sex": "",
+      "age": "",
+      "education": ""
+    },
+    "corruption": {
+      "value": 0,
+      "haveSeenTheYellowSign": false,
+      "gift": "",
+      "insight": ""
+    }
+  },
+  "items": [
+    {
+      "name": "Unarmed Attack",
+      "type": "weapon",
+      "flags": {
+        "deltagreen": {
+          "AutoAdded": true,
+          "SystemName": "unarmed-attack"
+        }
+      },
+      "img": "systems/deltagreen/assets/icons/punch.svg",
+      "_id": "ESiFjui987NMrb2q",
+      "effects": [],
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1785491008362,
+        "modifiedTime": 1785491008411,
+        "lastModifiedBy": "dPFLwJqkLdFh72cq",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      },
+      "ownership": {
+        "default": 0,
+        "bugxCCxa4GzlYx2g": 3,
+        "dPFLwJqkLdFh72cq": 3
+      },
+      "system": {
+        "description": "",
+        "skill": "unarmed_combat",
+        "range": "0M",
+        "damage": "1D4-1",
+        "armorPiercing": 0,
+        "lethality": 0,
+        "isLethal": false,
+        "killRadius": "N/A",
+        "ammo": "",
+        "expense": "Standard",
+        "skillModifier": 0,
+        "customSkillTarget": 50,
+        "equipped": true
+      },
+      "folder": null,
+      "sort": 0
+    },
+    {
+      "name": "Motivation",
+      "type": "motivation",
+      "system": {
+        "description": "",
+        "disorder": "",
+        "crossedOut": false,
+        "disorderCured": false
+      },
+      "_id": "2i28y6geDr2fMu1T",
+      "img": "systems/deltagreen/assets/icons/swap-bag-black-bg.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "ownership": {
+        "default": 0,
+        "dPFLwJqkLdFh72cq": 3
+      },
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1785492463295,
+        "modifiedTime": 1785492470309,
+        "lastModifiedBy": "dPFLwJqkLdFh72cq",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "New Bond",
+      "type": "bond",
+      "system": {
+        "score": 10,
+        "description": "",
+        "relationship": "",
+        "hasBeenDamagedSinceLastHomeScene": false
+      },
+      "_id": "8ZfEH7D2NRtWLQ4F",
+      "img": "systems/deltagreen/assets/icons/person-black-bg.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "ownership": {
+        "default": 0,
+        "dPFLwJqkLdFh72cq": 3
+      },
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1785492480950,
+        "modifiedTime": 1785492480950,
+        "lastModifiedBy": "dPFLwJqkLdFh72cq",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "New Armor",
+      "type": "armor",
+      "system": {
+        "description": "",
+        "protection": 3,
+        "equipped": true,
+        "expense": "Standard"
+      },
+      "_id": "xe3TF6xlSSwoE2wA",
+      "img": "systems/deltagreen/assets/icons/swap-bag-black-bg.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "ownership": {
+        "default": 0,
+        "61Nk4LqGD5F5o62U": 3
+      },
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1785544402628,
+        "modifiedTime": 1785544402634,
+        "lastModifiedBy": "61Nk4LqGD5F5o62U",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "New Gear",
+      "type": "gear",
+      "system": {
+        "description": "",
+        "equipped": true,
+        "expense": "Standard"
+      },
+      "_id": "Iwn54ynIz263ZTER",
+      "img": "systems/deltagreen/assets/icons/swap-bag-black-bg.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "ownership": {
+        "default": 0,
+        "61Nk4LqGD5F5o62U": 3
+      },
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1785544403861,
+        "modifiedTime": 1785544403862,
+        "lastModifiedBy": "61Nk4LqGD5F5o62U",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "New Tome",
+      "type": "tome",
+      "system": {
+        "description": "",
+        "language": "",
+        "studyTime": "",
+        "unnaturalSkillIncrease": 5,
+        "occultSkillIncrease": 3,
+        "sanity": {
+          "notes": "",
+          "failedLoss": "1D6",
+          "successLoss": "1D4"
+        },
+        "handlerNotes": "",
+        "revealed": false
+      },
+      "_id": "MRtKIOUp5zkGYlvU",
+      "img": "systems/deltagreen/assets/icons/book-cover.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "ownership": {
+        "default": 0,
+        "61Nk4LqGD5F5o62U": 3
+      },
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1785544404656,
+        "modifiedTime": 1785544404656,
+        "lastModifiedBy": "61Nk4LqGD5F5o62U",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    },
+    {
+      "name": "New Ritual",
+      "type": "ritual",
+      "system": {
+        "description": "",
+        "studyTime": "",
+        "sanity": {
+          "notes": "",
+          "failedLoss": "1D10",
+          "successLoss": "0"
+        },
+        "learnedSanity": {
+          "notes": "",
+          "failedLoss": "1D10",
+          "successLoss": "0"
+        },
+        "unnaturalSkillIncrease": 1,
+        "activationCosts": "",
+        "activationTime": "",
+        "complexity": "Simple",
+        "handlerNotes": "",
+        "revealed": false
+      },
+      "_id": "KYLIdYG36dkJxzqL",
+      "img": "systems/deltagreen/assets/icons/bookmarklet.svg",
+      "effects": [],
+      "folder": null,
+      "sort": 0,
+      "ownership": {
+        "default": 0,
+        "61Nk4LqGD5F5o62U": 3
+      },
+      "flags": {},
+      "_stats": {
+        "coreVersion": "14.365",
+        "systemId": "deltagreen",
+        "systemVersion": "1.7.0",
+        "createdTime": 1785544406045,
+        "modifiedTime": 1785544406045,
+        "lastModifiedBy": "61Nk4LqGD5F5o62U",
+        "compendiumSource": null,
+        "duplicateSource": null,
+        "exportSource": null
+      }
+    }
+  ],
+  "effects": [],
+  "folder": null,
+  "ownership": {
+    "default": 0
+  },
+  "flags": {},
+  "_stats": {
+    "coreVersion": "14.365",
+    "systemId": "deltagreen",
+    "systemVersion": "1.7.0",
+    "createdTime": 1785491007899,
+    "modifiedTime": 1785544500708,
+    "lastModifiedBy": "61Nk4LqGD5F5o62U",
+    "compendiumSource": null,
+    "duplicateSource": null,
+    "exportSource": {
+      "worldId": "delta-green",
+      "uuid": "Actor.8MeAVbzLk6HWm1DS",
+      "coreVersion": "14.365",
+      "systemId": "deltagreen",
+      "systemVersion": "1.7.0"
+    }
+  }
+}
