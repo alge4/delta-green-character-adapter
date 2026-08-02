@@ -105,8 +105,8 @@ function assessActorCompleteness(actorSource: unknown): "green" | "amber" | "red
 }
 
 /**
- * Register Agent-sheet title-bar Completeness lamp + Import modal (#9/#28).
- * No sheet tabs or system schema changes.
+ * Register Agent-sheet title-bar Completeness lamp + Import modal (#9/#28/#38).
+ * Subscribes classic and ApplicationV2 sheet hooks; no sheet tabs or system schema changes.
  */
 export function registerFoundryModule(input: RegisterFoundryModuleInput): void {
   const cleanups = new WeakMap<object, () => void>();
@@ -154,16 +154,19 @@ export function registerFoundryModule(input: RegisterFoundryModuleInput): void {
     cleanups.set(sheet, dispose);
   };
 
-  input.hooks.on(
+  // Classic Application V1 sheet hooks (compat) plus ApplicationV2 hooks used by
+  // Delta Green 1.7.0 DGAgentSheet (ActorSheetV2) on Foundry 14.365 (#37/#38).
+  for (const event of [
     "renderActorSheet",
-    ((sheet: FoundrySheetLike) => {
-      attach(sheet);
-    }) as (...args: never[]) => unknown,
-  );
-  input.hooks.on(
     "renderDocumentSheet",
-    ((sheet: FoundrySheetLike) => {
-      attach(sheet);
-    }) as (...args: never[]) => unknown,
-  );
+    "renderActorSheetV2",
+    "renderDocumentSheetV2",
+  ] as const) {
+    input.hooks.on(
+      event,
+      ((sheet: FoundrySheetLike) => {
+        attach(sheet);
+      }) as (...args: never[]) => unknown,
+    );
+  }
 }
