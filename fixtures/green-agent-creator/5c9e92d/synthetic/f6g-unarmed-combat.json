@@ -1,0 +1,70 @@
+{
+  "professionKey": "federal_agent",
+  "customProfessionName": "",
+  "isCustomProfession": false,
+  "stats": {
+    "STR": 10,
+    "CON": 12,
+    "DEX": 11,
+    "INT": 14,
+    "POW": 13,
+    "CHA": 9
+  },
+  "distinguishingFeatures": {},
+  "derivedAttributes": {
+    "HP": 11,
+    "WP": 13,
+    "SAN": 65,
+    "BP": 52
+  },
+  "derivedCurrent": {
+    "HP": 11,
+    "WP": 13,
+    "SAN": 65,
+    "BP": 52
+  },
+  "bonds": [
+    {
+      "description": "Partner",
+      "score": 9
+    }
+  ],
+  "motivations": [
+    "Stay alive",
+    "",
+    "",
+    "",
+    ""
+  ],
+  "personalInfo": {
+    "name": "Synthetic",
+    "employer": "Agency",
+    "sex": "X",
+    "nationality": "US",
+    "age": 30,
+    "dob": "1990-01-15"
+  },
+  "traumaticBackground": null,
+  "traumaticBackgroundEffects": {},
+  "basePOW": null,
+  "adaptations": [],
+  "disorder": null,
+  "skillFailMarks": [],
+  "items": [],
+  "notes": "",
+  "skills": [
+    {
+      "instanceId": "unarmed_combat_generic_fix",
+      "key": "unarmed_combat",
+      "typeName": null,
+      "value": 55,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    }
+  ],
+  "id": "creator-id-1",
+  "createdDate": "2024-01-01T00:00:00.000Z"
+}

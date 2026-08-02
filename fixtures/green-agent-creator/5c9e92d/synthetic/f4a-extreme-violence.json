@@ -1,0 +1,94 @@
+{
+  "professionKey": "federal_agent",
+  "customProfessionName": "",
+  "isCustomProfession": false,
+  "stats": {
+    "STR": 10,
+    "CON": 12,
+    "DEX": 11,
+    "INT": 14,
+    "POW": 13,
+    "CHA": 9
+  },
+  "distinguishingFeatures": {},
+  "derivedAttributes": {
+    "HP": 11,
+    "WP": 13,
+    "SAN": 60,
+    "BP": 47
+  },
+  "derivedCurrent": {
+    "HP": 11,
+    "WP": 13,
+    "SAN": 60,
+    "BP": 47
+  },
+  "bonds": [
+    {
+      "description": "Partner",
+      "score": 9
+    }
+  ],
+  "motivations": [
+    "Stay alive",
+    "",
+    "",
+    "",
+    ""
+  ],
+  "personalInfo": {
+    "name": "Synthetic",
+    "employer": "Agency",
+    "sex": "X",
+    "nationality": "US",
+    "age": 30,
+    "dob": "1990-01-15"
+  },
+  "traumaticBackground": "extreme_violence",
+  "traumaticBackgroundEffects": {},
+  "basePOW": null,
+  "adaptations": [
+    "Adapted to Violence"
+  ],
+  "disorder": null,
+  "skillFailMarks": [],
+  "items": [],
+  "notes": "",
+  "skills": [
+    {
+      "instanceId": "accounting_generic_fix",
+      "key": "accounting",
+      "typeName": null,
+      "value": 40,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "firearms_generic_fix",
+      "key": "firearms",
+      "typeName": null,
+      "value": 50,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "unarmed_combat_generic_fix",
+      "key": "unarmed_combat",
+      "typeName": null,
+      "value": 40,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    }
+  ],
+  "id": "creator-id-1",
+  "createdDate": "2024-01-01T00:00:00.000Z"
+}

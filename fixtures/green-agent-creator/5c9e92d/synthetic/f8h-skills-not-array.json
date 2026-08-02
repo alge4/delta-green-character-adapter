@@ -1,0 +1,13 @@
+{
+  "stats": {
+    "STR": 10,
+    "CON": 12,
+    "DEX": 11,
+    "INT": 14,
+    "POW": 13,
+    "CHA": 9
+  },
+  "skills": {
+    "accounting": 40
+  }
+}
