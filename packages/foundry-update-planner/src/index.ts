@@ -1,6 +1,12 @@
 export { planFoundryActorUpdate } from "./plan.js";
 export type { PlanFoundryActorUpdateOptions } from "./plan.js";
 
+export { materializeSelectedPlanActions } from "./materialize.js";
+export type {
+  MaterializeSelectedPlanActionsOptions,
+  MaterializedApplyAction,
+} from "./materialize.js";
+
 export {
   parseUpdatePlan,
   safeParseUpdatePlan,

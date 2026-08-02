@@ -8,6 +8,28 @@ importers:
 
   .: {}
 
+  apps/foundry-module:
+    dependencies:
+      '@delta-green-character-adapter/adapter-core':
+        specifier: workspace:*
+        version: link:../../packages/adapter-core
+      '@delta-green-character-adapter/adapter-foundry-deltagreen':
+        specifier: workspace:*
+        version: link:../../packages/adapter-foundry-deltagreen
+      '@delta-green-character-adapter/character-model':
+        specifier: workspace:*
+        version: link:../../packages/character-model
+      '@delta-green-character-adapter/foundry-update-planner':
+        specifier: workspace:*
+        version: link:../../packages/foundry-update-planner
+    devDependencies:
+      '@types/node':
+        specifier: ^22.18.1
+        version: 22.20.1
+      typescript:
+        specifier: ^5.9.2
+        version: 5.9.3
+
   packages/adapter-core:
     dependencies:
       '@delta-green-character-adapter/character-model':

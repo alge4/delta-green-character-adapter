@@ -4,6 +4,7 @@
 
 It emits data only: no Foundry globals, no document mutation, and no persistence or rollback. Apply and recovery live in `apps/foundry-module` (#27).
 
-## Public seam
+## Public seams
 
 - **`planFoundryActorUpdate(snapshot, actorSource, options?)`** — returns an `AdapterOperationResult` whose `plan` is a Zod-validated immutable `UpdatePlan` with dependency-aware entries, target fingerprint, plan digest, scope completeness, and permission requirements.
+- **`materializeSelectedPlanActions(snapshot, actorSource, plan, options?)`** — revalidates fingerprint/selection and returns concrete selected write actions for the Foundry apply runtime (#27). Public plan entries keep only safe summaries.
