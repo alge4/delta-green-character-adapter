@@ -16,6 +16,7 @@ import {
 import {
   createCanonicalId,
   safeParseAgentSnapshot,
+  type AgentSnapshot,
 } from "@delta-green-character-adapter/character-model";
 
 import { mutableIsFresh, resolveBinding } from "./binding.js";
@@ -44,14 +45,25 @@ export type PlanFoundryActorUpdateOptions = {
   readonly adapterVersion?: string;
 };
 
+export type DraftPlanComposition = {
+  readonly blocked: boolean;
+  readonly diagnostics: readonly AdapterDiagnostic[];
+  readonly requiredResolutions: readonly ResolutionRequirement[];
+  readonly drafts?: readonly DraftPlanEntry[];
+  readonly plan?: UpdatePlan;
+  readonly alreadyUpToDate: boolean;
+  readonly agent?: AgentSnapshot;
+  readonly desiredActor?: unknown;
+};
+
 /**
- * Pure Actor Binding + immutable Merge/Replace/Synchronize Update Plan (#7, #10, #26).
+ * Shared draft composition for preview planning and apply materialization (#26/#27).
  */
-export function planFoundryActorUpdate(
+export function composeDraftPlan(
   snapshot: unknown,
   actorSource: unknown,
   options: PlanFoundryActorUpdateOptions = {},
-): AdapterOperationResult {
+): DraftPlanComposition {
   const createId = options.createId ?? createCanonicalId;
   const mode: UpdateMode = options.mode ?? "merge";
   const callerIsGm = options.callerIsGm === true;
@@ -61,7 +73,9 @@ export function planFoundryActorUpdate(
 
   const parsed = safeParseAgentSnapshot(snapshot);
   if (!parsed.success) {
-    return createOperationResult({
+    return {
+      blocked: true,
+      alreadyUpToDate: false,
       diagnostics: [
         diagnostic({
           code: catalogueDiagnosticCodes.malformedStructure,
@@ -75,12 +89,14 @@ export function planFoundryActorUpdate(
         }),
       ],
       requiredResolutions: [],
-    });
+    };
   }
   const agent = parsed.data;
 
   if (!isRecord(actorSource) || actorSource.type !== "agent") {
-    return createOperationResult({
+    return {
+      blocked: true,
+      alreadyUpToDate: false,
       diagnostics: [
         diagnostic({
           code: catalogueDiagnosticCodes.malformedStructure,
@@ -92,7 +108,7 @@ export function planFoundryActorUpdate(
         }),
       ],
       requiredResolutions: [],
-    });
+    };
   }
 
   const exportResult = exportFoundryDeltaGreen(agent, {
@@ -101,10 +117,12 @@ export function planFoundryActorUpdate(
   });
   diagnostics.push(...exportResult.diagnostics);
   if (exportResult.blocked || exportResult.output === undefined) {
-    return createOperationResult({
+    return {
+      blocked: true,
+      alreadyUpToDate: false,
       diagnostics: sortDiagnostics(diagnostics),
       requiredResolutions: [...exportResult.requiredResolutions],
-    });
+    };
   }
   const desiredActor = exportResult.output;
 
@@ -282,9 +300,36 @@ export function planFoundryActorUpdate(
     },
   } satisfies UpdatePlan);
 
-  return createOperationResult({
+  return {
+    blocked: false,
+    alreadyUpToDate: isNoOp || alreadyUpToDate,
     diagnostics: sortDiagnostics(diagnostics),
     requiredResolutions,
+    drafts: overridden,
     plan,
+    agent,
+    desiredActor,
+  };
+}
+
+/**
+ * Pure Actor Binding + immutable Merge/Replace/Synchronize Update Plan (#7, #10, #26).
+ */
+export function planFoundryActorUpdate(
+  snapshot: unknown,
+  actorSource: unknown,
+  options: PlanFoundryActorUpdateOptions = {},
+): AdapterOperationResult {
+  const composed = composeDraftPlan(snapshot, actorSource, options);
+  if (composed.blocked || composed.plan === undefined) {
+    return createOperationResult({
+      diagnostics: [...composed.diagnostics],
+      requiredResolutions: [...composed.requiredResolutions],
+    });
+  }
+  return createOperationResult({
+    diagnostics: [...composed.diagnostics],
+    requiredResolutions: [...composed.requiredResolutions],
+    plan: composed.plan,
   });
 }
