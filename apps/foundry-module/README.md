@@ -7,6 +7,8 @@ It owns permission and fingerprint revalidation, verified restorable snapshots, 
 ## Public seams
 
 - **`applyFoundryActorUpdate({ plan, snapshot, runtime, options? })`** — materializes selected plan actions against a live `FoundryActorRuntime`, mutates only after a verified recovery snapshot, verifies semantic results, writes compact audit flags on success, and rolls back on failure.
+- **`createFoundryActor({ snapshot, world, options? })`** — exact-runtime create via `exportFoundryDeltaGreen` and `FoundryWorldRuntime.createActor`, then compact audit/binding flags.
 - **`FoundryActorRuntime` / `FoundryWorldRuntime`** — injectable ports (no Foundry globals in this package).
+- **In-memory harness** (`test/harness.ts`) — failure-injection Actor/world store for vertical acceptance tests.
 
 Recovery snapshots are never persisted in module flags. Incomplete rollback exposes an in-memory recovery snapshot on the operation result (and via `onManualRecovery`) for authorized manual restore only. The bridge does not elevate permissions; Handler-only selected work requires a GM.
