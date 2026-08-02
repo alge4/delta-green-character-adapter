@@ -1,0 +1,11 @@
+- dialog "Import Agent":
+  - heading "Import into this Agent" [level=2]
+  - button "Close"
+  - list:
+    - listitem: Source
+    - listitem: Diagnostics
+    - listitem: Update Plan
+    - listitem: Done
+  - heading "Import source" [level=3]
+  - paragraph: Local Green Agent Creator 5c9e92d JSON only. Files stay on this machine; nothing is uploaded.
+  - button "Choose File"

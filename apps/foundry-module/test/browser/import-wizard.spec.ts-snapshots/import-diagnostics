@@ -1,0 +1,82 @@
+- dialog "Import Agent":
+  - heading "Import into this Agent" [level=2]
+  - button "Close"
+  - list:
+    - listitem: Source
+    - listitem: Diagnostics
+    - listitem: Update Plan
+    - listitem: Done
+  - heading "Diagnostics" [level=3]
+  - 'img "Completeness Assessment: green"'
+  - text: green
+  - paragraph: "Source: caleb.json (Green Agent Creator 5c9e92d)"
+  - list:
+    - listitem:
+      - text: "information · completeness: none · adapter.value.coerced"
+      - paragraph: Coerced digit-only personalInfo.age string to integer.
+      - paragraph: /biography/age
+    - listitem:
+      - text: "warning · completeness: recommended · adapter.extension.preserved-unknown"
+      - paragraph: Non-ISO personalInfo.dob omitted from biography.dateOfBirth.
+      - paragraph: /personalInfo/dob
+      - 'button "Acknowledge group: green-agent-creator-import"'
+    - listitem:
+      - text: "warning · completeness: recommended · adapter.fidelity.loss"
+      - paragraph: "Known loss: non-ISO date of birth cannot populate biography.dateOfBirth."
+      - paragraph: /biography/dateOfBirth
+      - 'button "Acknowledge group: green-agent-creator-import"'
+    - listitem:
+      - text: "information · completeness: none · adapter.value.normalized"
+      - paragraph: sheetBaseline retained in extension; live root remains authoritative.
+      - paragraph: /sheetBaseline
+    - listitem:
+      - text: "information · completeness: none · adapter.derived.conflict"
+      - paragraph: sheetBaseline.personalInfo.age differs from live personalInfo.age; live root wins.
+      - paragraph: /sheetBaseline/personalInfo/age
+    - listitem:
+      - text: "information · completeness: none · adapter.fidelity.loss"
+      - paragraph: "Known loss: motivation crossedOut defaults to false."
+      - paragraph: /psychology/motivations
+    - listitem:
+      - text: "information · completeness: none · adapter.fidelity.loss"
+      - paragraph: "Known loss: bond damage defaults to false; GAC bond description becomes canonical name."
+      - paragraph: /relationships/bonds
+    - listitem:
+      - text: "information · completeness: none · adapter.fidelity.loss"
+      - paragraph: "Known loss: GAC bond description becomes canonical bond name."
+      - paragraph: /relationships/bonds
+    - listitem:
+      - text: "warning · completeness: recommended · adapter.fidelity.loss"
+      - paragraph: "Known loss: unarmed_combat is not a canonical standard skill; imported as custom."
+      - paragraph: /skills/custom
+      - 'button "Acknowledge group: green-agent-creator-import"'
+    - listitem:
+      - text: "information · completeness: none · adapter.fidelity.loss"
+      - paragraph: "Known loss: creator-local ids are not durable canonical identities."
+      - paragraph: /agentId
+    - listitem:
+      - text: "information · completeness: none · adapter.fidelity.loss"
+      - paragraph: "Known loss: GAC has no special-training model; skills.specialTraining is empty."
+      - paragraph: /skills/specialTraining
+    - listitem:
+      - text: "information · completeness: none · adapter.fidelity.loss"
+      - paragraph: "Known loss: structured weapons/armor/rituals/tomes have no GAC source."
+      - paragraph: /inventory/weapons
+    - listitem:
+      - text: "information · completeness: none · adapter.fidelity.loss"
+      - paragraph: "Known loss: aliases, education, and physical description are absent from GAC."
+      - paragraph: /identity/aliases
+    - listitem:
+      - text: "information · completeness: none · adapter.fidelity.loss"
+      - paragraph: "Known loss: wounds, exhausted, and firstAidAttempted are absent from GAC."
+      - paragraph: /resources/wounds
+    - listitem:
+      - text: "information · completeness: none · adapter.fidelity.loss"
+      - paragraph: "Known loss: Impossible Landscapes campaign state is absent from GAC."
+      - paragraph: /campaignState/impossibleLandscapes
+    - listitem:
+      - text: "information · completeness: none · adapter.fidelity.loss"
+      - paragraph: "Known loss: regenerated entity ids prevent byte-identical round-trip."
+      - paragraph: /skills/custom
+  - button "Continue to Update Plan" [disabled]
+  - button "Cancel import"

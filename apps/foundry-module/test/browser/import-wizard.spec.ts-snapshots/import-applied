@@ -1,0 +1,12 @@
+- dialog "Import Agent":
+  - heading "Import into this Agent" [level=2]
+  - button "Close"
+  - list:
+    - listitem: Source
+    - listitem: Diagnostics
+    - listitem: Update Plan
+    - listitem: Done
+  - paragraph: Verified persistence complete.
+  - heading "Applied" [level=3]
+  - paragraph: "Completeness: green. Module-owned DOB: (not stored)."
+  - button "Close"
