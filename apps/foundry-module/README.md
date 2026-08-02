@@ -2,10 +2,11 @@
 
 `@delta-green-character-adapter/foundry-module` is a thin exact-runtime bridge that applies a validated Update Plan to a Foundry Actor (#7, #10, #27).
 
-Mapping and planning stay in packages; the Foundry UI is separate (#28).
+It owns permission and fingerprint revalidation, verified restorable snapshots, deterministic Actor/Item batches, rollback, post-apply semantic verification, and compact audit/binding flags. Mapping and planning stay in packages; the Foundry UI is separate (#28).
 
 ## Public seams
 
+- **`applyFoundryActorUpdate({ plan, snapshot, runtime, options? })`** — materializes selected plan actions against a live `FoundryActorRuntime`, mutates only after a verified recovery snapshot, verifies semantic results, writes compact audit flags on success, and rolls back on failure.
 - **`FoundryActorRuntime` / `FoundryWorldRuntime`** — injectable ports (no Foundry globals in this package).
 
-Apply, create, recovery, and the failure-injection harness land in follow-on commits for #27.
+Recovery snapshots are never persisted in module flags. Incomplete rollback exposes an in-memory recovery snapshot on the operation result (and via `onManualRecovery`) for authorized manual restore only. The bridge does not elevate permissions; Handler-only selected work requires a GM.
