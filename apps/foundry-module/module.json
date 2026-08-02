@@ -1,0 +1,43 @@
+{
+  "id": "delta-green-character-adapter",
+  "title": "Delta Green Character Adapter",
+  "description": "Exact-target Agent interchange: Green Agent Creator 5c9e92d JSON and Foundry 14.365 + Delta Green 1.7.0 through canonical Agent Snapshot 1.0.0.",
+  "version": "0.0.0",
+  "compatibility": {
+    "minimum": "14.365",
+    "verified": "14.365",
+    "maximum": "14.365"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "deltagreen",
+        "type": "system",
+        "compatibility": {
+          "minimum": "1.7.0",
+          "verified": "1.7.0",
+          "maximum": "1.7.0"
+        }
+      }
+    ]
+  },
+  "esmodules": ["main.js"],
+  "styles": ["styles/styles.css"],
+  "flags": {
+    "deltaGreenCharacterAdapter": {
+      "canonicalSchemaVersion": "1.0.0",
+      "verifiedCapabilities": [
+        "green-agent-creator-5c9e92d-to-canonical-1.0.0",
+        "foundry-14.365-deltagreen-1.7.0-to-canonical-1.0.0",
+        "canonical-1.0.0-to-foundry-14.365-deltagreen-1.7.0"
+      ],
+      "greenAgentCreatorCommit": "5c9e92d987f1251d62c172209fc53f8e8ac3372b",
+      "foundryCoreVersion": "14.365",
+      "deltaGreenSystemVersion": "1.7.0",
+      "deltaGreenSystemCommit": "7d86f90e1d25d47a316b94e072b14a34ca80366b"
+    }
+  },
+  "license": "MIT",
+  "readme": "README.md",
+  "url": "https://github.com/alge4/delta-green-character-adapter"
+}

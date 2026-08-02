@@ -2,6 +2,7 @@ node_modules/
 .pnpm-store/
 dist/
 .test-dist/
+artifact/
 *.tsbuildinfo
 coverage/
 .env

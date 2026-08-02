@@ -52,6 +52,7 @@ const FOUNDRY_TESTS = [
   "apps/foundry-module/test/create.test.ts",
   "apps/foundry-module/test/merge.test.ts",
   "apps/foundry-module/test/live-apply.test.ts",
+  "apps/foundry-module/test/packaging.test.ts",
   "apps/foundry-module/test/verified-capabilities.test.ts",
   "apps/foundry-module/test/wizard-session.test.ts",
   "apps/foundry-module/test/browser/import-wizard.spec.ts",
