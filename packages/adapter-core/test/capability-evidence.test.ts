@@ -46,8 +46,8 @@ function greenCapability(overrides: Partial<CapabilityRecord> = {}): CapabilityR
     evidence: {
       inventory: greenInventoryPath,
       knownLoss: greenKnownLossPath,
-      fixtures: ["fixtures/green/caleb.json"],
-      tests: ["packages/adapter-green-agent-creator/test/import.test.ts"],
+      fixtures: ["fixtures/green-agent-creator/5c9e92d/caleb.json"],
+      tests: ["packages/adapter-green-agent-creator/test/import-caleb.test.ts"],
     },
     ...overrides,
   });
@@ -87,15 +87,15 @@ describe("capability evidence validation", () => {
       knownLoss: parseKnownLossManifest(readJson(greenKnownLossPath)),
       fixtureManifest: [
         {
-          path: "fixtures/green/caleb.json",
+          path: "fixtures/green-agent-creator/5c9e92d/caleb.json",
           checksum: "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
         },
       ],
       presentArtifactPaths: new Set([
         greenInventoryPath,
         greenKnownLossPath,
-        "fixtures/green/caleb.json",
-        "packages/adapter-green-agent-creator/test/import.test.ts",
+        "fixtures/green-agent-creator/5c9e92d/caleb.json",
+        "packages/adapter-green-agent-creator/test/import-caleb.test.ts",
       ]),
     });
     assert.deepEqual(result, { ok: true });
@@ -129,14 +129,14 @@ describe("capability evidence validation", () => {
         evidence: {
           inventory: greenInventoryPath,
           fixtures: [],
-          tests: ["packages/adapter-green-agent-creator/test/import.test.ts"],
+          tests: ["packages/adapter-green-agent-creator/test/import-caleb.test.ts"],
         },
       }),
       inventory: parseMappingInventory(readJson(greenInventoryPath)),
       fixtureManifest: [],
       presentArtifactPaths: new Set([
         greenInventoryPath,
-        "packages/adapter-green-agent-creator/test/import.test.ts",
+        "packages/adapter-green-agent-creator/test/import-caleb.test.ts",
       ]),
     });
     assert.equal(lossyWithoutManifest.ok, false);

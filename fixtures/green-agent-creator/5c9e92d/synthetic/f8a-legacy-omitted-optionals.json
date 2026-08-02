@@ -1,0 +1,23 @@
+{
+  "stats": {
+    "STR": 10,
+    "CON": 12,
+    "DEX": 11,
+    "INT": 14,
+    "POW": 13,
+    "CHA": 9
+  },
+  "skills": [
+    {
+      "instanceId": "accounting_generic_fix",
+      "key": "accounting",
+      "typeName": null,
+      "value": 20,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    }
+  ]
+}

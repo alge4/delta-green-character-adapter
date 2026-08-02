@@ -1,5 +1,5 @@
 {
-  "name": "@delta-green-character-adapter/validation",
+  "name": "@delta-green-character-adapter/adapter-green-agent-creator",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -14,9 +14,10 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "check": "tsc -p tsconfig.json --noEmit",
-    "test": "pnpm --filter @delta-green-character-adapter/character-model build && tsc -p tsconfig.test.json && node --test .test-dist/test/**/*.test.js"
+    "test": "pnpm --filter @delta-green-character-adapter/adapter-core --filter @delta-green-character-adapter/character-model build && tsc -p tsconfig.test.json && node --test .test-dist/test/**/*.test.js"
   },
   "dependencies": {
+    "@delta-green-character-adapter/adapter-core": "workspace:*",
     "@delta-green-character-adapter/character-model": "workspace:*"
   },
   "devDependencies": {

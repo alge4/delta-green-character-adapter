@@ -1,0 +1,875 @@
+{
+  "professionKey": "computer_scientist_engineer",
+  "customProfessionName": "",
+  "isCustomProfession": false,
+  "customProfessionBonds": 3,
+  "customProfessionSkillPointBudget": 400,
+  "customProfessionSelectedSkills": [],
+  "customProfessionSetupStage": "bonds",
+  "skillBoostsUsed": 8,
+  "orSkillChoices": {},
+  "profChoiceSkillSelections": {
+    "science": true,
+    "accounting": true,
+    "bureaucracy": true,
+    "law": true
+  },
+  "skills": [
+    {
+      "instanceId": "accounting_generic_245thvrxd",
+      "key": "accounting",
+      "typeName": null,
+      "value": 50,
+      "baseValueFromProfession": 40,
+      "increases": 0,
+      "isProfessional": true,
+      "isChoiceSkill": true,
+      "slotId": null
+    },
+    {
+      "instanceId": "alertness_generic_245ti6qy9",
+      "key": "alertness",
+      "typeName": null,
+      "value": 20,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "anthropology_generic_245t9et9q",
+      "key": "anthropology",
+      "typeName": null,
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "archeology_generic_245tsnmlr",
+      "key": "archeology",
+      "typeName": null,
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "art_generic_245tz2ifc",
+      "key": "art",
+      "typeName": "",
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "artillery_generic_245t6nv90",
+      "key": "artillery",
+      "typeName": null,
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "athletics_generic_245tnvdue",
+      "key": "athletics",
+      "typeName": null,
+      "value": 30,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "bureaucracy_generic_245tefdpx",
+      "key": "bureaucracy",
+      "typeName": null,
+      "value": 70,
+      "baseValueFromProfession": 40,
+      "increases": 1,
+      "isProfessional": true,
+      "isChoiceSkill": true,
+      "slotId": null
+    },
+    {
+      "instanceId": "computer_science_generic_245tlm813",
+      "key": "computer_science",
+      "typeName": null,
+      "value": 80,
+      "baseValueFromProfession": 60,
+      "increases": 1,
+      "isProfessional": true,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "craft_generic_245tfoj3g",
+      "key": "craft",
+      "typeName": "",
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "criminology_generic_245tntmi8",
+      "key": "criminology",
+      "typeName": null,
+      "value": 10,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "demolitions_generic_245tr3ff8",
+      "key": "demolitions",
+      "typeName": null,
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "disguise_generic_245thmyx5",
+      "key": "disguise",
+      "typeName": null,
+      "value": 10,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "dodge_generic_245tnq7ov",
+      "key": "dodge",
+      "typeName": null,
+      "value": 30,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "drive_generic_245t4lenp",
+      "key": "drive",
+      "typeName": null,
+      "value": 20,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "firearms_generic_245t62exp",
+      "key": "firearms",
+      "typeName": null,
+      "value": 20,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "first_aid_generic_245twwkf2",
+      "key": "first_aid",
+      "typeName": null,
+      "value": 10,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "foreign_language_generic_245tfu0fo",
+      "key": "foreign_language",
+      "typeName": "",
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "forensics_generic_245toutem",
+      "key": "forensics",
+      "typeName": null,
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "heavy_machinery_generic_245tum7ld",
+      "key": "heavy_machinery",
+      "typeName": null,
+      "value": 10,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "heavy_weapons_generic_245t8ysk6",
+      "key": "heavy_weapons",
+      "typeName": null,
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "history_generic_245tnncjz",
+      "key": "history",
+      "typeName": null,
+      "value": 10,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "humint_generic_245t5ckii",
+      "key": "humint",
+      "typeName": null,
+      "value": 10,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "law_generic_245t10pl8",
+      "key": "law",
+      "typeName": null,
+      "value": 40,
+      "baseValueFromProfession": 40,
+      "increases": 0,
+      "isProfessional": true,
+      "isChoiceSkill": true,
+      "slotId": null
+    },
+    {
+      "instanceId": "medicine_generic_245t2vhji",
+      "key": "medicine",
+      "typeName": null,
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "melee_weapons_generic_245tuma04",
+      "key": "melee_weapons",
+      "typeName": null,
+      "value": 30,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "military_science_generic_245tinu35",
+      "key": "military_science",
+      "typeName": "",
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "navigate_generic_245t7r961",
+      "key": "navigate",
+      "typeName": null,
+      "value": 10,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "occult_generic_245ts8xiw",
+      "key": "occult",
+      "typeName": null,
+      "value": 10,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "persuade_generic_245ttygpn",
+      "key": "persuade",
+      "typeName": null,
+      "value": 40,
+      "baseValueFromProfession": 0,
+      "increases": 1,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "pharmacy_generic_245t5cgib",
+      "key": "pharmacy",
+      "typeName": null,
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "pilot_generic_245t82d4n",
+      "key": "pilot",
+      "typeName": "",
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "psychotherapy_generic_245t11wup",
+      "key": "psychotherapy",
+      "typeName": null,
+      "value": 10,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "ride_generic_245tncotd",
+      "key": "ride",
+      "typeName": null,
+      "value": 10,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "science_generic_245t4li0t",
+      "key": "science",
+      "typeName": "",
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "search_generic_245txwg2y",
+      "key": "search",
+      "typeName": null,
+      "value": 20,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "sigint_generic_245tgsrst",
+      "key": "sigint",
+      "typeName": null,
+      "value": 60,
+      "baseValueFromProfession": 40,
+      "increases": 1,
+      "isProfessional": true,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "stealth_generic_245tk7595",
+      "key": "stealth",
+      "typeName": null,
+      "value": 30,
+      "baseValueFromProfession": 0,
+      "increases": 1,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "surgery_generic_245t3ced4",
+      "key": "surgery",
+      "typeName": null,
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "survival_generic_245taefc9",
+      "key": "survival",
+      "typeName": null,
+      "value": 10,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "swim_generic_245tz6wul",
+      "key": "swim",
+      "typeName": null,
+      "value": 20,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "unarmed_combat_generic_245tutzwq",
+      "key": "unarmed_combat",
+      "typeName": null,
+      "value": 40,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "unnatural_generic_245th9x09",
+      "key": "unnatural",
+      "typeName": null,
+      "value": 0,
+      "baseValueFromProfession": 0,
+      "increases": 0,
+      "isProfessional": false,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "craft_electrician_245uh5l3f",
+      "key": "craft",
+      "typeName": "Electrician",
+      "value": 30,
+      "baseValueFromProfession": 30,
+      "increases": 0,
+      "isProfessional": true,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "craft_mechanic_245u3840x",
+      "key": "craft",
+      "typeName": "Mechanic",
+      "value": 30,
+      "baseValueFromProfession": 30,
+      "increases": 0,
+      "isProfessional": true,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "craft_microelectronics_245ux37u6",
+      "key": "craft",
+      "typeName": "Microelectronics",
+      "value": 60,
+      "baseValueFromProfession": 40,
+      "increases": 1,
+      "isProfessional": true,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "science_mathematics_245utronx",
+      "key": "science",
+      "typeName": "Mathematics",
+      "value": 80,
+      "baseValueFromProfession": 40,
+      "increases": 2,
+      "isProfessional": true,
+      "isChoiceSkill": false,
+      "slotId": null
+    },
+    {
+      "instanceId": "science_engineering_22az37r9h",
+      "key": "science",
+      "typeName": "Engineering",
+      "value": 40,
+      "baseValueFromProfession": 40,
+      "increases": 0,
+      "isProfessional": true,
+      "isChoiceSkill": true,
+      "slotId": null
+    }
+  ],
+  "statGenerationMethod": "array",
+  "statArrayChoice": 2,
+  "rolledStatValues": [],
+  "statAssignments": {
+    "INT": 17,
+    "DEX": 14,
+    "CHA": 13,
+    "CON": 10,
+    "STR": 8,
+    "POW": 10
+  },
+  "stats": {
+    "STR": 8,
+    "CON": 10,
+    "DEX": 14,
+    "INT": 17,
+    "POW": 10,
+    "CHA": 13
+  },
+  "distinguishingFeatures": {
+    "INT": "Gifted",
+    "DEX": "Lithe",
+    "STR": "",
+    "CHA": "Explotative (Phishing)",
+    "CON": "",
+    "POW": ""
+  },
+  "derivedAttributes": {
+    "HP": 9,
+    "WP": 10,
+    "SAN": 50,
+    "BP": 40
+  },
+  "derivedCurrent": {
+    "HP": 0,
+    "WP": 0,
+    "SAN": 0,
+    "BP": 0
+  },
+  "bonds": [
+    {
+      "description": "My Best Friend, Bruce",
+      "score": 13
+    },
+    {
+      "description": "My brother",
+      "score": 13
+    },
+    {
+      "description": "My ex",
+      "score": 13
+    }
+  ],
+  "motivations": [
+    "Thrust into the spotlight",
+    "Desire to recover past glory",
+    "Storied Hacker",
+    "Beautiful algorthims. ",
+    "I code best when I'm drinkin"
+  ],
+  "personalInfo": {
+    "name": "Caleb",
+    "employer": "Shop Extra",
+    "sex": "Male",
+    "nationality": "USA",
+    "age": "24",
+    "dob": "29/10/1971"
+  },
+  "traumaticBackground": null,
+  "traumaticBackgroundEffects": {},
+  "basePOW": null,
+  "adaptations": [],
+  "disorder": null,
+  "skillFailMarks": [],
+  "items": [],
+  "notes": "",
+  "id": null,
+  "createdDate": null,
+  "sheetBaseline": {
+    "personalInfo": {
+      "name": "Caleb",
+      "employer": "Shop Extra",
+      "sex": "Male",
+      "nationality": "USA",
+      "age": 24,
+      "dob": "29/10/1971"
+    },
+    "stats": {
+      "STR": 8,
+      "CON": 10,
+      "DEX": 14,
+      "INT": 17,
+      "POW": 10,
+      "CHA": 13
+    },
+    "distinguishingFeatures": {
+      "INT": "Gifted",
+      "DEX": "Lithe",
+      "STR": "",
+      "CHA": "Explotative (Phishing)"
+    },
+    "derivedCurrent": {
+      "HP": 0,
+      "WP": 0,
+      "SAN": 0,
+      "BP": 0
+    },
+    "bonds": [
+      {
+        "description": "My Best Friend, Bruce ",
+        "score": 13
+      },
+      {
+        "description": "My brother",
+        "score": 13
+      },
+      {
+        "description": "My ex",
+        "score": 13
+      }
+    ],
+    "motivations": [
+      "Thrust into the spotlight",
+      "Desire to recover past glory",
+      "Storied Hacker",
+      "Beautiful algorthims. ",
+      "I code best when I'm drinkin"
+    ],
+    "disorder": null,
+    "adaptations": [],
+    "items": [],
+    "notes": "",
+    "skills": [
+      {
+        "instanceId": "accounting_generic_245thvrxd",
+        "value": 50
+      },
+      {
+        "instanceId": "alertness_generic_245ti6qy9",
+        "value": 20
+      },
+      {
+        "instanceId": "anthropology_generic_245t9et9q",
+        "value": 0
+      },
+      {
+        "instanceId": "archeology_generic_245tsnmlr",
+        "value": 0
+      },
+      {
+        "instanceId": "art_generic_245tz2ifc",
+        "value": 0
+      },
+      {
+        "instanceId": "artillery_generic_245t6nv90",
+        "value": 0
+      },
+      {
+        "instanceId": "athletics_generic_245tnvdue",
+        "value": 30
+      },
+      {
+        "instanceId": "bureaucracy_generic_245tefdpx",
+        "value": 70
+      },
+      {
+        "instanceId": "computer_science_generic_245tlm813",
+        "value": 80
+      },
+      {
+        "instanceId": "craft_generic_245tfoj3g",
+        "value": 0
+      },
+      {
+        "instanceId": "criminology_generic_245tntmi8",
+        "value": 10
+      },
+      {
+        "instanceId": "demolitions_generic_245tr3ff8",
+        "value": 0
+      },
+      {
+        "instanceId": "disguise_generic_245thmyx5",
+        "value": 10
+      },
+      {
+        "instanceId": "dodge_generic_245tnq7ov",
+        "value": 30
+      },
+      {
+        "instanceId": "drive_generic_245t4lenp",
+        "value": 20
+      },
+      {
+        "instanceId": "firearms_generic_245t62exp",
+        "value": 20
+      },
+      {
+        "instanceId": "first_aid_generic_245twwkf2",
+        "value": 10
+      },
+      {
+        "instanceId": "foreign_language_generic_245tfu0fo",
+        "value": 0
+      },
+      {
+        "instanceId": "forensics_generic_245toutem",
+        "value": 0
+      },
+      {
+        "instanceId": "heavy_machinery_generic_245tum7ld",
+        "value": 10
+      },
+      {
+        "instanceId": "heavy_weapons_generic_245t8ysk6",
+        "value": 0
+      },
+      {
+        "instanceId": "history_generic_245tnncjz",
+        "value": 10
+      },
+      {
+        "instanceId": "humint_generic_245t5ckii",
+        "value": 10
+      },
+      {
+        "instanceId": "law_generic_245t10pl8",
+        "value": 40
+      },
+      {
+        "instanceId": "medicine_generic_245t2vhji",
+        "value": 0
+      },
+      {
+        "instanceId": "melee_weapons_generic_245tuma04",
+        "value": 30
+      },
+      {
+        "instanceId": "military_science_generic_245tinu35",
+        "value": 0
+      },
+      {
+        "instanceId": "navigate_generic_245t7r961",
+        "value": 10
+      },
+      {
+        "instanceId": "occult_generic_245ts8xiw",
+        "value": 10
+      },
+      {
+        "instanceId": "persuade_generic_245ttygpn",
+        "value": 40
+      },
+      {
+        "instanceId": "pharmacy_generic_245t5cgib",
+        "value": 0
+      },
+      {
+        "instanceId": "pilot_generic_245t82d4n",
+        "value": 0
+      },
+      {
+        "instanceId": "psychotherapy_generic_245t11wup",
+        "value": 10
+      },
+      {
+        "instanceId": "ride_generic_245tncotd",
+        "value": 10
+      },
+      {
+        "instanceId": "science_generic_245t4li0t",
+        "value": 0
+      },
+      {
+        "instanceId": "search_generic_245txwg2y",
+        "value": 20
+      },
+      {
+        "instanceId": "sigint_generic_245tgsrst",
+        "value": 60
+      },
+      {
+        "instanceId": "stealth_generic_245tk7595",
+        "value": 30
+      },
+      {
+        "instanceId": "surgery_generic_245t3ced4",
+        "value": 0
+      },
+      {
+        "instanceId": "survival_generic_245taefc9",
+        "value": 10
+      },
+      {
+        "instanceId": "swim_generic_245tz6wul",
+        "value": 20
+      },
+      {
+        "instanceId": "unarmed_combat_generic_245tutzwq",
+        "value": 40
+      },
+      {
+        "instanceId": "unnatural_generic_245th9x09",
+        "value": 0
+      },
+      {
+        "instanceId": "craft_electrician_245uh5l3f",
+        "value": 30
+      },
+      {
+        "instanceId": "craft_mechanic_245u3840x",
+        "value": 30
+      },
+      {
+        "instanceId": "craft_microelectronics_245ux37u6",
+        "value": 60
+      },
+      {
+        "instanceId": "science_mathematics_245utronx",
+        "value": 80
+      },
+      {
+        "instanceId": "science_engineering_22az37r9h",
+        "value": 40
+      }
+    ],
+    "skillFailMarks": []
+  }
+}
