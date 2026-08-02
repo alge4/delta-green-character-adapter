@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Foundry Agent-sheet import wizard harness</title>
+  </head>
+  <body>
+    <div class="foundry-window" data-testid="dgca-sheet">
+      <div class="foundry-titlebar">
+        <span class="foundry-title">Agent Sheet</span>
+        <div class="foundry-titlebar-actions" data-dgca-titlebar></div>
+      </div>
+      <div class="sheet">
+        <aside class="left-bar">
+          <div class="portrait" aria-hidden="true"></div>
+          <input class="name-field" readonly value="Caleb" />
+        </aside>
+        <section class="right-bar">
+          <nav class="sheet-tabs" aria-label="Agent sheet tabs">
+            <button type="button" class="active">Skills</button>
+            <button type="button">CV</button>
+          </nav>
+          <div class="tab-body">
+            <div data-dgca-bio-host class="biography"></div>
+          </div>
+        </section>
+        <div data-dgca-modal-host></div>
+      </div>
+    </div>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

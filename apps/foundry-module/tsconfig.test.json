@@ -9,5 +9,6 @@
     "tsBuildInfoFile": ".test-dist/.tsbuildinfo",
     "types": ["node"]
   },
-  "include": ["src/**/*.ts", "test/**/*.ts"]
+  "include": ["src/**/*.ts", "test/**/*.ts"],
+  "exclude": ["test/browser/**/*.ts"]
 }

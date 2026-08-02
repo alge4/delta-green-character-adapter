@@ -12,18 +12,24 @@
   "types": "./src/index.ts",
   "files": ["dist"],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json && node ./scripts/copy-ui-assets.mjs",
     "check": "tsc -p tsconfig.json --noEmit",
-    "test": "pnpm --filter @delta-green-character-adapter/adapter-core --filter @delta-green-character-adapter/character-model --filter @delta-green-character-adapter/adapter-foundry-deltagreen --filter @delta-green-character-adapter/foundry-update-planner build && tsc -p tsconfig.test.json && node --test .test-dist/test/**/*.test.js"
+    "test": "pnpm --filter @delta-green-character-adapter/adapter-core --filter @delta-green-character-adapter/character-model --filter @delta-green-character-adapter/adapter-green-agent-creator --filter @delta-green-character-adapter/adapter-foundry-deltagreen --filter @delta-green-character-adapter/foundry-update-planner --filter @delta-green-character-adapter/validation build && tsc -p tsconfig.test.json && node --test .test-dist/test/**/*.test.js && pnpm test:browser",
+    "test:browser": "pnpm --filter @delta-green-character-adapter/adapter-core --filter @delta-green-character-adapter/character-model --filter @delta-green-character-adapter/adapter-green-agent-creator --filter @delta-green-character-adapter/adapter-foundry-deltagreen --filter @delta-green-character-adapter/foundry-update-planner --filter @delta-green-character-adapter/validation build && playwright test",
+    "dev:browser": "vite"
   },
   "dependencies": {
     "@delta-green-character-adapter/adapter-core": "workspace:*",
     "@delta-green-character-adapter/adapter-foundry-deltagreen": "workspace:*",
+    "@delta-green-character-adapter/adapter-green-agent-creator": "workspace:*",
     "@delta-green-character-adapter/character-model": "workspace:*",
-    "@delta-green-character-adapter/foundry-update-planner": "workspace:*"
+    "@delta-green-character-adapter/foundry-update-planner": "workspace:*",
+    "@delta-green-character-adapter/validation": "workspace:*"
   },
   "devDependencies": {
+    "@playwright/test": "^1.54.2",
     "@types/node": "^22.18.1",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "vite": "^7.0.6"
   }
 }

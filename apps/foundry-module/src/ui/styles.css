@@ -1,0 +1,237 @@
+:root {
+  --dgca-ink: #1a1814;
+  --dgca-muted: #5c564c;
+  --dgca-accent: #215112;
+  --dgca-green: #2f7d32;
+  --dgca-amber: #c4891a;
+  --dgca-red: #b3261e;
+  --dgca-window: #2b2b2b;
+  --dgca-paper: #e8e2d4;
+}
+
+.dgca-completeness {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8rem;
+}
+
+.dgca-completeness-lamp {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
+}
+
+.dgca-completeness-lamp.green {
+  background: var(--dgca-green);
+}
+
+.dgca-completeness-lamp.amber {
+  background: var(--dgca-amber);
+}
+
+.dgca-completeness-lamp.red {
+  background: var(--dgca-red);
+}
+
+.dgca-completeness-lamp.unknown {
+  background: #777;
+}
+
+.dgca-titlebar-import {
+  border: 1px solid #666;
+  background: #333;
+  color: #eee;
+  border-radius: 3px;
+  padding: 0.15rem 0.55rem;
+  cursor: pointer;
+}
+
+.dgca-titlebar-import:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.dgca-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 12, 10, 0.55);
+  display: grid;
+  place-items: center;
+  z-index: 20;
+  padding: 1rem;
+}
+
+.dgca-modal {
+  width: min(720px, 100%);
+  max-height: min(80vh, 720px);
+  overflow: auto;
+  background: var(--dgca-paper);
+  color: var(--dgca-ink);
+  border-radius: 6px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.dgca-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.dgca-modal-header h2 {
+  margin: 0;
+  font-size: 1.15rem;
+}
+
+.dgca-wizard-steps {
+  display: flex;
+  gap: 0.5rem;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.dgca-wizard-steps li {
+  padding: 0.2rem 0.45rem;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--dgca-muted);
+}
+
+.dgca-wizard-steps li.current {
+  background: var(--dgca-accent);
+  color: #eff8ea;
+}
+
+.dgca-wizard-steps li.done {
+  background: rgba(33, 81, 18, 0.18);
+  color: var(--dgca-accent);
+}
+
+.dgca-panel h3 {
+  margin: 0 0 0.5rem;
+}
+
+.dgca-muted,
+.dgca-path {
+  color: var(--dgca-muted);
+  font-size: 0.85rem;
+}
+
+.dgca-progress,
+.dgca-stale {
+  color: #8a6a12;
+  font-weight: 600;
+}
+
+.dgca-diag-list,
+.dgca-plan-list {
+  list-style: none;
+  padding: 0;
+  margin: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.dgca-diag,
+.dgca-plan-row {
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+  padding: 0.55rem;
+  background: rgba(255, 255, 255, 0.35);
+}
+
+.dgca-diag.severity-fatal,
+.dgca-diag.severity-error {
+  border-color: rgba(179, 38, 30, 0.45);
+}
+
+.dgca-diag-meta,
+.dgca-plan-meta,
+.dgca-plan-values {
+  font-size: 0.8rem;
+  color: var(--dgca-muted);
+}
+
+.dgca-panel-actions,
+.dgca-remediation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin-top: 0.65rem;
+}
+
+.dgca-primary,
+.dgca-ghost,
+.dgca-remediation button {
+  font: inherit;
+  border-radius: 3px;
+  padding: 0.3rem 0.65rem;
+  cursor: pointer;
+}
+
+.dgca-primary {
+  background: var(--dgca-accent);
+  color: #eff8ea;
+  border: 1px solid var(--dgca-accent);
+}
+
+.dgca-primary:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.dgca-ghost,
+.dgca-remediation button {
+  background: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  color: var(--dgca-ink);
+}
+
+.dgca-plan-row label {
+  display: flex;
+  gap: 0.45rem;
+  align-items: flex-start;
+}
+
+.dgca-op {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+}
+
+.dgca-bio-module-owned {
+  display: grid;
+  gap: 0.25rem;
+  margin-top: 0.75rem;
+  padding: 0.55rem;
+  border: 1px dashed rgba(33, 81, 18, 0.45);
+  border-radius: 4px;
+}
+
+.dgca-bio-module-owned input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.35);
+  background: transparent;
+  padding: 0.2rem 0.15rem;
+}
+
+.dgca-module-tag {
+  justify-self: start;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: var(--dgca-accent);
+  color: #eff8ea;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+}

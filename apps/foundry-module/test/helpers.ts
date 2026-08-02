@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -12,8 +12,21 @@ import {
 
 import { cloneJson, isRecord } from "../src/paths.js";
 
-// From source: apps/foundry-module/test → ../../.. ; from compiled .test-dist/test → ../../../..
-export const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "../../../../");
+function findRepoRoot(start: string): string {
+  let current = start;
+  for (;;) {
+    if (existsSync(resolve(current, "pnpm-workspace.yaml"))) {
+      return current;
+    }
+    const parent = dirname(current);
+    if (parent === current) {
+      throw new Error(`Unable to locate repository root from ${start}`);
+    }
+    current = parent;
+  }
+}
+
+export const repoRoot = findRepoRoot(dirname(fileURLToPath(import.meta.url)));
 export const foundryFixtureRoot = resolve(repoRoot, "fixtures/foundry/14.365-deltagreen-1.7.0");
 export const canonicalFixtureRoot = resolve(repoRoot, "fixtures/canonical/1.0.0/export-to-foundry");
 
