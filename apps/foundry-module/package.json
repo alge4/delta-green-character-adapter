@@ -15,7 +15,7 @@
     "build": "tsc -p tsconfig.build.json && node ./scripts/copy-ui-assets.mjs",
     "check": "tsc -p tsconfig.json --noEmit",
     "test": "pnpm --filter @delta-green-character-adapter/adapter-core --filter @delta-green-character-adapter/character-model --filter @delta-green-character-adapter/adapter-green-agent-creator --filter @delta-green-character-adapter/adapter-foundry-deltagreen --filter @delta-green-character-adapter/foundry-update-planner --filter @delta-green-character-adapter/validation build && tsc -p tsconfig.test.json && node --test .test-dist/test/**/*.test.js && pnpm test:browser",
-    "test:browser": "pnpm --filter @delta-green-character-adapter/adapter-core --filter @delta-green-character-adapter/character-model --filter @delta-green-character-adapter/adapter-green-agent-creator --filter @delta-green-character-adapter/adapter-foundry-deltagreen --filter @delta-green-character-adapter/foundry-update-planner --filter @delta-green-character-adapter/validation build && playwright test",
+    "test:browser": "pnpm --filter @delta-green-character-adapter/adapter-core --filter @delta-green-character-adapter/character-model --filter @delta-green-character-adapter/adapter-green-agent-creator --filter @delta-green-character-adapter/adapter-foundry-deltagreen --filter @delta-green-character-adapter/foundry-update-planner --filter @delta-green-character-adapter/validation build && playwright install --with-deps chromium && playwright test",
     "dev:browser": "vite"
   },
   "dependencies": {
