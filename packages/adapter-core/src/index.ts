@@ -81,3 +81,16 @@ export type {
   MappingInventory,
   PathClassification,
 } from "./capability.js";
+
+export {
+  parseVerifiedCapabilityRegistry,
+  validateVerifiedCapabilityRegistry,
+  VERIFIED_INITIAL_CAPABILITY_IDS,
+  verifiedCapabilityRegistrySchema,
+} from "./registry.js";
+export type {
+  RegistryValidationIssue,
+  VerifiedCapabilityRegistry,
+  VerifiedCapabilityRegistryEntry,
+  VerifiedInitialCapabilityId,
+} from "./registry.js";
