@@ -21,11 +21,9 @@ pnpm test
 pnpm build
 ```
 
-The workspace is still at the planning/scaffold stage, so recursive commands may have no implementation packages to run yet.
-
 ## Cursor cloud agents
 
-The committed `.cursor/environment.json` performs an idempotent dependency install when Cursor creates or refreshes an Ubuntu cloud machine. No long-running terminal is configured until the repository has an application that needs one.
+The committed `.cursor/environment.json` performs an idempotent dependency install when Cursor creates or refreshes an Ubuntu cloud machine.
 
 Before starting a cloud agent:
 
@@ -41,4 +39,4 @@ The large pinned upstream pregen corpus remains available to terminal-driven tes
 
 The project plan is maintained through the Wayfinder map in GitHub Issues. Decisions live in their closed child tickets; the map contains linked summaries rather than duplicated specifications.
 
-Do not infer compatibility with untested source versions. Follow the exact capability and fixture evidence recorded in `docs/research/`.
+Do not infer compatibility with untested source versions. Advertise only the three verified capabilities in `docs/mappings/verified-capabilities.json`, backed by inventories, known-loss manifests, fixtures/checksums, and tests.
