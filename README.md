@@ -56,7 +56,7 @@ Green export; XLSX / Google Sheets; PDF / OCR; NPCs; vehicles; compatibility mon
 
 ## Development
 
-Use Node.js 22 with Corepack and the pinned pnpm version:
+Use Node.js 24 with Corepack and the pinned pnpm version (Foundry VTT v14 requires Node 24):
 
 ```sh
 corepack enable

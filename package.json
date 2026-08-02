@@ -11,7 +11,7 @@
     "test": "pnpm -r test"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "pnpm": {
     "onlyBuiltDependencies": ["esbuild"]

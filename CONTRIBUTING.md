@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- Node.js 22
+- Node.js 24 (required by Foundry VTT v14)
 - Corepack
 - pnpm 10.14.0, selected from the `packageManager` field in `package.json`
 
