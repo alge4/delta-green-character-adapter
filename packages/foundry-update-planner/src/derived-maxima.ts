@@ -147,9 +147,10 @@ export function planDerivedMaximaConflicts(
     }
     const already = entries.some((entry) => entry.path === conflict.path);
     if (!already) {
+      // Deselected update (not preserve) so opting in can write (#40).
       pushEntry(entries, {
         id: ctx.createId(),
-        operation: "preserve",
+        operation: "update",
         path: conflict.path,
         fieldClass: conflict.path.endsWith("/max") ? "profile" : "mutable",
         beforeValue: conflict.beforeValue,

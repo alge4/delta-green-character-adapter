@@ -68,7 +68,8 @@ describe("Derived maxima corrected remediation (#7)", () => {
       plan.entries.some(
         (entry) =>
           entry.path === "/system/health/value" &&
-          (entry.operation === "preserve" || entry.selectedByDefault === false),
+          entry.operation === "update" &&
+          entry.selectedByDefault === false,
       ),
     );
   });

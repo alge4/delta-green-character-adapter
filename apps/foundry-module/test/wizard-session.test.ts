@@ -183,6 +183,81 @@ describe("createImportWizardSession", () => {
     );
   });
 
+  it("applies opted-in mutable campaign state on populated Agent merge", async () => {
+    const bootstrap = createInMemoryActorRuntime({
+      source: blankNamed("Caleb"),
+      gm: true,
+    });
+    await importCalebThroughWizard(bootstrap, "2026-08-02T12:00:00.000Z");
+    const imported = bootstrap.readActorSource();
+    const calebAgentId = adapterFlags(imported).agentId as string;
+
+    const populated = structuredClone(imported) as Record<string, unknown>;
+    const system = populated.system as Record<string, unknown>;
+    system.health = { ...(system.health as object), value: 6 };
+    system.wp = { ...(system.wp as object), value: 9 };
+    system.sanity = {
+      ...(system.sanity as object),
+      value: 40,
+      currentBreakingPoint: 40,
+    };
+    const biography = system.biography as Record<string, unknown>;
+    biography.profession = "Interim Role";
+
+    const mergeRuntime = createInMemoryActorRuntime({
+      source: bindActor(populated, calebAgentId),
+      gm: true,
+      canUpdate: true,
+    });
+    const session = createImportWizardSession({
+      runtime: mergeRuntime,
+      sheet: supportedSheet,
+      options: {
+        createId: sequentialIdFactory(),
+        adapterVersion: "0.0.0",
+        now: "2026-08-02T13:00:00.000Z",
+      },
+    });
+
+    session.open();
+    session.loadLocalGreenSource({ bytes: calebBytes, fileName: "caleb.json" });
+    for (const groupKey of session.view().pendingGroupAcknowledgements) {
+      session.acknowledgeGroup(groupKey);
+    }
+    session.continueToPlan();
+    const plan = session.view().plan!;
+    const mutableUpdates = plan.entries.filter(
+      (item: UpdatePlanEntry) =>
+        item.fieldClass === "mutable" &&
+        item.operation === "update" &&
+        [
+          "/system/health/value",
+          "/system/wp/value",
+          "/system/sanity/value",
+          "/system/sanity/currentBreakingPoint",
+        ].includes(item.path),
+    );
+    assert.ok(mutableUpdates.length >= 3, "expected mutable resource update rows");
+    assert.ok(mutableUpdates.every((entry: UpdatePlanEntry) => entry.selectedByDefault === false));
+    for (const entry of mutableUpdates) {
+      session.setEntrySelected(entry.id, true);
+      assert.equal(session.view().selection[entry.id], true);
+      assert.equal(
+        session.view().plan?.entries.find((item: UpdatePlanEntry) => item.id === entry.id)
+          ?.operation,
+        "update",
+      );
+    }
+
+    await session.confirmApply();
+    assert.equal(session.view().phase, "done");
+
+    const source = mergeRuntime.readActorSource();
+    assert.notEqual(getByPointer(source, "/system/health/value"), 6);
+    assert.notEqual(getByPointer(source, "/system/wp/value"), 9);
+    assert.notEqual(getByPointer(source, "/system/sanity/value"), 40);
+  });
+
   it("preserves mutable campaign state on populated Agent merge unless opted in", async () => {
     const bootstrap = createInMemoryActorRuntime({
       source: blankNamed("Caleb"),
