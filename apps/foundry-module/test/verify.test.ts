@@ -80,6 +80,35 @@ describe("verifyAppliedActorState", () => {
     assert.equal(result.ok, true);
   });
 
+  it("tolerates Foundry StringField trimming on selected scalar updates", () => {
+    const pre = withActorName(readFoundryFixture(BLANK_ACTOR), "Alge") as Record<string, unknown>;
+    const post = structuredClone(pre) as Record<string, unknown>;
+    const system = (post.system ?? {}) as Record<string, unknown>;
+    const statistics = (system.statistics ?? {}) as Record<string, unknown>;
+    const dex = (statistics.dex ?? {}) as Record<string, unknown>;
+    dex.distinguishing_feature = "Uncoordinated";
+    statistics.dex = dex;
+    system.statistics = statistics;
+    post.system = system;
+
+    const result = verifyAppliedActorState({
+      preApplySource: pre,
+      postApplySource: post,
+      plan: minimalPlan("/system/statistics/dex/distinguishing_feature"),
+      actions: [
+        {
+          entryId: "00000000-0000-4000-8000-000000000003",
+          operation: "update",
+          path: "/system/statistics/dex/distinguishing_feature",
+          fieldClass: "profile",
+          dependencies: [],
+          value: "Uncoordinated ",
+        },
+      ],
+    });
+    assert.equal(result.ok, true);
+  });
+
   it("matches added Items after Foundry trims trailing name whitespace", () => {
     const pre = withActorName(readFoundryFixture(BLANK_ACTOR), "Alge") as Record<string, unknown>;
     const post = structuredClone(pre) as Record<string, unknown>;

@@ -2,7 +2,14 @@ import { foundrySemanticView } from "@delta-green-character-adapter/adapter-foun
 import type { MaterializedApplyAction } from "@delta-green-character-adapter/foundry-update-planner";
 import type { UpdatePlan } from "@delta-green-character-adapter/foundry-update-planner";
 
-import { deepEqual, getByPointer, isRecord, parseItemPointer, type UnknownRecord } from "./paths.js";
+import {
+  deepEqual,
+  foundryEqual,
+  getByPointer,
+  isRecord,
+  parseItemPointer,
+  type UnknownRecord,
+} from "./paths.js";
 
 /** Document keys we must not mutate. `_stats` is excluded: Foundry rewrites it on every write. */
 const FOUNDRY_OWNED_DOCUMENT_KEYS = [
@@ -163,7 +170,8 @@ export function verifyAppliedActorState(input: {
     }
 
     const after = getByPointer(post, action.path);
-    if (!deepEqual(after, action.value)) {
+    // Foundry StringField trims whitespace; tolerate that on selected writes (#40 Chase).
+    if (!foundryEqual(after, action.value)) {
       return {
         ok: false,
         reason: `Selected ${action.operation} at ${action.path} was not reflected after apply.`,
