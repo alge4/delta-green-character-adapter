@@ -73,6 +73,8 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
 
   let rendering = false;
   let fileInput: HTMLInputElement | null = null;
+  /** Preserve Update Plan scroll across checkbox re-renders (#40). */
+  let planPanelScrollTop = 0;
 
   const render = async (): Promise<void> => {
     if (rendering) {
@@ -81,6 +83,12 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
     rendering = true;
     try {
       const view = await resolveView(host);
+      const priorPanel = modalHost.querySelector(".dgca-panel");
+      if (priorPanel instanceof HTMLElement && (view.phase === "plan" || view.phase === "applying")) {
+        planPanelScrollTop = priorPanel.scrollTop;
+      } else if (view.phase !== "plan" && view.phase !== "applying") {
+        planPanelScrollTop = 0;
+      }
       titleBar.replaceChildren();
       modalHost.replaceChildren();
 
@@ -454,6 +462,10 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
 
       backdrop.append(modal);
       modalHost.append(backdrop);
+      if ((view.phase === "plan" || view.phase === "applying") && planPanelScrollTop > 0) {
+        // Restore after mount so layout has a scrollable panel (#40).
+        body.scrollTop = planPanelScrollTop;
+      }
     } finally {
       rendering = false;
     }

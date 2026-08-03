@@ -25,10 +25,11 @@ describe("importGreenAgentCreator F1 Caleb golden (#17/#24)", () => {
     assert.equal(snapshot.biography.profession, "Computer Scientist or Engineer");
     assert.equal(snapshot.biography.age, 24);
     assert.equal(snapshot.biography.dateOfBirth, undefined);
-    assert.equal(snapshot.resources.hitPoints?.current, 0);
-    assert.equal(snapshot.resources.willpower?.current, 0);
-    assert.equal(snapshot.resources.sanity?.current, 0);
-    assert.equal(snapshot.resources.breakingPoint?.current, 0);
+    // GAC ships derivedCurrent all-zeros as uninitialized placeholders; import fills maxima.
+    assert.equal(snapshot.resources.hitPoints?.current, 9);
+    assert.equal(snapshot.resources.willpower?.current, 10);
+    assert.equal(snapshot.resources.sanity?.current, 50);
+    assert.equal(snapshot.resources.breakingPoint?.current, 40);
     assert.equal(snapshot.resources.hitPoints?.maximum, 9);
     assert.equal(snapshot.skills.standard.computerScience?.proficiency, 80);
     assert.equal(snapshot.skills.specialTraining.length, 0);

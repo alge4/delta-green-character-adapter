@@ -485,11 +485,44 @@ export function importGreenAgentCreator(
     return expected[key];
   }
 
+  const hpMax = resolveMaximum("HP", "/derivedAttributes/HP");
+  const wpMax = resolveMaximum("WP", "/derivedAttributes/WP");
+  const sanMax = resolveMaximum("SAN", "/derivedAttributes/SAN");
+  const bpBase = resolveMaximum("BP", "/derivedAttributes/BP");
+
+  // GAC commonly exports derivedCurrent all-zeros while derivedAttributes hold formula
+  // maxima (Caleb, Thorne, community sheets). Treat that whole block as uninitialized
+  // rather than literal zero HP/WP/SAN (#40). Partial zeros (e.g. HP 0 with WP/SAN left)
+  // stay explicit.
+  const resourceKeys = ["HP", "WP", "SAN", "BP"] as const;
+  const placeholderZeroCurrents =
+    derivedCurrent !== undefined &&
+    resourceKeys.every((key) => {
+      if (!Object.prototype.hasOwnProperty.call(derivedCurrent, key)) {
+        return false;
+      }
+      const explicit = derivedCurrent[key];
+      return isFiniteNumber(explicit) && toInt(explicit) === 0;
+    }) &&
+    hpMax > 0 &&
+    wpMax > 0 &&
+    sanMax > 0;
+
   function resolveCurrent(
     key: "HP" | "WP" | "SAN" | "BP",
     maximum: number,
     sourcePath: string,
   ): number {
+    if (placeholderZeroCurrents) {
+      diagnostics.push(
+        information(
+          catalogueDiagnosticCodes.safeDefault,
+          `derivedCurrent.${key}=0 in an all-zero derivedCurrent block; treating as uninitialized and defaulting to maximum ${maximum}.`,
+          sourcePath,
+        ),
+      );
+      return maximum;
+    }
     if (derivedCurrent && Object.prototype.hasOwnProperty.call(derivedCurrent, key)) {
       const explicit = derivedCurrent[key];
       if (isFiniteNumber(explicit)) {
@@ -525,10 +558,6 @@ export function importGreenAgentCreator(
     return maximum;
   }
 
-  const hpMax = resolveMaximum("HP", "/derivedAttributes/HP");
-  const wpMax = resolveMaximum("WP", "/derivedAttributes/WP");
-  const sanMax = resolveMaximum("SAN", "/derivedAttributes/SAN");
-  const bpBase = resolveMaximum("BP", "/derivedAttributes/BP");
   resources.hitPoints = { current: resolveCurrent("HP", hpMax, "/derivedCurrent/HP"), maximum: hpMax };
   resources.willpower = { current: resolveCurrent("WP", wpMax, "/derivedCurrent/WP"), maximum: wpMax };
   resources.sanity = { current: resolveCurrent("SAN", sanMax, "/derivedCurrent/SAN"), maximum: sanMax };
