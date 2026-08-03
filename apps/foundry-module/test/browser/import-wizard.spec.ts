@@ -32,16 +32,22 @@ test("browser: import Caleb into a blank Agent Actor through verified persistenc
 
   await page.getByTestId("dgca-source-file").setInputFiles(calebFixturePath);
   await expect(page.getByRole("heading", { name: "Diagnostics" })).toBeVisible();
+  // UX contract: Continue stays gated until group acknowledgement; snapshot covers the shell.
+  await expect(page.getByTestId("dgca-continue-plan")).toBeDisabled();
+  await expect(page.getByRole("button", { name: /Acknowledge \d+ warnings?/i })).toBeVisible();
   await expect(dialog).toMatchAriaSnapshot({ name: "import-diagnostics" });
 
-  // Acknowledge every pending group (buttons appear once per diagnostic sharing the key;
-  // clicking any one for a key clears that pending group).
+  // One Acknowledge control clears the whole group (not one button per warning line).
   while ((await page.locator("[data-testid^='dgca-ack-']").count()) > 0) {
     await page.locator("[data-testid^='dgca-ack-']").first().click();
   }
+  await expect(page.getByTestId("dgca-continue-plan")).toBeEnabled();
 
   await page.getByTestId("dgca-continue-plan").click();
   await expect(page.getByRole("heading", { name: "Update Plan" })).toBeVisible();
+  // Blank import selects mutable resource initialization; binding is not a gate.
+  await expect(dialog.getByText(/Changes apply to this open Agent sheet/i)).toBeVisible();
+  await expect(dialog.getByRole("checkbox", { name: /update \/system\/health\/value/ })).toBeChecked();
   await expect(dialog).toMatchAriaSnapshot({ name: "import-plan" });
 
   await expect(page.getByTestId("dgca-apply")).toBeEnabled();

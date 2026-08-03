@@ -19,12 +19,28 @@
       - text: "warning · completeness: recommended · adapter.extension.preserved-unknown"
       - paragraph: Non-ISO personalInfo.dob omitted from biography.dateOfBirth.
       - paragraph: /personalInfo/dob
-      - 'button "Acknowledge group: green-agent-creator-import"'
+      - paragraph: Requires group acknowledgement (green-agent-creator-import) — use the button below.
     - listitem:
       - text: "warning · completeness: recommended · adapter.fidelity.loss"
       - paragraph: "Known loss: non-ISO date of birth cannot populate biography.dateOfBirth."
       - paragraph: /biography/dateOfBirth
-      - 'button "Acknowledge group: green-agent-creator-import"'
+      - paragraph: Requires group acknowledgement (green-agent-creator-import) — use the button below.
+    - listitem:
+      - text: "information · completeness: none · adapter.value.defaulted"
+      - paragraph: /derivedCurrent\.HP=0 in an all-zero derivedCurrent block; treating as uninitialized and defaulting to maximum \d+\./
+      - paragraph: /derivedCurrent/HP
+    - listitem:
+      - text: "information · completeness: none · adapter.value.defaulted"
+      - paragraph: /derivedCurrent\.WP=0 in an all-zero derivedCurrent block; treating as uninitialized and defaulting to maximum \d+\./
+      - paragraph: /derivedCurrent/WP
+    - listitem:
+      - text: "information · completeness: none · adapter.value.defaulted"
+      - paragraph: /derivedCurrent\.SAN=0 in an all-zero derivedCurrent block; treating as uninitialized and defaulting to maximum \d+\./
+      - paragraph: /derivedCurrent/SAN
+    - listitem:
+      - text: "information · completeness: none · adapter.value.defaulted"
+      - paragraph: /derivedCurrent\.BP=0 in an all-zero derivedCurrent block; treating as uninitialized and defaulting to maximum \d+\./
+      - paragraph: /derivedCurrent/BP
     - listitem:
       - text: "information · completeness: none · adapter.value.normalized"
       - paragraph: sheetBaseline retained in extension; live root remains authoritative.
@@ -49,7 +65,7 @@
       - text: "warning · completeness: recommended · adapter.fidelity.loss"
       - paragraph: "Known loss: unarmed_combat is not a canonical standard skill; imported as custom."
       - paragraph: /skills/custom
-      - 'button "Acknowledge group: green-agent-creator-import"'
+      - paragraph: Requires group acknowledgement (green-agent-creator-import) — use the button below.
     - listitem:
       - text: "information · completeness: none · adapter.fidelity.loss"
       - paragraph: "Known loss: creator-local ids are not durable canonical identities."
@@ -78,5 +94,6 @@
       - text: "information · completeness: none · adapter.fidelity.loss"
       - paragraph: "Known loss: regenerated entity ids prevent byte-identical round-trip."
       - paragraph: /skills/custom
+  - button "Acknowledge 3 warnings (green-agent-creator-import)"
   - button "Continue to Update Plan" [disabled]
   - button "Cancel import"
