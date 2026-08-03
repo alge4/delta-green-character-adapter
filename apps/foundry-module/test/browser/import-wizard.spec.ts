@@ -44,9 +44,7 @@ test("browser: import Caleb into a blank Agent Actor through verified persistenc
   await expect(page.getByRole("heading", { name: "Update Plan" })).toBeVisible();
   await expect(dialog).toMatchAriaSnapshot({ name: "import-plan" });
 
-  // Confirm Actor Binding — first bind checkbox for agentId.
-  const bindCheckbox = page.locator('input[data-testid^="dgca-plan-"]').first();
-  await bindCheckbox.check();
+  await expect(page.getByTestId("dgca-apply")).toBeEnabled();
   await page.getByTestId("dgca-apply").click();
 
   await expect(page.getByRole("heading", { name: "Applied" })).toBeVisible();
@@ -74,8 +72,7 @@ test("browser: populated Agent merge preserves mutable campaign state by default
     bootstrap.session.acknowledgeGroup(groupKey);
   }
   bootstrap.session.continueToPlan();
-  const bind = bootstrap.session.view().plan!.entries.find((entry) => entry.operation === "bind")!;
-  bootstrap.session.setEntrySelected(bind.id, true);
+  assert.equal(bootstrap.session.view().canApply, true);
   await bootstrap.session.confirmApply();
   assert.equal(bootstrap.session.view().phase, "done");
 

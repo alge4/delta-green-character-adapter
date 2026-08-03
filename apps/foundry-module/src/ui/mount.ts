@@ -312,7 +312,7 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
           el(
             "p",
             "dgca-muted",
-            "Profile updates are selected by default. Mutable campaign state is preserved unless you opt in. Confirm Actor Binding before dependents can apply.",
+            "Profile updates are selected by default. Mutable campaign state is preserved unless you opt in. Changes apply to this open Agent sheet.",
           ),
         );
         if (view.staleReplanRequired) {
@@ -330,6 +330,16 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
             void Promise.resolve(host.acceptReplan()).then(() => void render());
           });
           body.append(acceptReplan);
+        } else if (!view.canApply && view.phase === "plan") {
+          body.append(
+            el(
+              "p",
+              "dgca-stale",
+              view.blocked
+                ? "Apply is blocked by Update Plan diagnostics. Resolve the issues first."
+                : "Select at least one Update Plan change to apply.",
+            ),
+          );
         }
         if (view.plan) {
           const list = el("ul", "dgca-plan-list");

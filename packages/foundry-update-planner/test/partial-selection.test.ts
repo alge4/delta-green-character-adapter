@@ -1,57 +1,61 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 
-import { planFoundryActorUpdate } from "../src/plan.js";
-import {
-  BLANK_ACTOR,
-  asPlan,
-  readCanonicalFixture,
-  readFoundryFixture,
-  sequentialIdFactory,
-  withActorName,
-} from "./helpers.js";
+import type { AdapterDiagnostic } from "@delta-green-character-adapter/adapter-core";
+
+import type { DraftPlanEntry } from "../src/entries.js";
+import { applySelectionOverrides } from "../src/selection.js";
 
 describe("Partial selection and dependency validity", () => {
   it("deselects dependent entries when an override clears their dependency", () => {
-    const snapshot = readCanonicalFixture("f1-minimal-create-new.json");
-    const unbound = withActorName(readFoundryFixture(BLANK_ACTOR), "Export Subject");
-
-    const proposed = asPlan(
-      planFoundryActorUpdate(snapshot, unbound, { createId: sequentialIdFactory() }),
-    );
-    const bind = proposed.entries.find((entry) => entry.operation === "bind");
-    assert.ok(bind);
-    const child = proposed.entries.find(
-      (entry) => entry.dependencies.includes(bind.id) && entry.operation === "update",
-    );
-    assert.ok(child);
-    assert.equal(bind.selectedByDefault, false);
-    assert.equal(child.selectedByDefault, false);
-
-    const enabled = asPlan(
-      planFoundryActorUpdate(snapshot, unbound, {
-        createId: sequentialIdFactory(),
-        selectionOverrides: {
-          [bind.id]: true,
-          [child.id]: true,
-        },
-      }),
-    );
-    assert.equal(enabled.entries.find((entry) => entry.id === bind.id)?.selectedByDefault, true);
-    assert.equal(enabled.entries.find((entry) => entry.id === child.id)?.selectedByDefault, true);
-
-    const clearedResult = planFoundryActorUpdate(snapshot, unbound, {
-      createId: sequentialIdFactory(),
-      selectionOverrides: {
-        [bind.id]: false,
-        [child.id]: true,
+    const entries: DraftPlanEntry[] = [
+      {
+        id: "dep",
+        operation: "update",
+        path: "/name",
+        fieldClass: "profile",
+        before: { kind: "scalar", typeName: "string", preview: "A" },
+        proposed: { kind: "scalar", typeName: "string", preview: "B" },
+        selectedByDefault: true,
+        selectionReason: "profile",
+        dependencies: [],
+        beforeValue: "A",
+        proposedValue: "B",
       },
-    });
-    const cleared = asPlan(clearedResult);
-    assert.equal(cleared.entries.find((entry) => entry.id === bind.id)?.selectedByDefault, false);
-    assert.equal(cleared.entries.find((entry) => entry.id === child.id)?.selectedByDefault, false);
+      {
+        id: "child",
+        operation: "update",
+        path: "/system/biography/profession",
+        fieldClass: "profile",
+        before: { kind: "scalar", typeName: "string", preview: "X" },
+        proposed: { kind: "scalar", typeName: "string", preview: "Y" },
+        selectedByDefault: true,
+        selectionReason: "profile",
+        dependencies: ["dep"],
+        beforeValue: "X",
+        proposedValue: "Y",
+      },
+    ];
+
+    const diagnostics: AdapterDiagnostic[] = [];
+    const enabled = applySelectionOverrides(
+      entries.map((entry) => ({ ...entry })),
+      { dep: true, child: true },
+      diagnostics,
+    );
+    assert.equal(enabled.find((entry) => entry.id === "dep")?.selectedByDefault, true);
+    assert.equal(enabled.find((entry) => entry.id === "child")?.selectedByDefault, true);
+
+    const clearedDiagnostics: AdapterDiagnostic[] = [];
+    const cleared = applySelectionOverrides(
+      entries.map((entry) => ({ ...entry })),
+      { dep: false, child: true },
+      clearedDiagnostics,
+    );
+    assert.equal(cleared.find((entry) => entry.id === "dep")?.selectedByDefault, false);
+    assert.equal(cleared.find((entry) => entry.id === "child")?.selectedByDefault, false);
     assert.ok(
-      clearedResult.diagnostics.some((entry) => entry.code === "adapter.derived.conflict"),
+      clearedDiagnostics.some((entry) => entry.code === "adapter.derived.conflict"),
     );
   });
 });

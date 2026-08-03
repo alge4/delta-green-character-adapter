@@ -385,17 +385,6 @@ export function createImportWizardSession(
         ...(parameters !== undefined ? { parameters } : {}),
       });
       setState({ targetedResolutions: next });
-
-      // Binding accept selects the Actor Binding entry so dependents can apply (#7/#28).
-      if (action === "accept" && state.plan !== null) {
-        const bindEntry = state.plan.entries.find((entry) => entry.operation === "bind");
-        if (bindEntry !== undefined) {
-          setState({
-            selectionOverrides: { ...state.selectionOverrides, [bindEntry.id]: true },
-          });
-          planWithCurrentSelection();
-        }
-      }
     },
     acknowledgeGroup(groupKey) {
       const next = new Set(state.acknowledgedGroups);

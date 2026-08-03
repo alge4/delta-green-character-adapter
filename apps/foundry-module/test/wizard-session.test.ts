@@ -57,10 +57,7 @@ async function importCalebThroughWizard(
     session.acknowledgeGroup(groupKey);
   }
   session.continueToPlan();
-  const bindEntry = session.view().plan!.entries.find(
-    (entry: UpdatePlanEntry) => entry.operation === "bind",
-  )!;
-  session.setEntrySelected(bindEntry.id, true);
+  assert.equal(session.view().canApply, true);
   await session.confirmApply();
   assert.equal(session.view().phase, "done");
 }
@@ -112,20 +109,17 @@ describe("createImportWizardSession", () => {
     assert.equal(session.view().canContinueToPlan, true);
 
     session.continueToPlan();
-    let planView = session.view();
+    const planView = session.view();
     assert.equal(planView.phase, "plan");
     assert.ok(planView.plan !== null);
-
-    const bindEntry = planView.plan!.entries.find(
-      (entry: UpdatePlanEntry) =>
-        entry.operation === "bind" &&
-        entry.path === `/flags/${ADAPTER_FLAG_NAMESPACE}/agentId`,
+    assert.equal(
+      planView.plan!.entries.some(
+        (entry: UpdatePlanEntry) =>
+          entry.operation === "bind" &&
+          entry.path === `/flags/${ADAPTER_FLAG_NAMESPACE}/agentId`,
+      ),
+      false,
     );
-    assert.ok(bindEntry !== undefined);
-    assert.equal(bindEntry.selectedByDefault, false);
-
-    session.setEntrySelected(bindEntry.id, true);
-    planView = session.view();
     assert.ok(planView.plan!.entries.some((entry: UpdatePlanEntry) => entry.selectedByDefault));
     assert.equal(planView.canApply, true);
 
@@ -140,6 +134,53 @@ describe("createImportWizardSession", () => {
     assert.equal(getByPointer(source, "/system/biography/profession"), "Computer Scientist or Engineer");
     assert.equal(getByPointer(source, "/system/statistics/str/value"), 8);
     assert.ok(isRecord(flags.audit));
+  });
+
+  it("applies to a differently named open sheet without an Actor Binding gate", async () => {
+    const runtime = createInMemoryActorRuntime({
+      source: blankNamed("Alge"),
+      gm: true,
+      canUpdate: true,
+    });
+    const session = createImportWizardSession({
+      runtime,
+      sheet: supportedSheet,
+      options: {
+        createId: sequentialIdFactory(),
+        adapterVersion: "0.0.0",
+        now: "2026-08-02T12:00:00.000Z",
+      },
+    });
+
+    session.open();
+    session.loadLocalGreenSource({ bytes: calebBytes, fileName: "caleb.json" });
+    for (const groupKey of session.view().pendingGroupAcknowledgements) {
+      session.acknowledgeGroup(groupKey);
+    }
+    session.continueToPlan();
+
+    const planView = session.view();
+    assert.equal(planView.phase, "plan");
+    assert.equal(planView.blocked, false);
+    assert.equal(planView.canApply, true);
+    assert.equal(
+      planView.plan!.entries.some(
+        (entry: UpdatePlanEntry) =>
+          entry.operation === "bind" &&
+          entry.path === `/flags/${ADAPTER_FLAG_NAMESPACE}/agentId`,
+      ),
+      false,
+    );
+
+    await session.confirmApply();
+    const done = session.view();
+    assert.equal(done.phase, "done");
+    assert.equal(done.applyResult?.blocked, false);
+    assert.equal(getByPointer(runtime.readActorSource(), "/name"), "Caleb");
+    assert.equal(
+      getByPointer(runtime.readActorSource(), "/system/biography/profession"),
+      "Computer Scientist or Engineer",
+    );
   });
 
   it("preserves mutable campaign state on populated Agent merge unless opted in", async () => {
@@ -228,10 +269,7 @@ describe("createImportWizardSession", () => {
       session.acknowledgeGroup(groupKey);
     }
     session.continueToPlan();
-    const bindEntry = session.view().plan!.entries.find(
-      (entry: UpdatePlanEntry) => entry.operation === "bind",
-    )!;
-    session.setEntrySelected(bindEntry.id, true);
+    assert.equal(session.view().canApply, true);
 
     // Mutate a fingerprint-relevant field without breaking the name match.
     await runtime.updateActor({ "system.biography.employer": "Changed Employer" });
