@@ -3,6 +3,7 @@ node_modules/
 dist/
 .test-dist/
 artifact/
+tmp/
 *.tsbuildinfo
 coverage/
 .env
