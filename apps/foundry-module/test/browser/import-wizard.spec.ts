@@ -32,21 +32,25 @@ test("browser: import Caleb into a blank Agent Actor through verified persistenc
 
   await page.getByTestId("dgca-source-file").setInputFiles(calebFixturePath);
   await expect(page.getByRole("heading", { name: "Diagnostics" })).toBeVisible();
+  // UX contract: Continue stays gated until group acknowledgement; snapshot covers the shell.
+  await expect(page.getByTestId("dgca-continue-plan")).toBeDisabled();
+  await expect(page.getByRole("button", { name: /Acknowledge \d+ warnings?/i })).toBeVisible();
   await expect(dialog).toMatchAriaSnapshot({ name: "import-diagnostics" });
 
-  // Acknowledge every pending group (buttons appear once per diagnostic sharing the key;
-  // clicking any one for a key clears that pending group).
+  // One Acknowledge control clears the whole group (not one button per warning line).
   while ((await page.locator("[data-testid^='dgca-ack-']").count()) > 0) {
     await page.locator("[data-testid^='dgca-ack-']").first().click();
   }
+  await expect(page.getByTestId("dgca-continue-plan")).toBeEnabled();
 
   await page.getByTestId("dgca-continue-plan").click();
   await expect(page.getByRole("heading", { name: "Update Plan" })).toBeVisible();
+  // Blank import selects mutable resource initialization; binding is not a gate.
+  await expect(dialog.getByText(/Changes apply to this open Agent sheet/i)).toBeVisible();
+  await expect(dialog.getByRole("checkbox", { name: /update \/system\/health\/value/ })).toBeChecked();
   await expect(dialog).toMatchAriaSnapshot({ name: "import-plan" });
 
-  // Confirm Actor Binding — first bind checkbox for agentId.
-  const bindCheckbox = page.locator('input[data-testid^="dgca-plan-"]').first();
-  await bindCheckbox.check();
+  await expect(page.getByTestId("dgca-apply")).toBeEnabled();
   await page.getByTestId("dgca-apply").click();
 
   await expect(page.getByRole("heading", { name: "Applied" })).toBeVisible();
@@ -74,8 +78,7 @@ test("browser: populated Agent merge preserves mutable campaign state by default
     bootstrap.session.acknowledgeGroup(groupKey);
   }
   bootstrap.session.continueToPlan();
-  const bind = bootstrap.session.view().plan!.entries.find((entry) => entry.operation === "bind")!;
-  bootstrap.session.setEntrySelected(bind.id, true);
+  assert.equal(bootstrap.session.view().canApply, true);
   await bootstrap.session.confirmApply();
   assert.equal(bootstrap.session.view().phase, "done");
 

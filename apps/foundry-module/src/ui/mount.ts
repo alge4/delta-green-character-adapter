@@ -73,6 +73,8 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
 
   let rendering = false;
   let fileInput: HTMLInputElement | null = null;
+  /** Preserve Update Plan scroll across checkbox re-renders (#40). */
+  let planPanelScrollTop = 0;
 
   const render = async (): Promise<void> => {
     if (rendering) {
@@ -81,6 +83,12 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
     rendering = true;
     try {
       const view = await resolveView(host);
+      const priorPanel = modalHost.querySelector(".dgca-panel");
+      if (priorPanel instanceof HTMLElement && (view.phase === "plan" || view.phase === "applying")) {
+        planPanelScrollTop = priorPanel.scrollTop;
+      } else if (view.phase !== "plan" && view.phase !== "applying") {
+        planPanelScrollTop = 0;
+      }
       titleBar.replaceChildren();
       modalHost.replaceChildren();
 
@@ -178,6 +186,7 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
       modal.append(steps);
 
       const body = el("div", "dgca-panel");
+      let footer: HTMLElement | null = null;
       if (view.progressMessage) {
         body.append(el("p", "dgca-progress", view.progressMessage));
       }
@@ -237,13 +246,13 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
           if (diagnostic.acknowledgement.kind === "group") {
             const groupKey = diagnostic.acknowledgement.groupKey;
             if (view.pendingGroupAcknowledgements.includes(groupKey)) {
-              const ack = el("button", "dgca-primary", `Acknowledge group: ${groupKey}`);
-              ack.type = "button";
-              ack.setAttribute("data-testid", `dgca-ack-${groupKey}`);
-              ack.addEventListener("click", () => {
-                void Promise.resolve(host.acknowledgeGroup(groupKey)).then(() => void render());
-              });
-              item.append(ack);
+              item.append(
+                el(
+                  "p",
+                  "dgca-muted",
+                  `Requires group acknowledgement (${groupKey}) — use the button below.`,
+                ),
+              );
             } else {
               item.append(el("p", "dgca-muted", `Group acknowledged: ${groupKey}`));
             }
@@ -265,16 +274,44 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
           list.append(item);
         }
         body.append(list);
-        const actions = el("div", "dgca-panel-actions");
+        footer = el("div", "dgca-panel-actions");
+        // One control per pending group — warnings share a groupKey, not per-line acks.
+        for (const groupKey of view.pendingGroupAcknowledgements) {
+          const warningCount = view.diagnostics.filter(
+            (item) =>
+              item.acknowledgement.kind === "group" &&
+              item.acknowledgement.groupKey === groupKey,
+          ).length;
+          const ack = el(
+            "button",
+            "dgca-primary",
+            `Acknowledge ${warningCount} warning${warningCount === 1 ? "" : "s"} (${groupKey})`,
+          );
+          ack.type = "button";
+          ack.setAttribute("data-testid", `dgca-ack-${groupKey}`);
+          ack.addEventListener("click", () => {
+            try {
+              host.acknowledgeGroup(groupKey);
+            } catch (error) {
+              console.error("[dgca] acknowledgeGroup failed", error);
+            }
+            void render();
+          });
+          footer.append(ack);
+        }
         const cont = el("button", "dgca-primary", "Continue to Update Plan");
         cont.type = "button";
         cont.disabled = !view.canContinueToPlan;
         cont.setAttribute("data-testid", "dgca-continue-plan");
         cont.addEventListener("click", () => {
-          void Promise.resolve(host.continueToPlan()).then(() => void render());
+          try {
+            host.continueToPlan();
+          } catch (error) {
+            console.error("[dgca] continueToPlan failed", error);
+          }
+          void render();
         });
-        actions.append(cont);
-        body.append(actions);
+        footer.append(cont);
       }
 
       if (view.phase === "plan" || view.phase === "applying") {
@@ -283,7 +320,7 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
           el(
             "p",
             "dgca-muted",
-            "Profile updates are selected by default. Mutable campaign state is preserved unless you opt in. Confirm Actor Binding before dependents can apply.",
+            "Profile updates are selected by default. Mutable campaign state is preserved unless you opt in. Changes apply to this open Agent sheet.",
           ),
         );
         if (view.staleReplanRequired) {
@@ -301,6 +338,16 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
             void Promise.resolve(host.acceptReplan()).then(() => void render());
           });
           body.append(acceptReplan);
+        } else if (!view.canApply && view.phase === "plan") {
+          body.append(
+            el(
+              "p",
+              "dgca-stale",
+              view.blocked
+                ? "Apply is blocked by Update Plan diagnostics. Resolve the issues first."
+                : "Select at least one Update Plan change to apply.",
+            ),
+          );
         }
         if (view.plan) {
           const list = el("ul", "dgca-plan-list");
@@ -341,7 +388,7 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
           }
           body.append(list);
         }
-        const actions = el("div", "dgca-panel-actions");
+        footer = el("div", "dgca-panel-actions");
         const back = el("button", "dgca-ghost", "Back");
         back.type = "button";
         back.disabled = view.phase === "applying";
@@ -355,8 +402,7 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
         apply.addEventListener("click", () => {
           void Promise.resolve(host.confirmApply()).then(() => void render());
         });
-        actions.append(back, apply);
-        body.append(actions);
+        footer.append(back, apply);
       }
 
       if (view.phase === "done") {
@@ -400,6 +446,9 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
       }
 
       modal.append(body);
+      if (footer) {
+        modal.append(footer);
+      }
 
       if (view.phase !== "source" && view.phase !== "done") {
         const cancel = el("button", "dgca-ghost", "Cancel import");
@@ -413,6 +462,10 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
 
       backdrop.append(modal);
       modalHost.append(backdrop);
+      if ((view.phase === "plan" || view.phase === "applying") && planPanelScrollTop > 0) {
+        // Restore after mount so layout has a scrollable panel (#40).
+        body.scrollTop = planPanelScrollTop;
+      }
     } finally {
       rendering = false;
     }
@@ -427,6 +480,9 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
     unsubscribe?.();
     titleBar.replaceChildren();
     modalHost.replaceChildren();
+    if (modalHost.getAttribute("data-dgca-modal-portal") === "true") {
+      modalHost.remove();
+    }
     bioHost?.querySelector("[data-dgca-module-owned]")?.remove();
   };
 }

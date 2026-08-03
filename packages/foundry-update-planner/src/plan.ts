@@ -28,7 +28,7 @@ import {
   diagnostic,
   plannerDiagnosticCodes,
 } from "./diagnostics.js";
-import { publishEntries, pushEntry, type DraftPlanEntry } from "./entries.js";
+import { publishEntries, type DraftPlanEntry } from "./entries.js";
 import { planActorScalars } from "./scalars.js";
 import { parseUpdatePlan, type UpdateMode, type UpdatePlan } from "./schemas.js";
 import { applySelectionOverrides, buildScopes, planDigest } from "./selection.js";
@@ -152,31 +152,6 @@ export function composeDraftPlan(
   const scopes = buildScopes(exportResult.diagnostics);
   const entries: DraftPlanEntry[] = [];
 
-  let bindEntryId: string | undefined;
-  if (binding.state === "proposed" || binding.state === "unbound" || binding.state === "conflict") {
-    bindEntryId = createId();
-    pushEntry(entries, {
-      id: bindEntryId,
-      operation: "bind",
-      path: pointer("flags", ADAPTER_FLAG_NAMESPACE, "agentId"),
-      fieldClass: "adapterOwned",
-      beforeValue: binding.targetAgentId,
-      proposedValue: agent.agentId,
-      mode,
-      blankTarget,
-      mutableFresh,
-      bound: false,
-      removalEligible: false,
-      callerIsGm,
-      scope: "biography",
-      selectedOverride: false,
-      selectionReasonOverride:
-        binding.state === "proposed"
-          ? "Name match proposes Actor Binding; confirmation is required."
-          : "Actor Binding must be established before updates apply.",
-    });
-  }
-
   if (mode === "replace" || mode === "synchronize") {
     diagnostics.push(
       diagnostic({
@@ -192,31 +167,29 @@ export function composeDraftPlan(
     );
   }
 
-  if (binding.state === "bound" || binding.state === "proposed") {
-    const planCtx = {
-      createId,
-      mode,
-      blankTarget,
-      mutableFresh,
-      bound,
-      callerIsGm,
-      ...(bindEntryId !== undefined ? { bindEntryId } : {}),
-    };
-    planActorScalars(entries, agent, actorSource, desiredActor, planCtx, diagnostics);
-    planDerivedMaximaConflicts(entries, actorSource, desiredActor, planCtx, diagnostics);
-    planCollections(
-      entries,
-      agent,
-      desiredActor,
-      actorSource,
-      {
-        ...planCtx,
-        scopes,
-      },
-      diagnostics,
-      requiredResolutions,
-    );
-  }
+  // Open Agent sheet is the import target. agentId is written via audit on apply — no bind gate.
+  const planCtx = {
+    createId,
+    mode,
+    blankTarget,
+    mutableFresh,
+    bound,
+    callerIsGm,
+  };
+  planActorScalars(entries, agent, actorSource, desiredActor, planCtx, diagnostics);
+  planDerivedMaximaConflicts(entries, actorSource, desiredActor, planCtx, diagnostics);
+  planCollections(
+    entries,
+    agent,
+    desiredActor,
+    actorSource,
+    {
+      ...planCtx,
+      scopes,
+    },
+    diagnostics,
+    requiredResolutions,
+  );
 
   const overridden = applySelectionOverrides(entries, options.selectionOverrides, diagnostics);
   const writeEntries = overridden.filter(
@@ -227,18 +200,17 @@ export function composeDraftPlan(
 
   const semanticBefore = foundrySemanticView(actorSource);
   const semanticDesired = foundrySemanticView(desiredActor);
-  const alreadyUpToDate =
-    bound &&
-    deepEqual(semanticBefore, semanticDesired) &&
-    writeEntries.every((entry) => entry.selectedByDefault === false || entry.operation === "bind");
-
   const selectedWrites = overridden.filter(
     (entry) =>
       entry.selectedByDefault &&
       entry.operation !== "preserve" &&
       entry.operation !== "bind",
   );
-  const isNoOp = bound && selectedWrites.length === 0 && deepEqual(semanticBefore, semanticDesired);
+  // Item/collection bind rows may stay selected on a semantic no-op; they are not profile writes.
+  const alreadyUpToDate =
+    deepEqual(semanticBefore, semanticDesired) &&
+    writeEntries.every((entry) => entry.selectedByDefault === false || entry.operation === "bind");
+  const isNoOp = selectedWrites.length === 0 && deepEqual(semanticBefore, semanticDesired);
 
   if (isNoOp || alreadyUpToDate) {
     diagnostics.push(

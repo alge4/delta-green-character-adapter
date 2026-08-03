@@ -1,5 +1,5 @@
 import type { FoundryActorRuntime } from "../runtime.js";
-import { isRecord } from "../paths.js";
+import { cloneJson, deepEqual, isRecord } from "../paths.js";
 
 /**
  * Minimal structural type for a live Foundry Actor document.
@@ -53,25 +53,29 @@ export function createFoundryActorRuntime(input: {
       return user.id;
     },
     readActorSource() {
-      return actor.toObject(false);
+      // Foundry enriched docs can contain class instances (e.g. Color on token tint).
+      // Always expose plain JSON so planner/verify/Zod operation results stay valid (#40).
+      return cloneJson(actor.toObject(false));
     },
     captureRecoverySnapshot() {
-      return actor.toObject(false);
+      return cloneJson(actor.toObject(false));
     },
     verifyRecoverySnapshot(snapshot: unknown) {
       try {
-        const roundTrip = JSON.parse(JSON.stringify(snapshot));
-        return JSON.stringify(roundTrip) === JSON.stringify(snapshot);
+        const plain = cloneJson(snapshot);
+        // Reject snapshots that are not plain JSON documents (Foundry Color, etc.).
+        return isRecord(plain) && deepEqual(plain, snapshot);
       } catch {
         return false;
       }
     },
     async restoreFromSnapshot(snapshot: unknown) {
-      if (!isRecord(snapshot)) {
+      const plain = cloneJson(snapshot);
+      if (!isRecord(plain)) {
         throw new Error("Recovery snapshot must be a plain object.");
       }
-      const items = Array.isArray(snapshot.items) ? snapshot.items : [];
-      const current = actor.toObject(false);
+      const items = Array.isArray(plain.items) ? plain.items : [];
+      const current = cloneJson(actor.toObject(false));
       const currentItems = isRecord(current) && Array.isArray(current.items) ? current.items : [];
       const currentIds = currentItems
         .map((item) => (isRecord(item) && typeof item._id === "string" ? item._id : null))
@@ -79,24 +83,35 @@ export function createFoundryActorRuntime(input: {
       if (currentIds.length > 0) {
         await actor.deleteEmbeddedDocuments("Item", currentIds);
       }
-      const { items: _ignored, ...actorData } = snapshot;
+      const { items: _ignored, ...actorData } = plain;
       await actor.update(actorData as Record<string, unknown>, { diff: false, recursive: false });
       if (items.length > 0) {
         await actor.createEmbeddedDocuments("Item", items);
       }
     },
     async updateActor(diff: Record<string, unknown>) {
-      await actor.update(diff);
+      // Zod-frozen nested values are not safe for Foundry DataModel merges (#40).
+      await actor.update(cloneJson(diff));
     },
     async createEmbeddedItems(data: unknown[]) {
-      const created = await actor.createEmbeddedDocuments("Item", data);
+      // Materialized add payloads can be Zod-frozen; Foundry HTMLField assigns into
+      // `system.description` and throws on read-only properties (#40).
+      // Also trim names: Foundry Document creation strips trailing whitespace.
+      const plain = data.map((entry) => {
+        const copy = cloneJson(entry);
+        if (isRecord(copy) && typeof copy.name === "string") {
+          copy.name = copy.name.trim();
+        }
+        return copy;
+      });
+      const created = await actor.createEmbeddedDocuments("Item", plain);
       return created.map((item) => item.id);
     },
     async deleteEmbeddedItems(ids: string[]) {
       await actor.deleteEmbeddedDocuments("Item", ids);
     },
     async updateEmbeddedItem(id: string, diff: Record<string, unknown>) {
-      await actor.updateEmbeddedDocuments("Item", [{ _id: id, ...diff }]);
+      await actor.updateEmbeddedDocuments("Item", [{ _id: id, ...cloneJson(diff) }]);
     },
   };
 }

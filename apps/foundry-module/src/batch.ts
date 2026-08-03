@@ -5,12 +5,26 @@ import {
   deepMerge,
   expandUpdateDiff,
   isRecord,
+  normalizeFoundryWriteValue,
   parseItemPointer,
   pointerToActorUpdateKey,
   setByDotPath,
   type UnknownRecord,
 } from "./paths.js";
 import type { FoundryActorRuntime } from "./runtime.js";
+
+/** Foundry trims Document names and StringField values; keep planned writes aligned. */
+export function normalizeItemCreateData(entry: unknown): unknown {
+  return normalizeFoundryWriteValue(cloneJson(entry));
+}
+
+function normalizeDiff(diff: Record<string, unknown>): Record<string, unknown> {
+  const out: Record<string, unknown> = {};
+  for (const [key, value] of Object.entries(diff)) {
+    out[key] = normalizeFoundryWriteValue(value);
+  }
+  return out;
+}
 
 export type PreparedApplyBatches = {
   readonly actorDiff: Record<string, unknown>;
@@ -89,15 +103,17 @@ export async function executeApplyBatches(
   },
 ): Promise<void> {
   if (Object.keys(batches.actorDiff).length > 0) {
-    await runtime.updateActor(batches.actorDiff);
+    await runtime.updateActor(normalizeDiff(batches.actorDiff));
   }
 
   if (batches.additions.length > 0) {
-    await runtime.createEmbeddedItems([...batches.additions]);
+    // Plain JSON copies: Zod-frozen add payloads break Foundry Item DataModels (#40).
+    // Trim strings — Foundry StringField/Document names strip whitespace on write.
+    await runtime.createEmbeddedItems(batches.additions.map((entry) => normalizeItemCreateData(entry)));
   }
 
   for (const update of batches.itemUpdates) {
-    await runtime.updateEmbeddedItem(update.id, update.diff);
+    await runtime.updateEmbeddedItem(update.id, normalizeDiff(update.diff));
   }
 
   const hasDestructive =
@@ -109,11 +125,11 @@ export async function executeApplyBatches(
   }
 
   if (Object.keys(batches.clearDiff).length > 0) {
-    await runtime.updateActor(batches.clearDiff);
+    await runtime.updateActor(normalizeDiff(batches.clearDiff));
   }
 
   for (const clear of batches.itemClears) {
-    await runtime.updateEmbeddedItem(clear.id, clear.diff);
+    await runtime.updateEmbeddedItem(clear.id, normalizeDiff(clear.diff));
   }
 
   if (batches.removals.length > 0) {
@@ -133,7 +149,7 @@ export function applyBatchesToSourceClone(
   }
 
   if (Object.keys(batches.actorDiff).length > 0) {
-    const expanded = expandUpdateDiff(batches.actorDiff);
+    const expanded = expandUpdateDiff(normalizeDiff(batches.actorDiff));
     Object.assign(actor, deepMerge(actor, expanded));
   }
 
@@ -146,7 +162,7 @@ export function applyBatchesToSourceClone(
     if (!isRecord(addition)) {
       continue;
     }
-    const copy = cloneJson(addition) as UnknownRecord;
+    const copy = normalizeItemCreateData(addition) as UnknownRecord;
     if (typeof copy._id !== "string" || copy._id === "") {
       copy._id = createItemId();
     }
@@ -158,13 +174,13 @@ export function applyBatchesToSourceClone(
     if (!isRecord(item)) {
       continue;
     }
-    for (const [key, value] of Object.entries(update.diff)) {
+    for (const [key, value] of Object.entries(normalizeDiff(update.diff))) {
       setByDotPath(item, key, value);
     }
   }
 
   if (Object.keys(batches.clearDiff).length > 0) {
-    Object.assign(actor, deepMerge(actor, expandUpdateDiff(batches.clearDiff)));
+    Object.assign(actor, deepMerge(actor, expandUpdateDiff(normalizeDiff(batches.clearDiff))));
   }
 
   for (const clear of batches.itemClears) {
@@ -172,7 +188,7 @@ export function applyBatchesToSourceClone(
     if (!isRecord(item)) {
       continue;
     }
-    for (const [key, value] of Object.entries(clear.diff)) {
+    for (const [key, value] of Object.entries(normalizeDiff(clear.diff))) {
       setByDotPath(item, key, value);
     }
   }

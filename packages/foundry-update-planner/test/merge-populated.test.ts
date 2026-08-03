@@ -33,11 +33,36 @@ describe("Merge into populated Actor (F5b/F5c)", () => {
     assert.equal(plan.blankTarget, false);
     const hp = entriesOf(plan, (entry) => entry.path === "/system/health/value");
     assert.ok(hp.length >= 1);
-    assert.ok(hp.every((entry) => entry.operation === "preserve" || entry.selectedByDefault === false));
-    assert.ok(
-      result.diagnostics.some((entry) => entry.code === "adapter.state.mutable-replacement") ||
-        hp.some((entry) => entry.operation === "preserve"),
+    // Propose update (deselected) — not preserve — so opt-in can write (#40).
+    assert.ok(hp.every((entry) => entry.operation === "update" && entry.selectedByDefault === false));
+    assert.ok(result.diagnostics.some((entry) => entry.code === "adapter.state.mutable-replacement"));
+  });
+
+  it("selects mutable currents when the caller opts in", () => {
+    const live = readFoundryFixture(LIVE_STANDARD);
+    const target = bindActor(live, agentId);
+    const preview = asPlan(
+      planFoundryActorUpdate(snapshot, target, {
+        createId: sequentialIdFactory(),
+        mode: "merge",
+      }),
     );
+    const hp = entriesOf(preview, (entry) => entry.path === "/system/health/value")[0];
+    assert.ok(hp);
+    assert.equal(hp.operation, "update");
+    assert.equal(hp.selectedByDefault, false);
+
+    const opted = asPlan(
+      planFoundryActorUpdate(snapshot, target, {
+        createId: sequentialIdFactory(),
+        mode: "merge",
+        selectionOverrides: { [hp.id]: true },
+      }),
+    );
+    const selectedHp = entriesOf(opted, (entry) => entry.path === "/system/health/value")[0];
+    assert.ok(selectedHp);
+    assert.equal(selectedHp.operation, "update");
+    assert.equal(selectedHp.selectedByDefault, true);
   });
 
   it("selects profile skill proficiency updates by default", () => {

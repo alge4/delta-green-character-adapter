@@ -57,6 +57,24 @@ class ElementShim {
     }
   }
 
+  insertBefore(node, reference) {
+    if (node.parentElement) {
+      node.parentElement.children = node.parentElement.children.filter((child) => child !== node);
+    }
+    node.parentElement = this;
+    if (reference == null) {
+      this.children.push(node);
+      return node;
+    }
+    const index = this.children.indexOf(reference);
+    if (index === -1) {
+      this.children.push(node);
+    } else {
+      this.children.splice(index, 0, node);
+    }
+    return node;
+  }
+
   replaceChildren(...nodes) {
     for (const child of this.children) {
       child.parentElement = null;
@@ -161,7 +179,9 @@ class HTMLElementShim extends ElementShim {}
 
 export function installDomShim() {
   globalThis.HTMLElement = HTMLElementShim;
+  const body = new HTMLElementShim("body");
   globalThis.document = {
+    body,
     createElement(tagName) {
       return new HTMLElementShim(tagName);
     },
@@ -174,12 +194,36 @@ export function installDomShim() {
 }
 
 export function createApplicationRoot(dom = installDomShim()) {
+  document.body.replaceChildren();
   const root = dom.createElement("div");
   root.classList.add("application");
   const header = dom.createElement("header");
   header.classList.add("window-header");
+  const title = dom.createElement("h1");
+  title.classList.add("window-title");
+  title.textContent = "Agent: Test";
+  const toggle = dom.createElement("button");
+  toggle.classList.add("header-control", "icon");
+  toggle.setAttribute("data-action", "toggleControls");
+  toggle.setAttribute("aria-label", "Toggle Controls");
+  const close = dom.createElement("button");
+  close.classList.add("header-control", "icon");
+  close.setAttribute("data-action", "close");
+  header.append(title, toggle, close);
+  const nav = dom.createElement("nav");
+  nav.setAttribute("data-application-part", "tabs");
+  const bioNav = dom.createElement("a");
+  bioNav.setAttribute("data-tab", "bio");
+  bioNav.textContent = "Bio";
+  nav.append(bioNav);
+  const skills = dom.createElement("div");
+  skills.classList.add("tab", "skills", "active");
+  skills.setAttribute("data-tab", "skills");
+  skills.setAttribute("data-application-part", "skills");
   const bio = dom.createElement("div");
+  bio.classList.add("tab", "bio");
   bio.setAttribute("data-tab", "bio");
-  root.append(header, bio);
+  bio.setAttribute("data-application-part", "bio");
+  root.append(header, nav, skills, bio);
   return { root, header, bio };
 }

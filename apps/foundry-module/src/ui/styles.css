@@ -9,11 +9,22 @@
   --dgca-paper: #e8e2d4;
 }
 
+.dgca-titlebar-actions {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.35rem;
+  max-height: 100%;
+  line-height: 1;
+  white-space: nowrap;
+}
+
 .dgca-completeness {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
+  line-height: 1;
 }
 
 .dgca-completeness-lamp {
@@ -45,7 +56,9 @@
   background: #333;
   color: #eee;
   border-radius: 3px;
-  padding: 0.15rem 0.55rem;
+  padding: 0.1rem 0.45rem;
+  font-size: 0.75rem;
+  line-height: 1.2;
   cursor: pointer;
 }
 
@@ -54,20 +67,32 @@
   cursor: not-allowed;
 }
 
+.dgca-modal-host {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+}
+
+.dgca-modal-host:empty {
+  display: none;
+}
+
 .dgca-modal-backdrop {
-  position: absolute;
+  position: fixed;
   inset: 0;
   background: rgba(10, 12, 10, 0.55);
   display: grid;
   place-items: center;
-  z-index: 20;
+  z-index: 99999;
   padding: 1rem;
+  pointer-events: auto;
 }
 
 .dgca-modal {
   width: min(720px, 100%);
   max-height: min(80vh, 720px);
-  overflow: auto;
+  overflow: hidden;
   background: var(--dgca-paper);
   color: var(--dgca-ink);
   border-radius: 6px;
@@ -76,6 +101,13 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  pointer-events: auto;
+}
+
+.dgca-panel {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: auto;
 }
 
 .dgca-modal-header {
@@ -166,6 +198,7 @@
 .dgca-remediation {
   display: flex;
   flex-wrap: wrap;
+  flex: 0 0 auto;
   gap: 0.45rem;
   margin-top: 0.65rem;
 }

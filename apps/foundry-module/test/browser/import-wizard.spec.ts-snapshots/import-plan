@@ -7,147 +7,107 @@
     - listitem: Update Plan
     - listitem: Done
   - heading "Update Plan" [level=3]
-  - paragraph: Profile updates are selected by default. Mutable campaign state is preserved unless you opt in. Confirm Actor Binding before dependents can apply.
+  - paragraph: Profile updates are selected by default. Mutable campaign state is preserved unless you opt in. Changes apply to this open Agent sheet.
   - list:
     - listitem:
-      - checkbox "bind /flags/deltaGreenCharacterAdapter/agentId"
-      - text: /bind \/flags\/deltaGreenCharacterAdapter\/agentId \(none\) → [0-9a-fA-F-]+ adapterOwned · Name match proposes Actor Binding; confirmation is required\./
-    - listitem:
-      - checkbox "update /system/biography/profession"
+      - checkbox "update /system/biography/profession" [checked]
       - text: update /system/biography/profession → Computer Scientist or Engineer profile · Profile and capability changes are selected by default.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/biography/employer"
+      - checkbox "update /system/biography/employer" [checked]
       - text: update /system/biography/employer → Shop Extra profile · Profile and capability changes are selected by default.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/biography/nationality"
+      - checkbox "update /system/biography/nationality" [checked]
       - text: update /system/biography/nationality → USA profile · Profile and capability changes are selected by default.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/biography/sex"
+      - checkbox "update /system/biography/sex" [checked]
       - text: update /system/biography/sex → Male profile · Profile and capability changes are selected by default.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/biography/age"
+      - checkbox "update /system/biography/age" [checked]
       - text: /update \/system\/biography\/age → \d+ profile · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/statistics/str/value"
+      - checkbox "update /system/statistics/str/value" [checked]
       - text: /update \/system\/statistics\/str\/value \d+ → 8 profile · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/statistics/dex/value"
+      - checkbox "update /system/statistics/dex/value" [checked]
       - text: /update \/system\/statistics\/dex\/value \d+ → \d+ profile · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/statistics/dex/distinguishing_feature"
+      - checkbox "update /system/statistics/dex/distinguishing_feature" [checked]
       - text: update /system/statistics/dex/distinguishing_feature → Lithe profile · Profile and capability changes are selected by default.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/statistics/int/value"
+      - checkbox "update /system/statistics/int/value" [checked]
       - text: /update \/system\/statistics\/int\/value \d+ → \d+ profile · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/statistics/int/distinguishing_feature"
+      - checkbox "update /system/statistics/int/distinguishing_feature" [checked]
       - text: update /system/statistics/int/distinguishing_feature → Gifted profile · Profile and capability changes are selected by default.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/statistics/cha/value"
+      - checkbox "update /system/statistics/cha/value" [checked]
       - text: /update \/system\/statistics\/cha\/value \d+ → \d+ profile · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/statistics/cha/distinguishing_feature"
+      - checkbox "update /system/statistics/cha/distinguishing_feature" [checked]
       - text: update /system/statistics/cha/distinguishing_feature → Explotative (Phishing) profile · Profile and capability changes are selected by default.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/health/value"
-      - text: /update \/system\/health\/value \d+ → 0 mutable · Blank fingerprint initialization replaces placeholder defaults\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
+      - checkbox "update /system/health/value" [checked]
+      - text: /update \/system\/health\/value \d+ → 9 mutable · Blank fingerprint initialization replaces placeholder defaults\./
     - listitem:
-      - checkbox "update /system/health/max"
+      - checkbox "update /system/health/max" [checked]
       - text: /update \/system\/health\/max \d+ → 9 profile · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/wp/value"
-      - text: /update \/system\/wp\/value \d+ → 0 mutable · Blank fingerprint initialization replaces placeholder defaults\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
+      - checkbox "update /system/sanity/value" [checked]
+      - text: /update \/system\/sanity\/value \d+ → \d+ mutable · Blank fingerprint initialization replaces placeholder defaults\./
     - listitem:
-      - checkbox "update /system/sanity/value"
-      - text: /update \/system\/sanity\/value \d+ → 0 mutable · Blank fingerprint initialization replaces placeholder defaults\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
+      - checkbox "update /system/sanity/currentBreakingPoint" [checked]
+      - text: /update \/system\/sanity\/currentBreakingPoint \d+ → \d+ mutable · Blank fingerprint initialization replaces placeholder defaults\./
     - listitem:
-      - checkbox "update /system/sanity/currentBreakingPoint"
-      - text: /update \/system\/sanity\/currentBreakingPoint \d+ → 0 mutable · Blank fingerprint initialization replaces placeholder defaults\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
-    - listitem:
-      - checkbox "update /system/skills/accounting/proficiency"
+      - checkbox "update /system/skills/accounting/proficiency" [checked]
       - text: /update \/system\/skills\/accounting\/proficiency \d+ → \d+ profile · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/skills/bureaucracy/proficiency"
+      - checkbox "update /system/skills/bureaucracy/proficiency" [checked]
       - text: /update \/system\/skills\/bureaucracy\/proficiency \d+ → \d+ profile · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/skills/computer_science/proficiency"
+      - checkbox "update /system/skills/computer_science/proficiency" [checked]
       - text: /update \/system\/skills\/computer_science\/proficiency 0 → \d+ profile · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/skills/law/proficiency"
+      - checkbox "update /system/skills/law/proficiency" [checked]
       - text: /update \/system\/skills\/law\/proficiency 0 → \d+ profile · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/skills/persuade/proficiency"
+      - checkbox "update /system/skills/persuade/proficiency" [checked]
       - text: /update \/system\/skills\/persuade\/proficiency \d+ → \d+ profile · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/skills/sigint/proficiency"
+      - checkbox "update /system/skills/sigint/proficiency" [checked]
       - text: /update \/system\/skills\/sigint\/proficiency 0 → \d+ profile · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /system/skills/stealth/proficiency"
+      - checkbox "update /system/skills/stealth/proficiency" [checked]
       - text: /update \/system\/skills\/stealth\/proficiency \d+ → \d+ profile · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "update /flags/deltaGreenCharacterAdapter/agentId"
+      - checkbox "update /flags/deltaGreenCharacterAdapter/agentId" [checked]
       - text: /update \/flags\/deltaGreenCharacterAdapter\/agentId \(none\) → [0-9a-fA-F-]+ adapterOwned · Profile and capability changes are selected by default\./
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "bind /items/AfSWj5tWv6LQvIWb/flags/deltaGreenCharacterAdapter/canonicalId"
-      - text: bind /items/AfSWj5tWv6LQvIWb/flags/deltaGreenCharacterAdapter/canonicalId (none) → system:unarmed-attack adapterOwned · Unique subtype plus normalized semantic identity proposes a binding.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
+      - checkbox /bind \/items\/[^/]+\/flags\/deltaGreenCharacterAdapter\/canonicalId/ [checked]
+      - text: /bind \/items\/[^/]+\/flags\/deltaGreenCharacterAdapter\/canonicalId \(none\) → system:unarmed-attack adapterOwned · Unique subtype plus normalized semantic identity proposes a binding\./
     - listitem:
-      - checkbox "add /items"
+      - checkbox "add /items" [checked]
       - text: add /items (none) → (object) profile · Blank fingerprint initialization adds missing Item types without mapping warnings.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "add /items"
+      - checkbox "add /items" [checked]
       - text: add /items (none) → (object) profile · Blank fingerprint initialization adds missing Item types without mapping warnings.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "add /items"
+      - checkbox "add /items" [checked]
       - text: add /items (none) → (object) profile · Blank fingerprint initialization adds missing Item types without mapping warnings.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "add /items"
+      - checkbox "add /items" [checked]
       - text: add /items (none) → (object) profile · Blank fingerprint initialization adds missing Item types without mapping warnings.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "add /items"
+      - checkbox "add /items" [checked]
       - text: add /items (none) → (object) profile · Blank fingerprint initialization adds missing Item types without mapping warnings.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "add /items"
+      - checkbox "add /items" [checked]
       - text: add /items (none) → (object) profile · Blank fingerprint initialization adds missing Item types without mapping warnings.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "add /items"
+      - checkbox "add /items" [checked]
       - text: add /items (none) → (object) profile · Blank fingerprint initialization adds missing Item types without mapping warnings.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
     - listitem:
-      - checkbox "add /items"
+      - checkbox "add /items" [checked]
       - text: add /items (none) → (object) profile · Blank fingerprint initialization adds missing Item types without mapping warnings.
-      - paragraph: "/Depends on: [0-9a-fA-F-]+/"
   - button "Back"
-  - button "Confirm and apply selected changes" [disabled]
+  - button "Confirm and apply selected changes"
   - button "Cancel import"

@@ -8,22 +8,37 @@ import { contentHash, isRecord, type UnknownRecord } from "./util.js";
 /**
  * Relevant untouched-default fingerprint of
  * `fixtures/foundry/14.365-deltagreen-1.7.0/fvtt-Actor-blank-GZGftVGSKSRNSREr.json`
- * (#7 supplemental). Baked so the planner stays pure (no filesystem I/O).
+ * after blank-equivalence normalization (#7 supplemental / #40).
+ * Baked so the planner stays pure (no filesystem I/O).
  */
 export const BLANK_UNTOUCHED_FINGERPRINT =
-  "sha256:f4e86fbeb7819c20d8039719648c5c0ef66878eb05f3a96e9504f47f410ec691" as const;
+  "sha256:d0e844cc7cb9f3dfb40fd2e1da3ec2dcb6b7e8b11ed5dc839b1c7168409b4e05" as const;
+
+function statValue(statistics: UnknownRecord, key: string): number {
+  const entry = statistics[key];
+  return isRecord(entry) && typeof entry.value === "number" ? entry.value : 10;
+}
 
 /**
  * Relevant untouched-default slice for blank-Actor recognition (#7 supplemental).
  * Ignores Foundry document identity, ownership, tokens, timestamps, presentation,
  * and adapter-owned binding/audit flags.
+ *
+ * Live Foundry 14.365 + DG 1.7.0 blanks differ from the pinned fixture in two ways
+ * that must still count as blank (#40 Thorne):
+ * - Sanity defaults to POW×5 / POW×5−POW (50/40) rather than the fixture's 100/101
+ * - System Unarmed Attack may be absent until the Agent sheet is first rendered
  */
 export function untouchedDefaultSlice(actor: unknown): unknown {
   if (!isRecord(actor)) {
     return null;
   }
   const system = isRecord(actor.system) ? actor.system : {};
+  const statistics = isRecord(system.statistics) ? system.statistics : {};
   const items = Array.isArray(actor.items) ? actor.items : [];
+  const power = statValue(statistics, "pow");
+  const formulaSanity = power * 5;
+  const formulaBreakingPoint = formulaSanity - power;
 
   const normalizedItems = items
     .filter(isRecord)
@@ -42,6 +57,20 @@ export function untouchedDefaultSlice(actor: unknown): unknown {
     })
     .sort((left, right) => `${left.type}/${left.name}`.localeCompare(`${right.type}/${right.name}`));
 
+  const onlySystemUnarmed =
+    normalizedItems.length === 1 && normalizedItems[0]?.systemOwned === true;
+  const blankItems = normalizedItems.length === 0 || onlySystemUnarmed;
+
+  const sanity = isRecord(system.sanity) ? system.sanity : {};
+  const sanityValue = typeof sanity.value === "number" ? sanity.value : null;
+  const breakingPoint =
+    typeof sanity.currentBreakingPoint === "number" ? sanity.currentBreakingPoint : null;
+  const sanityIsFormulaDefault =
+    sanityValue === formulaSanity && breakingPoint === formulaBreakingPoint;
+  // Historic pinned blank fixture used 100/101 before DG live defaults settled on POW×5.
+  const sanityIsLegacyFixture = sanityValue === 100 && breakingPoint === 101;
+  const sanityIsUntouchedDefault = sanityIsFormulaDefault || sanityIsLegacyFixture;
+
   return {
     type: actor.type ?? null,
     system: {
@@ -52,7 +81,17 @@ export function untouchedDefaultSlice(actor: unknown): unknown {
       typedSkills: system.typedSkills ?? null,
       specialTraining: system.specialTraining ?? null,
       schemaVersion: system.schemaVersion ?? null,
-      sanity: system.sanity ?? null,
+      sanity: {
+        adaptations: sanity.adaptations ?? null,
+        // One equivalence class for untouched defaults (live POW×5 and legacy fixture).
+        defaultKind: sanityIsUntouchedDefault ? "untouched-default" : "custom",
+        ...(sanityIsUntouchedDefault
+          ? {}
+          : {
+              value: sanityValue,
+              currentBreakingPoint: breakingPoint,
+            }),
+      },
       physical: {
         description: isRecord(system.physical) ? (system.physical.description ?? "") : "",
         wounds: isRecord(system.physical) ? (system.physical.wounds ?? "") : "",
@@ -64,7 +103,8 @@ export function untouchedDefaultSlice(actor: unknown): unknown {
       biography: system.biography ?? null,
       corruption: system.corruption ?? null,
     },
-    items: normalizedItems,
+    // Empty inventory and "only auto Unarmed Attack" are both untouched blanks.
+    items: blankItems ? { kind: "blank-items" } : { kind: "custom", items: normalizedItems },
   };
 }
 

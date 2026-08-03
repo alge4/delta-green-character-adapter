@@ -61,6 +61,24 @@ class ElementShim {
     }
   }
 
+  insertBefore(node: ElementShim, reference: ElementShim | null): ElementShim {
+    if (node.parentElement) {
+      node.parentElement.children = node.parentElement.children.filter((child) => child !== node);
+    }
+    node.parentElement = this;
+    if (reference === null) {
+      this.children.push(node);
+      return node;
+    }
+    const index = this.children.indexOf(reference);
+    if (index === -1) {
+      this.children.push(node);
+    } else {
+      this.children.splice(index, 0, node);
+    }
+    return node;
+  }
+
   replaceChildren(...nodes: Array<ElementShim | string>): void {
     for (const child of this.children) {
       child.parentElement = null;
@@ -101,10 +119,42 @@ class ElementShim {
     return null;
   }
 
+  querySelectorAll(selector: string): ElementShim[] {
+    const found: ElementShim[] = [];
+    const queue = [...this.children];
+    while (queue.length > 0) {
+      const node = queue.shift()!;
+      if (matchesSelector(node, selector)) {
+        found.push(node);
+      }
+      queue.push(...node.children);
+    }
+    return found;
+  }
+
   addEventListener(type: string, listener: (...args: unknown[]) => void): void {
     const list = this.listeners.get(type) ?? [];
     list.push(listener);
     this.listeners.set(type, list);
+  }
+
+  dispatchEvent(event: { type: string }): boolean {
+    for (const listener of this.listeners.get(event.type) ?? []) {
+      listener(event);
+    }
+    return true;
+  }
+
+  get innerText(): string {
+    return this.collectText();
+  }
+
+  private collectText(): string {
+    let text = this.textContent;
+    for (const child of this.children) {
+      text += child.collectText();
+    }
+    return text;
   }
 }
 
@@ -146,25 +196,60 @@ class HTMLElementShim extends ElementShim {}
 
 function installDom(): void {
   (globalThis as unknown as { HTMLElement: typeof HTMLElementShim }).HTMLElement = HTMLElementShim;
-  (globalThis as unknown as { document: { createElement: (tag: string) => HTMLElementShim } }).document =
-    {
-      createElement(tagName: string) {
-        return new HTMLElementShim(tagName);
-      },
+  const body = new HTMLElementShim("body");
+  (globalThis as unknown as {
+    document: {
+      body: HTMLElementShim;
+      createElement: (tag: string) => HTMLElementShim;
     };
+  }).document = {
+    body,
+    createElement(tagName: string) {
+      return new HTMLElementShim(tagName);
+    },
+  };
   (globalThis as unknown as { getComputedStyle: () => { position: string } }).getComputedStyle = () => ({
     position: "static",
   });
 }
 
 function createApplicationRoot(): HTMLElementShim {
+  document.body.replaceChildren();
   const root = new HTMLElementShim("div");
   root.classList.add("application");
   const header = new HTMLElementShim("header");
   header.classList.add("window-header");
+  const title = new HTMLElementShim("h1");
+  title.classList.add("window-title");
+  title.textContent = "Agent: Test";
+  const toggle = new HTMLElementShim("button");
+  toggle.classList.add("header-control", "icon");
+  toggle.setAttribute("data-action", "toggleControls");
+  toggle.setAttribute("aria-label", "Toggle Controls");
+  const close = new HTMLElementShim("button");
+  close.classList.add("header-control", "icon");
+  close.setAttribute("data-action", "close");
+  header.append(title, toggle, close);
+
+  // ApplicationV2: nav links and tab panels both carry data-tab; nav comes first in DOM.
+  const nav = new HTMLElementShim("nav");
+  nav.setAttribute("data-application-part", "tabs");
+  const bioNav = new HTMLElementShim("a");
+  bioNav.setAttribute("data-tab", "bio");
+  bioNav.textContent = "Bio";
+  nav.append(bioNav);
+
+  const skills = new HTMLElementShim("div");
+  skills.classList.add("tab", "skills", "active");
+  skills.setAttribute("data-tab", "skills");
+  skills.setAttribute("data-application-part", "skills");
+
   const bio = new HTMLElementShim("div");
+  bio.classList.add("tab", "bio");
   bio.setAttribute("data-tab", "bio");
-  root.append(header, bio);
+  bio.setAttribute("data-application-part", "bio");
+
+  root.append(header, nav, skills, bio);
   return root;
 }
 
@@ -291,6 +376,92 @@ describe("registerFoundryModule Agent-sheet mount (#38)", () => {
     assert.match(importButton.textContent, /Import/);
   });
 
+  it("portals the import modal host onto document.body, not inside the sheet form", async () => {
+    const hooks = createHookBus();
+    registerFoundryModule({
+      hooks,
+      getGame: () => exactGame,
+      adapterVersion: "0.0.0",
+    });
+    const root = createApplicationRoot();
+    hooks.emit("renderActorSheetV2", createSheet(root), root, {}, {});
+
+    await waitFor(
+      () => document.body.querySelector("[data-dgca-modal-host]"),
+      (node) => node !== null,
+    );
+    const modalHost = document.body.querySelector("[data-dgca-modal-host]");
+    assert.ok(modalHost, "modal host should mount on document.body");
+    assert.equal(modalHost.parentElement, document.body);
+    assert.equal(modalHost.getAttribute("data-dgca-modal-portal"), "true");
+    assert.equal(
+      root.querySelector("[data-dgca-modal-host]"),
+      null,
+      "modal host must not remain inside the ApplicationV2 form",
+    );
+  });
+
+  it("mounts module-owned Bio chrome on the bio tab panel, not the Bio nav link", async () => {
+    const hooks = createHookBus();
+    registerFoundryModule({
+      hooks,
+      getGame: () => exactGame,
+      adapterVersion: "0.0.0",
+    });
+    const root = createApplicationRoot();
+    hooks.emit("renderActorSheetV2", createSheet(root), root, {}, {});
+
+    const owned = await waitFor(
+      () => root.querySelector("[data-dgca-module-owned]"),
+      (node) => node !== null,
+    );
+    assert.ok(owned, "module-owned Bio slot should mount");
+    const host = owned.parentElement;
+    assert.ok(host, "module-owned Bio slot needs a host");
+    assert.equal(host.getAttribute("data-application-part"), "bio");
+    assert.equal(host.tagName, "DIV");
+    assert.equal(host.classList.contains("tab"), true);
+    assert.equal(
+      root.querySelector('a[data-tab="bio"]')?.querySelector("[data-dgca-module-owned]"),
+      null,
+      "must not mount inside the Bio navigation control",
+    );
+    assert.equal(
+      root.querySelector('[data-application-part="skills"]')?.querySelector("[data-dgca-module-owned]"),
+      null,
+      "must not mount on the Skills tab panel",
+    );
+  });
+
+  it("places title-bar chrome immediately before Toggle Controls in one header row", async () => {
+    const hooks = createHookBus();
+    registerFoundryModule({
+      hooks,
+      getGame: () => exactGame,
+      adapterVersion: "0.0.0",
+    });
+    const root = createApplicationRoot();
+    hooks.emit("renderActorSheetV2", createSheet(root), root, {}, {});
+
+    const header = root.querySelector(".window-header");
+    assert.ok(header, "ApplicationV2 window-header should exist");
+    const titleBar = await waitFor(
+      () => header.querySelector("[data-dgca-titlebar]"),
+      (node) => node !== null,
+    );
+    assert.ok(titleBar, "title-bar chrome slot should mount");
+    const toggle = header.querySelector('[data-action="toggleControls"]');
+    assert.ok(toggle, "Toggle Controls button should remain in the header");
+    const slotIndex = header.children.indexOf(titleBar);
+    const toggleIndex = header.children.indexOf(toggle);
+    assert.equal(
+      slotIndex,
+      toggleIndex - 1,
+      "Completeness/Import slot must sit immediately left of Toggle Controls",
+    );
+    assert.equal(titleBar.className, "dgca-titlebar-actions");
+  });
+
   it("mounts Completeness + Import when renderDocumentSheetV2 fires", async () => {
     const hooks = createHookBus();
     registerFoundryModule({
@@ -313,6 +484,40 @@ describe("registerFoundryModule Agent-sheet mount (#38)", () => {
     const importButton = titleBar.querySelector("button");
     assert.ok(importButton, "Import control should mount on DocumentSheetV2 render");
     assert.match(importButton.textContent, /Import/);
+  });
+
+  it("keeps an open import wizard across Agent-sheet re-renders", async () => {
+    const hooks = createHookBus();
+    registerFoundryModule({
+      hooks,
+      getGame: () => exactGame,
+      adapterVersion: "0.0.0",
+    });
+    const root = createApplicationRoot();
+    const sheet = createSheet(root);
+    hooks.emit("renderActorSheetV2", sheet, root, {}, {});
+
+    const titleBar = await waitFor(
+      () => root.querySelector("[data-dgca-titlebar]"),
+      (node) => node !== null && node.querySelector("button") !== null,
+    );
+    assert.ok(titleBar);
+    const importButton = titleBar.querySelector("button");
+    assert.ok(importButton);
+    importButton.dispatchEvent({ type: "click" });
+
+    const readModalText = (): string => {
+      const host = document.body.querySelector("[data-dgca-modal-host]");
+      return host instanceof ElementShim ? host.innerText : "";
+    };
+    await waitFor(readModalText, (text) => /Source/i.test(text));
+    assert.match(readModalText(), /Source/);
+
+    // Actor#update re-renders the sheet; session must survive so apply is not torn down.
+    hooks.emit("renderActorSheetV2", sheet, root, {}, {});
+
+    const afterText = await waitFor(readModalText, (text) => /Source/i.test(text));
+    assert.match(afterText, /Source/, "open wizard session must survive sheet re-render");
   });
 });
 

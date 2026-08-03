@@ -97,9 +97,9 @@ Pinned English profession labels (`5c9e92d` `en.js`):
 | `stats.STR`…`CHA` | `statistics.strength`…`charisma`.`score` (ints; warn if outside 3–18, do not clamp) |
 | `distinguishingFeatures.{STR,…}` | matching `statistics.*.distinguishingFeature` (non-empty only) |
 | `derivedAttributes.HP/WP/SAN` | `resources.hitPoints/willpower/sanity.maximum` |
-| `derivedCurrent.HP/WP/SAN` | corresponding `.current` (explicit zero kept; missing → default to maximum) |
+| `derivedCurrent.HP/WP/SAN` | corresponding `.current` (missing → maximum; all-zero block with positive maxima → treat as uninitialized and use maxima; otherwise keep explicit values including partial zeros) |
 | `derivedAttributes.BP` | `resources.breakingPoint.baseline` |
-| `derivedCurrent.BP` | `resources.breakingPoint.current` |
+| `derivedCurrent.BP` | `resources.breakingPoint.current` (same all-zero placeholder rule) |
 | `basePOW` | `extensions.greenAgentCreator.workflow.basePOW` only (no canonical field) |
 
 Absent in GAC (leave unset): `resources.wounds`, `exhausted`, `firstAidAttempted`.

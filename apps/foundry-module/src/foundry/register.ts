@@ -48,6 +48,22 @@ function asHtmlElement(value: unknown): HTMLElement | null {
   return null;
 }
 
+function placeTitleBarSlot(header: HTMLElement, titleBar: HTMLElement): void {
+  // ApplicationV2 headers are a single flex row: title, then controls. Sit immediately
+  // left of Toggle Controls (ellipsis) so Completeness/Import stay on that row (#40).
+  const toggle =
+    header.querySelector('[data-action="toggleControls"]') instanceof HTMLElement
+      ? (header.querySelector('[data-action="toggleControls"]') as HTMLElement)
+      : header.querySelector(".header-control") instanceof HTMLElement
+        ? (header.querySelector(".header-control") as HTMLElement)
+        : null;
+  if (toggle?.parentElement === header) {
+    header.insertBefore(titleBar, toggle);
+    return;
+  }
+  header.append(titleBar);
+}
+
 function ensureChromeSlots(root: HTMLElement): {
   titleBar: HTMLElement;
   modalHost: HTMLElement;
@@ -58,37 +74,68 @@ function ensureChromeSlots(root: HTMLElement): {
       ? (root.closest(".app, .application, .window-app") as HTMLElement)
       : root;
 
-  let titleBar = windowEl.querySelector("[data-dgca-titlebar]");
-  if (!(titleBar instanceof HTMLElement)) {
-    const header =
-      windowEl.querySelector(".window-header, .application-header, header") instanceof HTMLElement
-        ? (windowEl.querySelector(".window-header, .application-header, header") as HTMLElement)
-        : windowEl;
-    titleBar = document.createElement("div");
-    titleBar.setAttribute("data-dgca-titlebar", "true");
-    titleBar.className = "dgca-titlebar-actions";
-    header.append(titleBar);
-  }
+  const header =
+    windowEl.querySelector(".window-header, .application-header, header") instanceof HTMLElement
+      ? (windowEl.querySelector(".window-header, .application-header, header") as HTMLElement)
+      : windowEl;
 
-  let modalHost = windowEl.querySelector("[data-dgca-modal-host]");
+  const existingTitleBar = windowEl.querySelector("[data-dgca-titlebar]");
+  const titleBar =
+    existingTitleBar instanceof HTMLElement
+      ? existingTitleBar
+      : (() => {
+          const slot = document.createElement("div");
+          slot.setAttribute("data-dgca-titlebar", "true");
+          slot.className = "dgca-titlebar-actions";
+          return slot;
+        })();
+  placeTitleBarSlot(header, titleBar);
+
+  // Portal the wizard outside the ApplicationV2 <form>. In-sheet absolute overlays
+  // overflow onto #board, so Continue/Apply clicks hit the canvas instead (#40).
+  for (const legacy of windowEl.querySelectorAll("[data-dgca-modal-host]")) {
+    legacy.remove();
+  }
+  const body = document.body;
+  let modalHost =
+    body instanceof HTMLElement
+      ? Array.from(body.children).find(
+          (child): child is HTMLElement =>
+            child instanceof HTMLElement && child.getAttribute("data-dgca-modal-host") === "true",
+        )
+      : undefined;
   if (!(modalHost instanceof HTMLElement)) {
     modalHost = document.createElement("div");
     modalHost.setAttribute("data-dgca-modal-host", "true");
+    modalHost.setAttribute("data-dgca-modal-portal", "true");
     modalHost.className = "dgca-modal-host";
-    if (getComputedStyle(windowEl).position === "static") {
-      windowEl.style.position = "relative";
+    if (body instanceof HTMLElement) {
+      body.append(modalHost);
+    } else {
+      windowEl.append(modalHost);
     }
-    windowEl.append(modalHost);
   }
 
+  // Prefer ApplicationV2 tab *panels* (`data-application-part` / `.tab[data-tab]`).
+  // Bare `[data-tab='bio']` matches the nav <a> first and mounts DOB chrome in the tab bar (#40).
   const bioCandidate = windowEl.querySelector(
-    "[data-dgca-bio-host], .biography, [data-tab='bio'], [data-tab='cv']",
+    "[data-dgca-bio-host], [data-application-part='bio'], [data-application-part='cv'], .tab[data-tab='bio'], .tab[data-tab='cv']",
   );
+  const bioHost = bioCandidate instanceof HTMLElement ? bioCandidate : undefined;
+  if (bioHost && bioHost.getAttribute("data-dgca-bio-host") !== "true") {
+    bioHost.setAttribute("data-dgca-bio-host", "true");
+  }
+  // Drop any prior mis-mounts (e.g. into Bio nav links from older selectors).
+  for (const stray of windowEl.querySelectorAll("[data-dgca-module-owned]")) {
+    if (stray instanceof HTMLElement && stray.parentElement !== bioHost) {
+      stray.remove();
+    }
+  }
 
   return {
     titleBar: titleBar as HTMLElement,
     modalHost: modalHost as HTMLElement,
-    bioHost: bioCandidate instanceof HTMLElement ? bioCandidate : undefined,
+    bioHost,
   };
 }
 
@@ -110,6 +157,9 @@ function assessActorCompleteness(actorSource: unknown): "green" | "amber" | "red
  */
 export function registerFoundryModule(input: RegisterFoundryModuleInput): void {
   const cleanups = new WeakMap<object, () => void>();
+  // Keep the wizard session across sheet re-renders so apply is not torn down when
+  // Actor#update refreshes the ApplicationV2 sheet mid-mutation (#40).
+  const sessions = new WeakMap<object, ReturnType<typeof createImportWizardSession>>();
 
   const attach = (sheet: FoundrySheetLike): void => {
     const game = input.getGame();
@@ -133,16 +183,20 @@ export function registerFoundryModule(input: RegisterFoundryModuleInput): void {
 
     cleanups.get(sheet)?.();
 
-    const runtime = createFoundryActorRuntime({ actor, user });
-    const sheetCompleteness = assessActorCompleteness(runtime.readActorSource());
-    const session = createImportWizardSession({
-      runtime,
-      sheet: sheetContext,
-      options: {
-        ...(input.adapterVersion !== undefined ? { adapterVersion: input.adapterVersion } : {}),
-        ...(sheetCompleteness !== null ? { sheetCompleteness } : {}),
-      },
-    });
+    let session = sessions.get(sheet);
+    if (session === undefined) {
+      const runtime = createFoundryActorRuntime({ actor, user });
+      const sheetCompleteness = assessActorCompleteness(runtime.readActorSource());
+      session = createImportWizardSession({
+        runtime,
+        sheet: sheetContext,
+        options: {
+          ...(input.adapterVersion !== undefined ? { adapterVersion: input.adapterVersion } : {}),
+          ...(sheetCompleteness !== null ? { sheetCompleteness } : {}),
+        },
+      });
+      sessions.set(sheet, session);
+    }
 
     const slots = ensureChromeSlots(hostRoot);
     const dispose = mountImportWizardUi({

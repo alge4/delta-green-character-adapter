@@ -12,6 +12,32 @@ export function deepEqual(left: unknown, right: unknown): boolean {
   return JSON.stringify(left) === JSON.stringify(right);
 }
 
+/**
+ * Foundry StringField / Document name persistence trims whitespace.
+ * Normalize write values and verification expectations to match (#40 Chase).
+ */
+export function normalizeFoundryWriteValue(value: unknown): unknown {
+  if (typeof value === "string") {
+    return value.trim();
+  }
+  if (Array.isArray(value)) {
+    return value.map((entry) => normalizeFoundryWriteValue(entry));
+  }
+  if (isRecord(value)) {
+    const out: UnknownRecord = {};
+    for (const [key, nested] of Object.entries(value)) {
+      out[key] = normalizeFoundryWriteValue(nested);
+    }
+    return out;
+  }
+  return value;
+}
+
+/** Equality that tolerates Foundry string trimming on leaf strings. */
+export function foundryEqual(left: unknown, right: unknown): boolean {
+  return deepEqual(normalizeFoundryWriteValue(left), normalizeFoundryWriteValue(right));
+}
+
 /** Decode one RFC 6901 JSON Pointer segment. */
 export function decodePointerSegment(segment: string): string {
   return segment.replace(/~1/g, "/").replace(/~0/g, "~");

@@ -67,9 +67,9 @@ _Avoid_: Adapter extension
 ## Foundry updates
 
 **Actor Binding**:
-An explicit association between a canonical `agentId` and one Foundry Agent Actor. A name match may propose a binding but never establishes one automatically.
-_Avoid_: Name match, Actor lookup
+Legacy term for stored `agentId` / collection identity under adapter flags. Import targets the open Agent sheet; successful apply writes `agentId` via audit. There is no bind-confirmation gate.
+_Avoid_: Name match, Actor lookup, bind checkbox
 
 **Update Plan**:
-An immutable, previewable set of dependency-aware changes proposed for one bound Foundry Actor from one canonical Agent Snapshot.
+An immutable, previewable set of dependency-aware changes proposed for the open Foundry Agent Actor from one canonical Agent Snapshot.
 _Avoid_: Import result, patch

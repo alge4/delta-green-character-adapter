@@ -88,10 +88,13 @@ export function diffScalarField(
     return;
   }
 
+  // Mutable campaign state: propose an update that is deselected by default so the
+  // user can opt in. Do not use "preserve" here — that operation never writes even
+  // when the checkbox is selected (#40).
   if (classified.fieldClass === "mutable" && !ctx.blankTarget && ctx.mode !== "synchronize") {
     pushEntry(entries, {
       id: ctx.createId(),
-      operation: "preserve",
+      operation: "update",
       path: ctx.path,
       fieldClass: "mutable",
       beforeValue: ctx.beforeValue,
