@@ -238,13 +238,13 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
           if (diagnostic.acknowledgement.kind === "group") {
             const groupKey = diagnostic.acknowledgement.groupKey;
             if (view.pendingGroupAcknowledgements.includes(groupKey)) {
-              const ack = el("button", "dgca-primary", `Acknowledge group: ${groupKey}`);
-              ack.type = "button";
-              ack.setAttribute("data-testid", `dgca-ack-${groupKey}`);
-              ack.addEventListener("click", () => {
-                void Promise.resolve(host.acknowledgeGroup(groupKey)).then(() => void render());
-              });
-              item.append(ack);
+              item.append(
+                el(
+                  "p",
+                  "dgca-muted",
+                  `Requires group acknowledgement (${groupKey}) — use the button below.`,
+                ),
+              );
             } else {
               item.append(el("p", "dgca-muted", `Group acknowledged: ${groupKey}`));
             }
@@ -267,12 +267,41 @@ export function mountImportWizardUi(options: MountImportWizardOptions): () => vo
         }
         body.append(list);
         footer = el("div", "dgca-panel-actions");
+        // One control per pending group — warnings share a groupKey, not per-line acks.
+        for (const groupKey of view.pendingGroupAcknowledgements) {
+          const warningCount = view.diagnostics.filter(
+            (item) =>
+              item.acknowledgement.kind === "group" &&
+              item.acknowledgement.groupKey === groupKey,
+          ).length;
+          const ack = el(
+            "button",
+            "dgca-primary",
+            `Acknowledge ${warningCount} warning${warningCount === 1 ? "" : "s"} (${groupKey})`,
+          );
+          ack.type = "button";
+          ack.setAttribute("data-testid", `dgca-ack-${groupKey}`);
+          ack.addEventListener("click", () => {
+            try {
+              host.acknowledgeGroup(groupKey);
+            } catch (error) {
+              console.error("[dgca] acknowledgeGroup failed", error);
+            }
+            void render();
+          });
+          footer.append(ack);
+        }
         const cont = el("button", "dgca-primary", "Continue to Update Plan");
         cont.type = "button";
         cont.disabled = !view.canContinueToPlan;
         cont.setAttribute("data-testid", "dgca-continue-plan");
         cont.addEventListener("click", () => {
-          void Promise.resolve(host.continueToPlan()).then(() => void render());
+          try {
+            host.continueToPlan();
+          } catch (error) {
+            console.error("[dgca] continueToPlan failed", error);
+          }
+          void render();
         });
         footer.append(cont);
       }

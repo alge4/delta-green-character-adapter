@@ -211,7 +211,9 @@ export function createImportWizardSession(
   const activeDiagnostics = (): AdapterDiagnostic[] => {
     const importDiags = state.importResult?.diagnostics ?? [];
     const planDiags = state.planResult?.diagnostics ?? [];
-    if (state.phase === "diagnostics" || state.phase === "source") {
+    // Always surface plan diagnostics once planning has been attempted so binding
+    // / planner failures are visible on the diagnostics step (#40).
+    if (state.phase === "source" || planDiags.length === 0) {
       return [...importDiags];
     }
     const merged = [...importDiags];
@@ -405,8 +407,56 @@ export function createImportWizardSession(
       if (!current.canContinueToPlan) {
         throw new Error("Diagnostics and acknowledgements must be resolved before planning.");
       }
-      setState({ selectionOverrides: {} });
-      planWithCurrentSelection();
+      if (state.snapshot === null) {
+        throw new Error("No imported Agent Snapshot is available to plan.");
+      }
+      // Single setState so the subscribed render sees phase "plan" (not a stale
+      // diagnostics paint from an intermediate selectionOverrides notify) (#40).
+      const actorSource = input.runtime.readActorSource();
+      let planResult: ReturnType<typeof planFoundryActorUpdate>;
+      try {
+        planResult = planFoundryActorUpdate(state.snapshot, actorSource, {
+          mode,
+          callerIsGm: input.runtime.isGm(),
+          createId: resettingIdFactory(),
+          actorId: input.runtime.actorId,
+          ...(input.options?.now !== undefined ? { now: input.options.now } : {}),
+          ...(input.options?.adapterVersion !== undefined
+            ? { adapterVersion: input.options.adapterVersion }
+            : {}),
+          selectionOverrides: {},
+        });
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        setState({
+          selectionOverrides: {},
+          plan: null,
+          planResult: null,
+          phase: "diagnostics",
+          progressMessage: `Update Plan failed: ${message}`,
+          staleReplanRequired: false,
+        });
+        throw error instanceof Error ? error : new Error(message);
+      }
+      if (planResult.plan === undefined) {
+        setState({
+          selectionOverrides: {},
+          planResult,
+          plan: null,
+          phase: "diagnostics",
+          staleReplanRequired: false,
+          progressMessage: "Could not build an Update Plan. Resolve the diagnostics below.",
+        });
+        return;
+      }
+      setState({
+        selectionOverrides: {},
+        planResult,
+        plan: parseUpdatePlan(planResult.plan),
+        phase: "plan",
+        staleReplanRequired: false,
+        progressMessage: null,
+      });
     },
     backToDiagnostics() {
       setState({
