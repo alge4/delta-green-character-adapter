@@ -4,9 +4,9 @@ import type { UpdatePlan } from "@delta-green-character-adapter/foundry-update-p
 
 import { deepEqual, getByPointer, isRecord, parseItemPointer, type UnknownRecord } from "./paths.js";
 
+/** Document keys we must not mutate. `_stats` is excluded: Foundry rewrites it on every write. */
 const FOUNDRY_OWNED_DOCUMENT_KEYS = [
   "_id",
-  "_stats",
   "folder",
   "ownership",
   "prototypeToken",
@@ -14,6 +14,9 @@ const FOUNDRY_OWNED_DOCUMENT_KEYS = [
   "img",
   "effects",
 ] as const;
+
+/** Stable package-identity fields inside `_stats` that must not change across apply. */
+const STABLE_STATS_KEYS = ["coreVersion", "systemId", "systemVersion"] as const;
 
 function itemById(actor: unknown, itemId: string): UnknownRecord | undefined {
   if (!isRecord(actor) || !Array.isArray(actor.items)) {
@@ -83,6 +86,21 @@ export function verifyAppliedActorState(input: {
     }
   }
 
+  // Foundry updates modifiedTime/lastModifiedBy on every Actor#update; only package
+  // identity inside `_stats` is meaningful for verification.
+  if (isRecord(pre._stats) || isRecord(post._stats)) {
+    const preStats = isRecord(pre._stats) ? pre._stats : {};
+    const postStats = isRecord(post._stats) ? post._stats : {};
+    for (const key of STABLE_STATS_KEYS) {
+      if (!deepEqual(preStats[key], postStats[key])) {
+        return {
+          ok: false,
+          reason: `Foundry document stats "${key}" changed unexpectedly during apply.`,
+        };
+      }
+    }
+  }
+
   const selected = selectedWritePaths(input.plan);
 
   for (const entry of input.plan.entries) {
@@ -118,14 +136,18 @@ export function verifyAppliedActorState(input: {
       if (!isRecord(action.value)) {
         continue;
       }
-      const name = typeof action.value.name === "string" ? action.value.name : undefined;
+      const name = typeof action.value.name === "string" ? action.value.name.trim() : undefined;
       const type = typeof action.value.type === "string" ? action.value.type : undefined;
       if (name === undefined || type === undefined) {
         continue;
       }
       const items = Array.isArray(post.items) ? post.items : [];
       const found = items.some(
-        (item) => isRecord(item) && item.name === name && item.type === type,
+        (item) =>
+          isRecord(item) &&
+          item.type === type &&
+          typeof item.name === "string" &&
+          item.name.trim() === name,
       );
       if (!found) {
         return {

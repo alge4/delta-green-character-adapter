@@ -137,6 +137,25 @@ class ElementShim {
     list.push(listener);
     this.listeners.set(type, list);
   }
+
+  dispatchEvent(event: { type: string }): boolean {
+    for (const listener of this.listeners.get(event.type) ?? []) {
+      listener(event);
+    }
+    return true;
+  }
+
+  get innerText(): string {
+    return this.collectText();
+  }
+
+  private collectText(): string {
+    let text = this.textContent;
+    for (const child of this.children) {
+      text += child.collectText();
+    }
+    return text;
+  }
 }
 
 function matchesSimple(node: ElementShim, simple: string): boolean {
@@ -465,6 +484,40 @@ describe("registerFoundryModule Agent-sheet mount (#38)", () => {
     const importButton = titleBar.querySelector("button");
     assert.ok(importButton, "Import control should mount on DocumentSheetV2 render");
     assert.match(importButton.textContent, /Import/);
+  });
+
+  it("keeps an open import wizard across Agent-sheet re-renders", async () => {
+    const hooks = createHookBus();
+    registerFoundryModule({
+      hooks,
+      getGame: () => exactGame,
+      adapterVersion: "0.0.0",
+    });
+    const root = createApplicationRoot();
+    const sheet = createSheet(root);
+    hooks.emit("renderActorSheetV2", sheet, root, {}, {});
+
+    const titleBar = await waitFor(
+      () => root.querySelector("[data-dgca-titlebar]"),
+      (node) => node !== null && node.querySelector("button") !== null,
+    );
+    assert.ok(titleBar);
+    const importButton = titleBar.querySelector("button");
+    assert.ok(importButton);
+    importButton.dispatchEvent({ type: "click" });
+
+    const readModalText = (): string => {
+      const host = document.body.querySelector("[data-dgca-modal-host]");
+      return host instanceof ElementShim ? host.innerText : "";
+    };
+    await waitFor(readModalText, (text) => /Source/i.test(text));
+    assert.match(readModalText(), /Source/);
+
+    // Actor#update re-renders the sheet; session must survive so apply is not torn down.
+    hooks.emit("renderActorSheetV2", sheet, root, {}, {});
+
+    const afterText = await waitFor(readModalText, (text) => /Source/i.test(text));
+    assert.match(afterText, /Source/, "open wizard session must survive sheet re-render");
   });
 });
 

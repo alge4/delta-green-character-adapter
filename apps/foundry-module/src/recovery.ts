@@ -14,7 +14,8 @@ export function captureVerifiedRecoverySnapshot(runtime: FoundryActorRuntime): {
 } {
   let snapshot: unknown;
   try {
-    snapshot = runtime.captureRecoverySnapshot();
+    // Force plain JSON even if a runtime returns enriched Foundry objects.
+    snapshot = cloneJson(runtime.captureRecoverySnapshot());
   } catch (error) {
     return {
       ok: false,

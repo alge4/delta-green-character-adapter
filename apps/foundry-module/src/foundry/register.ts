@@ -157,6 +157,9 @@ function assessActorCompleteness(actorSource: unknown): "green" | "amber" | "red
  */
 export function registerFoundryModule(input: RegisterFoundryModuleInput): void {
   const cleanups = new WeakMap<object, () => void>();
+  // Keep the wizard session across sheet re-renders so apply is not torn down when
+  // Actor#update refreshes the ApplicationV2 sheet mid-mutation (#40).
+  const sessions = new WeakMap<object, ReturnType<typeof createImportWizardSession>>();
 
   const attach = (sheet: FoundrySheetLike): void => {
     const game = input.getGame();
@@ -180,16 +183,20 @@ export function registerFoundryModule(input: RegisterFoundryModuleInput): void {
 
     cleanups.get(sheet)?.();
 
-    const runtime = createFoundryActorRuntime({ actor, user });
-    const sheetCompleteness = assessActorCompleteness(runtime.readActorSource());
-    const session = createImportWizardSession({
-      runtime,
-      sheet: sheetContext,
-      options: {
-        ...(input.adapterVersion !== undefined ? { adapterVersion: input.adapterVersion } : {}),
-        ...(sheetCompleteness !== null ? { sheetCompleteness } : {}),
-      },
-    });
+    let session = sessions.get(sheet);
+    if (session === undefined) {
+      const runtime = createFoundryActorRuntime({ actor, user });
+      const sheetCompleteness = assessActorCompleteness(runtime.readActorSource());
+      session = createImportWizardSession({
+        runtime,
+        sheet: sheetContext,
+        options: {
+          ...(input.adapterVersion !== undefined ? { adapterVersion: input.adapterVersion } : {}),
+          ...(sheetCompleteness !== null ? { sheetCompleteness } : {}),
+        },
+      });
+      sessions.set(sheet, session);
+    }
 
     const slots = ensureChromeSlots(hostRoot);
     const dispose = mountImportWizardUi({

@@ -12,6 +12,15 @@ import {
 } from "./paths.js";
 import type { FoundryActorRuntime } from "./runtime.js";
 
+/** Foundry trims Document names on create; keep planned adds aligned with persistence. */
+export function normalizeItemCreateData(entry: unknown): unknown {
+  const plain = cloneJson(entry);
+  if (isRecord(plain) && typeof plain.name === "string") {
+    plain.name = plain.name.trim();
+  }
+  return plain;
+}
+
 export type PreparedApplyBatches = {
   readonly actorDiff: Record<string, unknown>;
   readonly clearDiff: Record<string, unknown>;
@@ -93,7 +102,9 @@ export async function executeApplyBatches(
   }
 
   if (batches.additions.length > 0) {
-    await runtime.createEmbeddedItems([...batches.additions]);
+    // Plain JSON copies: Zod-frozen add payloads break Foundry Item DataModels (#40).
+    // Trim Item names — Foundry Document name fields strip trailing whitespace on create.
+    await runtime.createEmbeddedItems(batches.additions.map((entry) => normalizeItemCreateData(entry)));
   }
 
   for (const update of batches.itemUpdates) {
@@ -146,7 +157,7 @@ export function applyBatchesToSourceClone(
     if (!isRecord(addition)) {
       continue;
     }
-    const copy = cloneJson(addition) as UnknownRecord;
+    const copy = normalizeItemCreateData(addition) as UnknownRecord;
     if (typeof copy._id !== "string" || copy._id === "") {
       copy._id = createItemId();
     }

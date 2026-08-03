@@ -26,7 +26,7 @@ import {
   applyDiagnosticCodes,
   diagnostic,
 } from "./diagnostics.js";
-import { isRecord } from "./paths.js";
+import { cloneJson, isRecord } from "./paths.js";
 import { captureVerifiedRecoverySnapshot, restoreAndVerify } from "./recovery.js";
 import type { FoundryActorRuntime } from "./runtime.js";
 import { verifyAppliedActorState } from "./verify.js";
@@ -97,7 +97,8 @@ async function failWithRollback(input: {
         technical: restored.reason,
       }),
     );
-    input.onManualRecovery?.(input.recoverySnapshot, MANUAL_RECOVERY_DISCLOSURE);
+    const plainRecovery = cloneJson(input.recoverySnapshot);
+    input.onManualRecovery?.(plainRecovery, MANUAL_RECOVERY_DISCLOSURE);
     return createOperationResult({
       diagnostics: sortDiagnostics(diagnostics),
       requiredResolutions: [],
@@ -105,7 +106,8 @@ async function failWithRollback(input: {
         kind: "manual-recovery",
         disclosure: MANUAL_RECOVERY_DISCLOSURE,
         // Exposed for authorized download only — never written to module flags.
-        recoverySnapshot: input.recoverySnapshot,
+        // Must be plain JSON (Foundry Color/etc. are not Zod jsonValue-safe) (#40).
+        recoverySnapshot: plainRecovery,
       },
     });
   }
