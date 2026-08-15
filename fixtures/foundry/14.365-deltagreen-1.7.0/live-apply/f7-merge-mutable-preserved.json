@@ -329,7 +329,20 @@
         "label": "Unnatural"
       }
     },
-    "typedSkills": {},
+    "typedSkills": {
+      "tskill_01": {
+        "failure": false,
+        "group": "Science",
+        "label": "Biology",
+        "proficiency": 50
+      },
+      "tskill_02": {
+        "failure": true,
+        "group": "Foreign Language",
+        "label": "Spanish",
+        "proficiency": 45
+      }
+    },
     "specialTraining": [],
     "schemaVersion": 1,
     "sanity": {
@@ -609,9 +622,9 @@
         ],
         "adapterVersion": "0.0.0",
         "sourceContentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-        "planDigest": "sha256:f063d34fd4310e1ec88a4db857175100c49f31a44785ab8279985ba5ce248940",
+        "planDigest": "sha256:9f4d99681b96c13309b771f3f336a1f2a93f52fa19eea944d3a9205c091a60e6",
         "targetFingerprint": "sha256:db75f24df25b83b6c1f9ae0fec18b93528f389554a3baf157c878cbe3495c23d",
-        "resultFingerprint": "sha256:e7e10ebc7aab28ff1d9a789f5f4dd646a94e9e1f3be03742ba5e24b57fc49400",
+        "resultFingerprint": "sha256:5368c6c9707ad93c05dc308e4ddb00fd4b12a414a8ba04ba066b76dc373b14a4",
         "mode": "merge",
         "affectedScopes": [
           "armour",
@@ -628,7 +641,7 @@
         "operationCounts": {
           "bind": 1,
           "add": 9,
-          "update": 35
+          "update": 43
         },
         "userId": "UserHarness0001",
         "timestamp": "2026-08-02T12:00:00.000Z",
