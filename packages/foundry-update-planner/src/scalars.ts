@@ -330,6 +330,31 @@ export function planActorScalars(
     }
   }
 
+  const targetTypedSkills = isRecord(targetSystem.typedSkills) ? targetSystem.typedSkills : {};
+  const desiredTypedSkills = isRecord(desiredSystem.typedSkills) ? desiredSystem.typedSkills : {};
+  for (const key of Object.keys({ ...targetTypedSkills, ...desiredTypedSkills })) {
+    const before = isRecord(targetTypedSkills[key]) ? (targetTypedSkills[key] as UnknownRecord) : {};
+    const proposed = isRecord(desiredTypedSkills[key])
+      ? (desiredTypedSkills[key] as UnknownRecord)
+      : {};
+    for (const field of ["proficiency", "label", "group", "failure"] as const) {
+      if (proposed[field] === undefined && before[field] === undefined) {
+        continue;
+      }
+      diffScalarField(
+        entries,
+        {
+          ...ctx,
+          path: pointer("system", "typedSkills", key, field),
+          beforeValue: before[field],
+          proposedValue: proposed[field],
+          dependencies: deps,
+        },
+        diagnostics,
+      );
+    }
+  }
+
   // Adapter identity flag
   const targetFlags = actorAdapterFlags(target);
   diffScalarField(

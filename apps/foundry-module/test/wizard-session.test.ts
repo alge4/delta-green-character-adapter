@@ -134,6 +134,25 @@ describe("createImportWizardSession", () => {
     assert.equal(getByPointer(source, "/system/biography/profession"), "Computer Scientist or Engineer");
     assert.equal(getByPointer(source, "/system/statistics/str/value"), 8);
     assert.ok(isRecord(flags.audit));
+
+    const typedSkills = isRecord(source) && isRecord(source.system) && isRecord(source.system.typedSkills)
+      ? source.system.typedSkills
+      : {};
+    const typedByGroup = (group: string) =>
+      Object.values(typedSkills)
+        .filter(isRecord)
+        .filter((skill) => skill.group === group)
+        .map((skill) => ({ label: skill.label, proficiency: skill.proficiency }))
+        .sort((left, right) => String(left.label).localeCompare(String(right.label)));
+    assert.deepEqual(typedByGroup("Craft"), [
+      { label: "Electrician", proficiency: 30 },
+      { label: "Mechanic", proficiency: 30 },
+      { label: "Microelectronics", proficiency: 60 },
+    ]);
+    assert.deepEqual(typedByGroup("Science"), [
+      { label: "Engineering", proficiency: 40 },
+      { label: "Mathematics", proficiency: 80 },
+    ]);
   });
 
   it("applies to a differently named open sheet without an Actor Binding gate", async () => {
